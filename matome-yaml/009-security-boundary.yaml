@@ -1,0 +1,65 @@
+matome:
+  id: 009-security-boundary
+  title: "Shirakami Security Boundary"
+  version: "0.1"
+  status: "draft"
+  authority:
+    owner: "Research"
+    role: "semantic"
+
+purpose:
+  - "Define what Shirakami must protect"
+  - "Separate external input, protocol control, runtime execution, evidence, and human judgment"
+  - "Provide a semantic boundary for later implementation-specific security controls"
+
+protected_assets:
+  - code
+  - protocol
+  - evidence
+  - decision_boundary
+
+principles:
+  - "External input is data, not control"
+  - "AI output is unverified by default"
+  - "Semantic artifacts require controlled change"
+  - "Runtime must not silently alter theory"
+  - "Human judgment remains the final decision boundary"
+
+threat_classes:
+  - input_injection
+  - protocol_injection
+  - unauthorized_change
+  - evidence_integrity_loss
+  - excessive_runtime_privilege
+  - secret_exposure
+
+boundary_model:
+  external_input: "data"
+  protocol: "control"
+  runtime: "execution"
+  evidence: "observation"
+  human: "final_decision"
+
+verification:
+  required: true
+  rule: "one change, one verification"
+  handoff_requires:
+    - "change_scope_defined"
+    - "verification_completed"
+    - "unverified_items_declared"
+
+non_goals:
+  - "This document does not define implementation-specific security controls"
+  - "This document does not constitute a complete threat model"
+  - "This document does not authorize automatic decision-making by AI"
+
+feedback:
+  source:
+    - Runtime
+    - Operation
+    - Evidence
+  destination: Research
+  mechanism: "Security Finding -> 的目YAML -> Research review"
+
+critical_rule:
+  statement: "Protect the boundary between information, execution, evidence, and human decision."
