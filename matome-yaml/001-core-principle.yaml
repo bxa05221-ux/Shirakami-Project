@@ -1,0 +1,24 @@
+matome:
+  id: shirakami-core-principle
+  title: "白神の根本原則"
+  version: "0.1"
+  status: "operational-draft"
+
+statement: >
+  白神はAIそのものを賢くすることを目的とせず、
+  人間がAIを自分の意思のもとで使える環境を構築する。
+
+principles:
+  - "AIは判断主体ではない"
+  - "最終判断は人間が行う"
+  - "AIをシミュレータとして扱う"
+  - "Realityは変更しない"
+  - "LandscapeをAIの外部に保持する"
+  - "Runtimeを交換可能にする"
+  - "意味と実装を分離する"
+
+boundary:
+  not: "LLMそのものの置換"
+  role: "AIを人間の意思のもとで扱うための構造"
+
+canonical_phrase: "Do not make AI smarter. Make it possible for people to use AI on their own terms."
