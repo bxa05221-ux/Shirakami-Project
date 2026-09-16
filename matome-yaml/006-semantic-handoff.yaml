@@ -1,0 +1,27 @@
+matome:
+  id: shirakami-semantic-handoff
+  title: "Semantic Handoff / Project分離"
+  version: "0.1"
+  status: "operational-draft"
+
+statement: >
+  Shirakami Projectでは作業領域を分離しても意味を切断しないため、
+  的目YAMLを正式な意味の引継ぎ単位として扱う。
+
+roles:
+  mother_project: "全体Landscape・調整"
+  research_project: "理論・仮説・研究"
+  matome_yaml: "意味の引継ぎ"
+  local_repository: "開発作業"
+  github_repository: "確定実装・履歴"
+  chatgpt_project: "作業空間"
+
+flow:
+  canonical: "Mother → Research → 的目YAML → Local Repository → Verification → GitHub → Operation → Evidence → Mother"
+  feedback: "GitHub / Runtime / Operation → Finding → 的目YAML → Research"
+
+rules:
+  - "会話を唯一の正本にしない"
+  - "理論をRuntimeへ勝手に埋め込まない"
+  - "未検証変更を確定扱いしない"
+  - "実装上の問題はFindingとしてResearchへ返す"
