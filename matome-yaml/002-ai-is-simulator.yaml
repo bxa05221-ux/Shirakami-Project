@@ -1,0 +1,27 @@
+matome:
+  id: shirakami-ai-is-simulator
+  title: "AIはシミュレータであり権威ではない"
+  version: "0.1"
+  status: "operational-draft"
+
+statement: >
+  白神ではAIの出力を最終的な事実認定や意思決定として扱わず、
+  人間が判断するための提案・整理・シミュレーションとして扱う。
+
+ai_role:
+  allowed:
+    - "提案"
+    - "シミュレーション"
+    - "整理"
+    - "複数視点の提示"
+  authority: false
+
+human_role:
+  final_judgment: true
+  decision_authority: human
+
+important_distinction:
+  output: "判断材料"
+  decision: "人間の責任"
+
+canonical_phrase: "AI is a simulator, not an authority."
