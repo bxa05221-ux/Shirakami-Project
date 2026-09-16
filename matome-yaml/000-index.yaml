@@ -42,6 +42,9 @@ library:
   - id: 012-evidence-integrity
     file: 012-evidence-integrity.yaml
     topic: "Evidenceの完全性と変更追跡"
+  - id: 013-security-runtime-handoff
+    file: 013-security-runtime-handoff.yaml
+    topic: "Security意味からRuntime作業への引継ぎ"
 
 boundary:
   authority: "meaning"
