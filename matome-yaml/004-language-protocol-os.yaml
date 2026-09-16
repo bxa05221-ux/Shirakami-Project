@@ -1,0 +1,29 @@
+matome:
+  id: shirakami-language-protocol-os
+  title: "Language Protocol OS"
+  version: "0.1"
+  status: "operational-draft"
+
+statement: >
+  白神モデルはLLMそのものではなく、人間の言葉をLanguage Protocolとして整理し、
+  Computational Taskへ変換し、AI Runtimeとの間に構造を与えるための基盤である。
+
+flow:
+  - "Human Language"
+  - "Prompt Organization"
+  - "Language Protocol"
+  - "Computational Task"
+  - "AI Runtime"
+  - "Evidence / Observation"
+  - "Human-readable Options"
+  - "Human Judgment"
+
+purpose:
+  - "人間の意図を構造化する"
+  - "AI Runtimeを交換可能にする"
+  - "AIの出力を判断材料として扱えるようにする"
+
+not:
+  - "LLMそのもの"
+  - "LLMの性能向上そのもの"
+  - "AIによる意思決定システム"
