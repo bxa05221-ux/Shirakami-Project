@@ -30,6 +30,18 @@ library:
   - id: 008-verification
     file: 008-verification.yaml
     topic: "一変更一検証と俯瞰検証"
+  - id: 009-security-boundary
+    file: 009-security-boundary.yaml
+    topic: "白神が守る境界と保護対象"
+  - id: 010-input-trust
+    file: 010-input-trust.yaml
+    topic: "入力の出所と検証状態の分離"
+  - id: 011-protocol-injection
+    file: 011-protocol-injection.yaml
+    topic: "データとプロトコル制御の境界"
+  - id: 012-evidence-integrity
+    file: 012-evidence-integrity.yaml
+    topic: "Evidenceの完全性と変更追跡"
 
 boundary:
   authority: "meaning"
