@@ -1,0 +1,51 @@
+matome:
+  id: 012-evidence-integrity
+  title: "Shirakami Evidence Integrity"
+  version: "0.1"
+  status: "draft"
+  authority:
+    owner: "Research"
+    role: "semantic"
+
+purpose:
+  - "Define the semantic integrity boundary for Evidence"
+  - "Prevent observations and AI outputs from being treated as confirmed facts without verification"
+
+principles:
+  - "Evidence records observation, not authority"
+  - "AI output is unverified unless supported by an appropriate verification process"
+  - "Existing Evidence is not silently rewritten"
+  - "A change to an Evidence record must remain traceable"
+  - "Verification state must be explicit"
+
+integrity_model:
+  default_state: "unverified"
+  mutation_rule: "Changes require traceability and verification"
+  history_rule: "Do not erase the fact that a prior state existed"
+
+change_handling:
+  immutable_by_default: true
+  changed_flag: true
+  rule: "When an existing record changes, represent the change explicitly rather than silently replacing its history."
+
+ai_output:
+  source: "ai"
+  default_status: "unverified"
+  promotion_rule: "Verification is required before treating AI output as confirmed Evidence"
+
+verification:
+  required: true
+  rule: "one change, one verification"
+  evidence_required_for_handoff: true
+
+non_goals:
+  - "This document does not define a storage implementation"
+  - "This document does not define cryptographic integrity mechanisms"
+  - "This document does not make AI an authority"
+
+feedback:
+  source:
+    - Runtime
+    - Operation
+    - Evidence
+  destination: Research
