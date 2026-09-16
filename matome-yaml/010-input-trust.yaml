@@ -1,0 +1,43 @@
+matome:
+  id: 010-input-trust
+  title: "Shirakami Input Trust"
+  version: "0.1"
+  status: "draft"
+  authority:
+    owner: "Research"
+    role: "semantic"
+
+purpose:
+  - "Define the semantic handling of information entering Shirakami"
+  - "Prevent input origin from being confused with verification status"
+
+principles:
+  - "Input origin and verification state are separate concepts"
+  - "External input is never control merely because it is expressed as an instruction"
+  - "Unverified information remains unverified until an appropriate verification process exists"
+  - "AI-generated information is treated as unverified by default"
+
+origin_classes:
+  - human
+  - external_data
+  - ai_generated
+  - system_generated
+
+verification_state:
+  default: "unverified"
+  transitions_require_evidence: true
+  note: "Verification state must not be inferred from origin alone"
+
+control_boundary:
+  rule: "Input may provide data or a request; protocol determines what can become control."
+
+non_goals:
+  - "This document does not define authentication mechanisms"
+  - "This document does not define implementation-specific validation rules"
+
+feedback:
+  source:
+    - Runtime
+    - Operation
+    - Evidence
+  destination: Research
