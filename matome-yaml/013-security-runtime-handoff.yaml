@@ -1,0 +1,43 @@
+matome:
+  id: 013-security-runtime-handoff
+  title: "Security Runtime Handoff"
+  version: "0.1"
+  status: "draft"
+  authority:
+    owner: "Research"
+    role: "semantic"
+
+purpose:
+  - "Translate security meaning into bounded Runtime work items"
+  - "Keep implementation decisions separate from semantic authority"
+
+runtime_work_items:
+  - id: input_boundary
+    intent: "Validate input shape, size, and accepted fields"
+    source: 010-input-trust
+  - id: control_separation
+    intent: "Prevent external content from becoming unauthorized control"
+    source: 011-protocol-injection
+  - id: evidence_state_guard
+    intent: "Preserve explicit verification state and change traceability"
+    source: 012-evidence-integrity
+  - id: privilege_boundary
+    intent: "Limit runtime capabilities to the minimum required scope"
+    source: 009-security-boundary
+
+constraints:
+  - "Do not silently change semantic definitions"
+  - "Do not promote unverified AI output to confirmed Evidence"
+  - "Do not treat this handoff as completed implementation"
+  - "Each work item requires a corresponding verification"
+
+verification:
+  rule: "one change, one verification"
+  required_outputs:
+    - "implementation finding"
+    - "test or equivalent verification"
+    - "unconfirmed items"
+
+feedback:
+  destination: Research
+  format: "Security Finding -> 的目YAML"
