@@ -1,0 +1,24 @@
+matome:
+  id: shirakami-evidence
+  title: "Evidence"
+  version: "0.1"
+  status: "operational-draft"
+
+statement: >
+  AIとの対話で得られる情報には、確認済みの事実、推定、解釈、創造的要素などが混在し得る。
+  白神では、それらを区別し、未確認のものを確定情報として扱わないための観測単位としてEvidenceを扱う。
+
+categories:
+  confirmed: "確認済み情報"
+  estimated: "推定情報"
+  interpreted: "解釈"
+  creative: "創造的生成"
+  finding: "実装・運用・検証から得られた知見"
+
+rules:
+  - "未確認情報を確認済み情報として扱わない"
+  - "Evidenceは判断そのものではない"
+  - "検証可能なものは検証する"
+  - "変更が生じた場合は履歴を残す"
+
+purpose: "AI出力と現実との境界を明確にする"
