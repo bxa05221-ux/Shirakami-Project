@@ -1,0 +1,53 @@
+matome:
+  id: 011-protocol-injection
+  title: "Shirakami Protocol Injection Boundary"
+  version: "0.1"
+  status: "draft"
+  authority:
+    owner: "Research"
+    role: "semantic"
+
+purpose:
+  - "Define the semantic boundary against protocol injection"
+  - "Prevent external content from silently becoming protocol control"
+
+core_model:
+  data:
+    role: "information supplied to the system"
+  control:
+    role: "behavior authorized by the protocol"
+  boundary:
+    rule: "Data does not become control merely by containing imperative language"
+
+injection_classes:
+  - prompt_injection
+  - protocol_text_injection
+  - instruction_smuggling
+  - context_confusion
+
+rules:
+  - "Treat external instructions as data until the protocol explicitly authorizes their interpretation as control"
+  - "Do not allow content to redefine its own authority"
+  - "Do not allow AI output to silently modify semantic authority"
+  - "Protocol changes require controlled change and verification"
+
+failure_response:
+  principle: "When authority is ambiguous, preserve the boundary and mark the matter unresolved."
+  prohibited:
+    - "silent privilege escalation"
+    - "automatic promotion of untrusted content to protocol"
+
+verification:
+  required: true
+  rule: "one change, one verification"
+
+non_goals:
+  - "This document does not define a complete prompt-injection defense implementation"
+  - "This document does not replace runtime security controls"
+
+feedback:
+  source:
+    - Runtime
+    - Operation
+    - Evidence
+  destination: Research
