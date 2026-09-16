@@ -1,0 +1,35 @@
+matome:
+  id: shirakami-verification
+  title: "Verification Scope Protocol"
+  version: "0.1"
+  status: "operational-draft"
+
+statement: >
+  白神では、変更を小さく分けて検証し、必要に応じて局所検証だけでなく全体への影響を俯瞰する。
+
+principles:
+  - "一変更一検証"
+  - "変更範囲を明確にする"
+  - "変更理由を記録する"
+  - "対応するTestsまたは検証を用意する"
+  - "未確認事項を明示する"
+  - "既存機能への影響を確認する"
+
+before_handoff:
+  required:
+    - "対象が明確"
+    - "変更範囲が明確"
+    - "変更理由が記録済み"
+    - "Testsまたは対応する検証が存在"
+    - "未確認事項が明示"
+
+before_github:
+  required:
+    - "Local verification completed"
+    - "変更差分確認"
+    - "既存機能への影響確認"
+    - "必要なEvidence記録"
+
+scope:
+  local: "一変更一検証"
+  overview: "俯瞰検証"
