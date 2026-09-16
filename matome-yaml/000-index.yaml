@@ -1,0 +1,36 @@
+matome:
+  id: shirakami-matome-library-index
+  title: "白神 的目YAML図書館 Index"
+  version: "0.1"
+  status: "operational-draft"
+  purpose: "白神の意味を短い単位で参照・引継ぎする"
+
+library:
+  - id: 001-core-principle
+    file: 001-core-principle.yaml
+    topic: "白神の根本原則"
+  - id: 002-ai-is-simulator
+    file: 002-ai-is-simulator.yaml
+    topic: "AIはシミュレータであり権威ではない"
+  - id: 003-human-judgment
+    file: 003-human-judgment.yaml
+    topic: "最終判断を人間に返す"
+  - id: 004-language-protocol-os
+    file: 004-language-protocol-os.yaml
+    topic: "Language Protocol OS"
+  - id: 005-evidence
+    file: 005-evidence.yaml
+    topic: "Evidenceと未確認情報の扱い"
+  - id: 006-semantic-handoff
+    file: 006-semantic-handoff.yaml
+    topic: "Project分離と意味の引継ぎ"
+  - id: 007-project-landscape
+    file: 007-project-landscape.yaml
+    topic: "白神Project全体Landscape"
+  - id: 008-verification
+    file: 008-verification.yaml
+    topic: "一変更一検証と俯瞰検証"
+
+boundary:
+  authority: "meaning"
+  note: "的目YAMLは意味の引継ぎ単位であり、実装そのものの正本ではない"
