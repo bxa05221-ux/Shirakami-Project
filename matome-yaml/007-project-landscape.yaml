@@ -1,0 +1,28 @@
+matome:
+  id: shirakami-project-landscape
+  title: "Shirakami Project Landscape"
+  version: "0.1"
+  status: "operational-draft"
+
+statement: >
+  白神は単一のアプリケーションではなく、Research、Model、Specification、Runtime、
+  Application、Evidence、Human Judgmentを関係づけるProject Landscapeとして構成される。
+
+layers:
+  mother: "全体Landscapeと調整"
+  research: "理論・仮説・研究実験"
+  model: "白神モデル / Language Protocol OS"
+  specification: "Protocol・構造・仕様"
+  runtime: "Runtime・Adapter・Renderer・Evidence・Operation・Tests"
+  application: "個別用途"
+  operation: "現実の運用"
+  evidence: "観測・検証・Finding"
+  human_judgment: "最終判断"
+
+relationship: >
+  各領域は責任範囲を分離するが、的目YAMLとRepositoryによって意味・実装・履歴を接続する。
+
+boundary:
+  landscape_authority: "Mother"
+  implementation_authority: "GitHub Repository"
+  meaning_authority: "的目YAML"
