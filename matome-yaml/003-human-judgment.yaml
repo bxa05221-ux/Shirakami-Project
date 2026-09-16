@@ -1,0 +1,22 @@
+matome:
+  id: shirakami-human-judgment
+  title: "Human Judgment"
+  version: "0.1"
+  status: "operational-draft"
+
+statement: >
+  白神の構造では、AIがタスクを先導して決定を代行するのではなく、
+  AIから返された情報・選択肢・シミュレーションを人間が確認し、最終判断する。
+
+flow:
+  - "AI: 提案・整理・シミュレーション"
+  - "Human: 確認・比較・判断"
+  - "Reality: 人間の決定に基づいて変化"
+
+responsibility:
+  ai: "判断材料を生成する"
+  human: "判断・決定する"
+
+boundary:
+  prohibited_assumption: "AI出力そのものが決定である"
+  exception: "ユーザーが望む範囲で補助的な先導を許容する"
