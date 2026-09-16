@@ -1,0 +1,33 @@
+matome:
+  id: ""
+  title: ""
+  version: "0.1"
+  status: "draft"
+
+statement: >
+  
+
+context:
+  why: ""
+  scope: ""
+
+principles:
+  - ""
+
+rules:
+  - ""
+
+boundary:
+  in_scope: []
+  out_of_scope: []
+
+handoff:
+  from: ""
+  to: ""
+  purpose: ""
+
+verification:
+  required: []
+  unverified: []
+
+notes: ""
