@@ -160,6 +160,10 @@ Mother
 
 ChatGPT Project は作業空間として利用できますが、会話履歴そのものを唯一の正本とはしません。
 
+運用時の役割分担は **Local Repository Operation Protocol v0.1** に定義します。
+
+→ [`protocols/local-repository-operation-protocol-v0.1.md`](protocols/local-repository-operation-protocol-v0.1.md)
+
 - **的目YAML** — 意味の引継ぎ
 - **Local Repository** — 開発中の状態
 - **GitHub Repository** — 確定した実装と履歴
