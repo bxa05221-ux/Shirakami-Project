@@ -1,0 +1,30 @@
+project:
+  name: Shirakami Project
+  phase: Phase 2
+  status: active
+  state_version: 0.1
+
+source_of_truth:
+  operational: local_repository
+  public_record: github
+
+roles:
+  human: final_judgment
+  chatgpt: design_reasoning_evidence_semantic_handoff
+  codex: local_implementation_data_processing_verification
+  github: public_review_release_history
+
+current_focus:
+  - Evidence ID
+  - Semantic Handoff
+  - API boundary
+  - Local Repository operation
+
+verification:
+  rule: 一変更一検証
+  human_gate: true
+
+synchronization:
+  local_first: true
+  github_sync_after_verification: true
+  consequential_publish_requires_human_authorization: true
