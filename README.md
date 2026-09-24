@@ -13,6 +13,21 @@ Shirakami Project は、AIそのものを賢くするのではなく、**人間�
 
 ---
 
+## Reviewer Entry
+
+白神をレビューする場合、説明だけを読む必要はありません。
+**Reviewer Protocol** に沿って、Landscape → Evidence → Protocol → Runtime → Verification → Human Gate の経路を実際に確認できます。
+
+> **A reviewer should not have to believe Shirakami in order to review Shirakami.**
+>
+> 白神をレビューするために、レビュアーが白神を信じる必要はありません。
+
+→ [`protocols/reviewer-protocol-v0.1.md`](protocols/reviewer-protocol-v0.1.md)
+
+レビュープロトコルは評価を自動化するものではありません。Runtimeの観測とEvidenceを提示し、最終的な判断をレビュアーに返します。
+
+---
+
 ## Landscape
 
 Shirakami Project は、単一のアプリケーションではありません。
@@ -170,10 +185,11 @@ Shirakami は現在、プロトタイプから実運用へ向けたシェイク�
 
 白神を初めて見る場合は、次の順序を推奨します。
 
-1. **Model** — 白神が何を目指すのか
-2. **Specification** — どのような構造で扱うのか
-3. **OS / Runtime** — それをどう実装するのか
-4. **Research** — 背後にある理論・仮説・実験
+1. **Reviewer Protocol** — 白神を実際にレビューする
+2. **Model** — 白神が何を目指すのか
+3. **Specification** — どのような構造で扱うのか
+4. **OS / Runtime** — それをどう実装するのか
+5. **Research** — 背後にある理論・仮説・実験
 
 ---
 
@@ -184,8 +200,6 @@ Shirakami は現在、プロトタイプから実運用へ向けたシェイク�
 
 AIを賢くするのではなく、
 **人間がAIを自分の意思で使えるようにする。**
-
----
 
 ## Project Status
 
