@@ -1,0 +1,83 @@
+agent_coordination:
+  version: "0.1"
+  purpose: >
+    Shared coordination state for role-separated AI agents working on the
+    Shirakami Project. This file describes who is responsible for what and
+    what state must be preserved across handoffs.
+
+  authority:
+    human_gate: true
+    default_execution_authorized: false
+    rule: >
+      A handoff transfers context and responsibility for a task; it does not
+      transfer human authority.
+
+  shared_context:
+    canonical_state: "SHIRAKAMI_STATE.yaml"
+    handoff_template: "handoff/SEMANTIC_HANDOFF_TEMPLATE.yaml"
+    required_context:
+      - project_identity
+      - current_objective
+      - applicable_protocol
+      - evidence_ids
+      - repository_state
+      - requested_change
+      - verification_scope
+      - unresolved_questions
+
+  agents:
+    chatgpt:
+      role: "planner"
+      responsibilities:
+        - protocol_design
+        - semantic_reasoning
+        - evidence_interpretation
+        - semantic_handoff_preparation
+        - review_preparation
+      authority: "no_execution_authority"
+
+    codex:
+      role: "builder"
+      responsibilities:
+        - local_repository_inspection
+        - implementation
+        - data_processing
+        - tests
+        - verification
+      authority: "no_publish_authority"
+
+    github_ai:
+      role: "reviewer"
+      responsibilities:
+        - repository_review
+        - boundary_detection
+        - regression_observation
+        - review_evidence
+      authority: "no_merge_authority"
+
+    github:
+      role: "public_record"
+      responsibilities:
+        - commit_history
+        - pull_requests
+        - review
+        - release
+        - synchronization_record
+      authority: "no_human_gate_authority"
+
+  handoff_flow:
+    - "chatgpt -> codex"
+    - "codex -> github"
+    - "github_ai -> chatgpt"
+    - "github -> shared_state"
+    - "human -> all_agents"
+
+  synchronization:
+    local_first: true
+    github_sync_after_verification: true
+    state_updates_must_preserve_evidence: true
+    divergence_requires_human_resolution: true
+
+  verification:
+    rule: "一変更一検証"
+    test_pass_does_not_equal_theory_proof: true
