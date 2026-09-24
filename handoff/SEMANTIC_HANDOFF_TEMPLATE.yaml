@@ -1,0 +1,52 @@
+semantic_handoff:
+  version: "0.1"
+  id: "SH-YYYYMMDD-NNN"
+  status: "draft"
+
+  project:
+    name: "Shirakami Project"
+    phase: "Phase 2"
+
+  source:
+    actor: "human | chatgpt | codex | github"
+    timestamp: ""
+
+  objective: >
+    State the single concrete objective of this handoff.
+
+  protocol:
+    applicable: []
+
+  evidence:
+    evidence_ids: []
+    provenance: []
+
+  repository:
+    expected_state: ""
+    target_paths: []
+    base_commit: ""
+
+  change:
+    requested: >
+      Describe the requested change only.
+    constraints: []
+    out_of_scope: []
+
+  verification:
+    rule: "一変更一検証"
+    procedure: []
+    expected_observation: ""
+
+  unresolved_questions: []
+
+  result:
+    status: "pending"
+    changed_paths: []
+    observed: []
+    deviations: []
+    verification_result: ""
+    commit: ""
+
+  human_gate:
+    required: true
+    decision: "pending"
