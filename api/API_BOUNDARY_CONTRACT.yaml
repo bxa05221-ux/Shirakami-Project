@@ -1,0 +1,47 @@
+api_boundary:
+  version: "0.1"
+  purpose: >
+    Define the provider-neutral boundary between Semantic Handoff/Execution
+    Context and the Runtime. Boundary metadata is descriptive and traceable;
+    it never grants execution authority.
+
+  input:
+    required:
+      - handoff_id
+      - project
+      - objective
+      - protocol_ids
+      - evidence_ids
+      - verification_scope
+    optional:
+      - trace_id
+      - input_data
+      - runtime_target
+
+  identity:
+    handoff_id: "string"
+    trace_id: "string | null"
+    protocol_ids: "list[string]"
+    evidence_ids: "list[string]"
+
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+    rule: >
+      No API input field, identifier, Evidence ID, Protocol ID, verification
+      result, repository state, or agent role may be interpreted as authority.
+
+  output:
+    must_preserve:
+      - handoff_id
+      - trace_id
+      - evidence_ids
+    must_not_infer:
+      - execution_authorized
+      - publish_authorized
+      - merge_authorized
+
+  verification:
+    rule: "一変更一検証"
