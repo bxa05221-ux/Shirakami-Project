@@ -1,0 +1,20 @@
+evidence_record:
+  version: "0.1"
+  role: "auditable observation produced from RuntimeResult"
+  identity:
+    evidence_id: "stable content-derived identifier"
+    source_fields:
+      - handoff_id
+      - trace_id
+      - execution_id
+      - provider
+  provenance:
+    input_evidence_ids: "list[string]"
+  observed:
+    output: "provider result as observation; not a decision"
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+  invariant: "Evidence records facts/provenance; they do not grant authority."
