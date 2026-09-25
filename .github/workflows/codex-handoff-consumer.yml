@@ -6,12 +6,16 @@ on:
       - "handoff/**"
       - "scripts/consume_handoff.py"
       - "scripts/test_consume_handoff.py"
+      - "scripts/validate_codex_result.py"
+      - "scripts/test_validate_codex_result.py"
       - ".github/workflows/codex-handoff-consumer.yml"
   pull_request:
     paths:
       - "handoff/**"
       - "scripts/consume_handoff.py"
       - "scripts/test_consume_handoff.py"
+      - "scripts/validate_codex_result.py"
+      - "scripts/test_validate_codex_result.py"
       - ".github/workflows/codex-handoff-consumer.yml"
 
 jobs:
@@ -28,3 +32,5 @@ jobs:
         run: python scripts/consume_handoff.py handoff/SH-HO-20260925-001.yaml
       - name: Verify consumer
         run: pytest -q scripts/test_consume_handoff.py
+      - name: Verify Codex result contract
+        run: pytest -q scripts/test_validate_codex_result.py
