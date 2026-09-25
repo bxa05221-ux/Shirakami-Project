@@ -21,7 +21,7 @@ def build_witness(trace_document: dict) -> dict:
     if not isinstance(trace, dict):
         raise ValueError("missing codex_traceability")
 
-    required = ("trace_id", "source_handoff_id", "evidence_ids")
+    required = ("trace_id", "execution_id", "source_handoff_id", "evidence_ids")
     for key in required:
         if not trace.get(key):
             raise ValueError(f"{key} is required")
@@ -52,7 +52,7 @@ def build_witness(trace_document: dict) -> dict:
             "status": "observed",
             "provenance": {
                 "trace_id": trace["trace_id"],
-                "execution_id": trace["trace_id"],
+                "execution_id": trace["execution_id"],
                 "handoff_id": trace["source_handoff_id"],
                 "evidence_ids": list(trace["evidence_ids"]),
                 "commit": trace.get("commit"),
