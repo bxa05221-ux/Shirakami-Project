@@ -58,6 +58,8 @@ jobs:
         run: pytest -q scripts/test_build_candidate.py
       - name: Verify human approval to Protocol boundary
         run: pytest -q scripts/test_build_protocol.py
+      - name: Verify Protocol to RuntimeRequest boundary
+        run: pytest -q scripts/test_build_protocol_runtime_request.py
       - name: Verify API boundary contract
         run: pytest -q scripts/test_validate_api_boundary.py
       - name: Verify AIwitness boundary contract
