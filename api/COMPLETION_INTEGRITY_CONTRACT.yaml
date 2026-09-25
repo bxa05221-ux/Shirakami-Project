@@ -1,0 +1,35 @@
+contract:
+  name: "Completion Integrity Contract"
+  version: "0.1"
+  purpose: >
+    Prevent AI-generated completion percentages from being treated as verified
+    project state. Completion is represented by evidence-backed requirement states,
+    not by a self-assessed percentage.
+
+rules:
+  forbidden:
+    - "completion_percent"
+    - "overall_completion"
+    - "confidence_as_completion"
+  required:
+    - "requirement_id"
+    - "status"
+    - "evidence_ids"
+  allowed_status:
+    - "verified"
+    - "unverified"
+    - "blocked"
+    - "not_applicable"
+  verified_requires:
+    - "at least one evidence_id"
+    - "verification_source"
+  human_gate:
+    required: true
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+
+principle: >
+  Do not ask the AI how complete the system is. Measure which requirements
+  have independently verifiable evidence and expose the remainder explicitly.

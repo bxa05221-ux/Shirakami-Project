@@ -50,6 +50,8 @@ jobs:
         run: pytest -q scripts/test_provider_adapter.py
       - name: Verify Protocol RuntimeRequest execution boundary
         run: pytest -q scripts/test_execute_runtime_request.py
+      - name: Verify completion integrity boundary
+        run: pytest -q scripts/test_validate_completion_integrity.py
       - name: Verify EvidenceRecord boundary
         run: pytest -q scripts/test_build_evidence_record.py
       - name: Verify EvidenceRecord to AIwitness projection
