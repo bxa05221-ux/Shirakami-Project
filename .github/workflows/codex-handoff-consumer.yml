@@ -18,6 +18,9 @@ on:
       - "scripts/test_bind_codex_trace.py"
       - "scripts/merge_codex_result_into_trace.py"
       - "scripts/test_merge_codex_result_into_trace.py"
+      - "scripts/validate_api_boundary.py"
+      - "scripts/test_validate_api_boundary.py"
+      - "api/API_BOUNDARY_CONTRACT.yaml"
       - ".github/workflows/codex-handoff-consumer.yml"
   pull_request:
     paths:
@@ -28,6 +31,9 @@ on:
       - "scripts/test_validate_codex_result.py"
       - "scripts/record_codex_result.py"
       - "scripts/test_record_codex_result.py"
+      - "scripts/validate_api_boundary.py"
+      - "scripts/test_validate_api_boundary.py"
+      - "api/API_BOUNDARY_CONTRACT.yaml"
       - ".github/workflows/codex-handoff-consumer.yml"
 
 jobs:
@@ -54,3 +60,5 @@ jobs:
         run: pytest -q scripts/test_bind_codex_trace.py
       - name: Verify Codex result trace closure
         run: pytest -q scripts/test_merge_codex_result_into_trace.py
+      - name: Verify API boundary contract
+        run: pytest -q scripts/test_validate_api_boundary.py
