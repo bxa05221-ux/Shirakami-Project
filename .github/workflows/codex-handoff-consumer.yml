@@ -16,6 +16,8 @@ on:
       - "scripts/test_record_codex_trace.py"
       - "scripts/bind_codex_trace.py"
       - "scripts/test_bind_codex_trace.py"
+      - "scripts/merge_codex_result_into_trace.py"
+      - "scripts/test_merge_codex_result_into_trace.py"
       - ".github/workflows/codex-handoff-consumer.yml"
   pull_request:
     paths:
@@ -50,3 +52,5 @@ jobs:
         run: pytest -q scripts/test_record_codex_trace.py
       - name: Verify Codex trace commit binding
         run: pytest -q scripts/test_bind_codex_trace.py
+      - name: Verify Codex result trace closure
+        run: pytest -q scripts/test_merge_codex_result_into_trace.py
