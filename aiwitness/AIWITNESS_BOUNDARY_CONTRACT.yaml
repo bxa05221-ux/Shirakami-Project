@@ -1,0 +1,67 @@
+aiwitness:
+  version: "0.1"
+  status: "design_boundary"
+  purpose: >
+    Define a provider-neutral witness layer that records observed execution
+    provenance without becoming an authority, judge, or decision-maker.
+
+  input:
+    required:
+      - trace_id
+      - execution_id
+      - handoff_id
+      - evidence_ids
+      - verification_status
+    optional:
+      - commit
+      - verification_uncertainty
+      - verification_observed
+
+  provenance:
+    trace_id: "string"
+    execution_id: "string"
+    handoff_id: "string"
+    evidence_ids: "list[string]"
+    commit: "string | null"
+
+  observation:
+    verification_status: "pending | pass | fail"
+    verification_uncertainty: "string | null"
+    verification_observed: "mapping"
+
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+    rule: >
+      AIwitness records and exposes observed provenance only. It must never
+      infer approval, authority, correctness of the underlying decision, or
+      permission to execute, publish, or merge.
+
+  integrity:
+    required:
+      - "trace_id must identify the observed execution trace."
+      - "execution_id must identify the observed execution."
+      - "handoff_id must preserve semantic handoff identity."
+      - "evidence_ids must be preserved or explicitly marked as newly observed."
+      - "verification status describes observation, not authorization."
+    forbidden:
+      - "AIwitness may not modify the source execution trace."
+      - "AIwitness may not grant authority."
+      - "AIwitness may not silently replace Evidence with inference."
+      - "AIwitness may not convert a passing test into theory proof."
+
+  lifecycle:
+    - "observe"
+    - "record"
+    - "expose"
+    - "verify"
+    - "preserve"
+
+  verification:
+    rule: "一変更一検証"
+    first_implementation_scope:
+      - "schema validation"
+      - "trace-to-evidence identity preservation"
+      - "authority non-propagation"
