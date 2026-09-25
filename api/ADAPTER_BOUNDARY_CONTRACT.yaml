@@ -1,0 +1,55 @@
+adapter_boundary:
+  version: "0.1"
+  purpose: >
+    Define the provider-neutral handoff from API Context into a Runtime Adapter.
+    Adapter metadata selects or describes a runtime target; it never grants
+    execution, publication, or merge authority.
+
+  input:
+    required:
+      - handoff_id
+      - project
+      - objective
+      - protocol_ids
+      - evidence_ids
+      - verification_scope
+    optional:
+      - trace_id
+      - execution_id
+      - input_data
+      - runtime_target
+
+  identity:
+    handoff_id: "string"
+    trace_id: "string | null"
+    execution_id: "string | null"
+    protocol_ids: "list[string]"
+    evidence_ids: "list[string]"
+
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+    rule: >
+      Runtime target, provider name, adapter configuration, Evidence ID,
+      Protocol ID, verification result, or execution identity may never be
+      interpreted as authority.
+
+  output:
+    must_preserve:
+      - handoff_id
+      - trace_id
+      - execution_id
+      - evidence_ids
+      - protocol_ids
+      - verification_scope
+    may_describe:
+      - runtime_target
+    must_not_infer:
+      - execution_authorized
+      - publish_authorized
+      - merge_authorized
+
+  verification:
+    rule: "一変更一検証"
