@@ -4,62 +4,16 @@ on:
   push:
     paths:
       - "handoff/**"
-      - "scripts/consume_handoff.py"
-      - "scripts/test_consume_handoff.py"
-      - "scripts/validate_codex_result.py"
-      - "scripts/test_validate_codex_result.py"
-      - "scripts/record_codex_result.py"
-      - "scripts/test_record_codex_result.py"
-      - "scripts/validate_codex_trace.py"
-      - "scripts/test_validate_codex_trace.py"
-      - "scripts/record_codex_trace.py"
-      - "scripts/test_record_codex_trace.py"
-      - "scripts/bind_codex_trace.py"
-      - "scripts/test_bind_codex_trace.py"
-      - "scripts/merge_codex_result_into_trace.py"
-      - "scripts/test_merge_codex_result_into_trace.py"
-      - "scripts/record_aiwitness.py"
-      - "scripts/test_record_aiwitness.py"
-      - "scripts/build_api_context.py"
-      - "scripts/test_build_api_context.py"
-      - "scripts/build_runtime_request.py"
-      - "scripts/test_build_runtime_request.py"
-      - "scripts/provider_adapter.py"
-      - "scripts/test_provider_adapter.py"
-      - "api/PROVIDER_ADAPTER_CONTRACT.yaml"
-      - "api/ADAPTER_BOUNDARY_CONTRACT.yaml"
-      - "scripts/validate_api_boundary.py"
-      - "scripts/test_validate_api_boundary.py"
-      - "api/API_BOUNDARY_CONTRACT.yaml"
+      - "scripts/**"
+      - "api/**"
       - "aiwitness/**"
-      - "scripts/validate_aiwitness_boundary.py"
-      - "scripts/test_validate_aiwitness_boundary.py"
       - ".github/workflows/codex-handoff-consumer.yml"
   pull_request:
     paths:
       - "handoff/**"
-      - "scripts/consume_handoff.py"
-      - "scripts/test_consume_handoff.py"
-      - "scripts/validate_codex_result.py"
-      - "scripts/test_validate_codex_result.py"
-      - "scripts/record_codex_result.py"
-      - "scripts/test_record_codex_result.py"
-      - "scripts/validate_codex_trace.py"
-      - "scripts/test_validate_codex_trace.py"
-      - "scripts/record_codex_trace.py"
-      - "scripts/test_record_codex_trace.py"
-      - "scripts/bind_codex_trace.py"
-      - "scripts/test_bind_codex_trace.py"
-      - "scripts/merge_codex_result_into_trace.py"
-      - "scripts/test_merge_codex_result_into_trace.py"
-      - "scripts/record_aiwitness.py"
-      - "scripts/test_record_aiwitness.py"
-      - "scripts/validate_api_boundary.py"
-      - "scripts/test_validate_api_boundary.py"
-      - "api/API_BOUNDARY_CONTRACT.yaml"
+      - "scripts/**"
+      - "api/**"
       - "aiwitness/**"
-      - "scripts/validate_aiwitness_boundary.py"
-      - "scripts/test_validate_aiwitness_boundary.py"
       - ".github/workflows/codex-handoff-consumer.yml"
 
 jobs:
@@ -90,8 +44,12 @@ jobs:
         run: pytest -q scripts/test_record_aiwitness.py
       - name: Verify trace to API context bridge
         run: pytest -q scripts/test_build_api_context.py
+      - name: Verify runtime adapter boundary
+        run: pytest -q scripts/test_build_runtime_request.py
       - name: Verify provider adapter boundary
         run: pytest -q scripts/test_provider_adapter.py
+      - name: Verify EvidenceRecord boundary
+        run: pytest -q scripts/test_build_evidence_record.py
       - name: Verify API boundary contract
         run: pytest -q scripts/test_validate_api_boundary.py
       - name: Verify AIwitness boundary contract
