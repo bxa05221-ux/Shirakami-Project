@@ -6,6 +6,7 @@ def trace():
         "codex_traceability": {
             "version": "0.1",
             "trace_id": "TRACE-001",
+            "execution_id": "EXEC-001",
             "source_handoff_id": "SH-HO-001",
             "evidence_ids": ["EVIDENCE-001"],
             "verification": {"status": "passed", "tests": ["pytest -q"]},
@@ -23,6 +24,7 @@ def trace():
 def test_projection_preserves_identity_and_evidence():
     witness = build_witness(trace())["aiwitness"]
     assert witness["provenance"]["trace_id"] == "TRACE-001"
+    assert witness["provenance"]["execution_id"] == "EXEC-001"
     assert witness["provenance"]["handoff_id"] == "SH-HO-001"
     assert witness["provenance"]["evidence_ids"] == ["EVIDENCE-001"]
     assert witness["observation"]["verification_status"] == "pass"
