@@ -1,0 +1,23 @@
+evolution_loop:
+  version: "0.1"
+  cycle:
+    - Observation
+    - Evidence
+    - Analysis
+    - Protocol
+    - Runtime
+    - Verification
+    - Evidence
+  implemented_return:
+    EvidenceRecord: "required"
+    stable_evidence_id: "required"
+    AIwitness: "required"
+    SemanticHandoff: "required"
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+  invariant: >
+    A verified observation may create a new handoff/candidate, but it may not
+    create execution, publication, or merge authority.
