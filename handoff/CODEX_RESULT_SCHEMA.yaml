@@ -1,0 +1,33 @@
+codex_result:
+  version: "0.1"
+  source_handoff_id: ""
+  status: "pending"
+
+  result:
+    changed_paths: []
+    observations: []
+    deviations: []
+
+  verification:
+    status: "pending"
+    tests: []
+
+  commit: null
+
+  unresolved: []
+
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+
+  human_gate:
+    required: true
+    decision: "pending"
+
+  rules:
+    - "source_handoff_id must identify the originating Semantic Handoff."
+    - "Result status describes outcome only; it never grants authority."
+    - "Evidence IDs, Protocol IDs, commit IDs, test results, or agent roles must not imply authorization."
+    - "Human Gate remains the sole authority boundary."
+    - "A successful verification does not constitute theory proof."
