@@ -50,6 +50,8 @@ jobs:
         run: pytest -q scripts/test_provider_adapter.py
       - name: Verify EvidenceRecord boundary
         run: pytest -q scripts/test_build_evidence_record.py
+      - name: Verify EvidenceRecord to AIwitness projection
+        run: pytest -q scripts/test_project_evidence_to_aiwitness.py
       - name: Verify API boundary contract
         run: pytest -q scripts/test_validate_api_boundary.py
       - name: Verify AIwitness boundary contract
