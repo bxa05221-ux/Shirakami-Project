@@ -1,0 +1,25 @@
+codex_result:
+  version: "0.1"
+  source_handoff_id: "SH-HO-20260925-001"
+  status: "completed"
+
+  result:
+    changed_paths: []
+    observations: []
+    deviations: []
+
+  verification:
+    status: "passed"
+    tests: []
+
+  commit: null
+  unresolved: []
+
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+
+  human_gate:
+    required: true
+    decision: "pending"
