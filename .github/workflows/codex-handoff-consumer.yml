@@ -52,6 +52,8 @@ jobs:
         run: pytest -q scripts/test_build_evidence_record.py
       - name: Verify EvidenceRecord to AIwitness projection
         run: pytest -q scripts/test_project_evidence_to_aiwitness.py
+      - name: Verify Evidence to Semantic Handoff evolution loop
+        run: pytest -q scripts/test_build_evolution_handoff.py
       - name: Verify API boundary contract
         run: pytest -q scripts/test_validate_api_boundary.py
       - name: Verify AIwitness boundary contract
