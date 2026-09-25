@@ -1,0 +1,21 @@
+protocol_gate:
+  version: "0.1"
+  purpose: "Convert an explicitly human-approved Candidate into a protocol proposal."
+  input:
+    required:
+      - candidate_id
+      - approval
+      - evidence_ids
+      - proposal
+  approval:
+    required: true
+    value: true
+    source: "human_gate"
+  output:
+    protocol_state: "approved_for_runtime_review"
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+  invariant: "Human approval permits protocol formation; it does not grant execution authority."
