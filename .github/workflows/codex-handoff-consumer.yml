@@ -21,6 +21,9 @@ on:
       - "scripts/validate_api_boundary.py"
       - "scripts/test_validate_api_boundary.py"
       - "api/API_BOUNDARY_CONTRACT.yaml"
+      - "aiwitness/**"
+      - "scripts/validate_aiwitness_boundary.py"
+      - "scripts/test_validate_aiwitness_boundary.py"
       - ".github/workflows/codex-handoff-consumer.yml"
   pull_request:
     paths:
@@ -34,6 +37,9 @@ on:
       - "scripts/validate_api_boundary.py"
       - "scripts/test_validate_api_boundary.py"
       - "api/API_BOUNDARY_CONTRACT.yaml"
+      - "aiwitness/**"
+      - "scripts/validate_aiwitness_boundary.py"
+      - "scripts/test_validate_aiwitness_boundary.py"
       - ".github/workflows/codex-handoff-consumer.yml"
 
 jobs:
@@ -62,3 +68,5 @@ jobs:
         run: pytest -q scripts/test_merge_codex_result_into_trace.py
       - name: Verify API boundary contract
         run: pytest -q scripts/test_validate_api_boundary.py
+      - name: Verify AIwitness boundary contract
+        run: pytest -q scripts/test_validate_aiwitness_boundary.py
