@@ -1,0 +1,29 @@
+codex_traceability:
+  version: "0.1"
+  trace_id: ""
+  source_handoff_id: ""
+  evidence_ids: []
+  result:
+    status: "pending"
+    changed_paths: []
+    observations: []
+    deviations: []
+  verification:
+    status: "pending"
+    tests: []
+  commit: null
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+  human_gate:
+    required: true
+    decision: "pending"
+
+  rules:
+    - "source_handoff_id must identify the originating Semantic Handoff."
+    - "evidence_ids must be preserved from the originating Handoff or explicitly recorded as newly observed."
+    - "A commit identifies repository history only; it never grants authority."
+    - "Verification results describe observed verification only; they never grant authority."
+    - "Traceability links must not infer approval, execution, publication, or merge authority."
+    - "Human Gate remains the sole authority boundary."
