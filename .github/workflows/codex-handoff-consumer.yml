@@ -1,0 +1,30 @@
+name: Codex Handoff Consumer Verification
+
+on:
+  push:
+    paths:
+      - "handoff/**"
+      - "scripts/consume_handoff.py"
+      - "scripts/test_consume_handoff.py"
+      - ".github/workflows/codex-handoff-consumer.yml"
+  pull_request:
+    paths:
+      - "handoff/**"
+      - "scripts/consume_handoff.py"
+      - "scripts/test_consume_handoff.py"
+      - ".github/workflows/codex-handoff-consumer.yml"
+
+jobs:
+  consume-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install verification dependencies
+        run: python -m pip install --disable-pip-version-check pytest PyYAML
+      - name: Consume Semantic Handoff
+        run: python scripts/consume_handoff.py handoff/SH-HO-20260925-001.yaml
+      - name: Verify consumer
+        run: pytest -q scripts/test_consume_handoff.py
