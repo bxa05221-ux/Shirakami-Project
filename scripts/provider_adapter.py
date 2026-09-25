@@ -59,5 +59,7 @@ class ProviderAdapter(ABC):
             raise ValueError("provider result cannot grant merge authority")
         if not result.human_gate_required:
             raise ValueError("human_gate_required must remain true")
-        if result.handoff_id != result.handoff_id:
-            raise ValueError("handoff identity mismatch")
+        if not result.handoff_id:
+            raise ValueError("handoff identity is required")
+        if not result.provider:
+            raise ValueError("provider identity is required")
