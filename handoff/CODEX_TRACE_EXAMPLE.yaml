@@ -1,0 +1,22 @@
+codex_traceability:
+  version: "0.1"
+  trace_id: "TRACE-EXAMPLE-001"
+  source_handoff_id: "SH-HO-20260925-001"
+  evidence_ids:
+    - "AGENT-COORDINATION-001"
+  result:
+    status: "pending"
+    changed_paths: []
+    observations: []
+    deviations: []
+  verification:
+    status: "pending"
+    tests: []
+  commit: null
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+  human_gate:
+    required: true
+    decision: "pending"
