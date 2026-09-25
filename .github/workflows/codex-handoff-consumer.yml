@@ -24,6 +24,9 @@ on:
       - "scripts/test_build_api_context.py"
       - "scripts/build_runtime_request.py"
       - "scripts/test_build_runtime_request.py"
+      - "scripts/provider_adapter.py"
+      - "scripts/test_provider_adapter.py"
+      - "api/PROVIDER_ADAPTER_CONTRACT.yaml"
       - "api/ADAPTER_BOUNDARY_CONTRACT.yaml"
       - "scripts/validate_api_boundary.py"
       - "scripts/test_validate_api_boundary.py"
@@ -87,6 +90,8 @@ jobs:
         run: pytest -q scripts/test_record_aiwitness.py
       - name: Verify trace to API context bridge
         run: pytest -q scripts/test_build_api_context.py
+      - name: Verify provider adapter boundary
+        run: pytest -q scripts/test_provider_adapter.py
       - name: Verify API boundary contract
         run: pytest -q scripts/test_validate_api_boundary.py
       - name: Verify AIwitness boundary contract

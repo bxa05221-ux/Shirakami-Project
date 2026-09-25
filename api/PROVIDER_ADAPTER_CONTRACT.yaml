@@ -1,0 +1,39 @@
+provider_adapter:
+  version: "0.1"
+  role: >
+    Replaceable provider boundary below Runtime Adapter. Provider identity
+    and output are descriptive; neither grants authority.
+
+  request:
+    must_preserve:
+      - handoff_id
+      - trace_id
+      - execution_id
+      - project
+      - objective
+      - protocol_ids
+      - evidence_ids
+      - verification_scope
+    may_include:
+      - runtime_target
+      - input_data
+
+  result:
+    must_preserve:
+      - handoff_id
+      - trace_id
+      - execution_id
+      - provider
+      - output
+      - evidence_ids
+    authority:
+      execution_authorized: false
+      publish_authorized: false
+      merge_authorized: false
+      human_gate_required: true
+
+  invariants:
+    provider_is_replaceable: true
+    provider_is_not_authority: true
+    runtime_target_is_descriptive: true
+    verification_rule: "一変更一検証"
