@@ -1,0 +1,25 @@
+candidate_gate:
+  version: "0.1"
+  purpose: "Convert a verified observation into a reviewable candidate without granting authority."
+  input:
+    required:
+      - handoff_id
+      - evidence_ids
+      - observation
+  validation:
+    structural:
+      required_fields:
+        - candidate_id
+        - source_handoff_id
+        - evidence_ids
+        - proposal
+        - validation
+      validation_status: "must be explicit"
+  output:
+    candidate_state: "review_required"
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+  invariant: "Candidate is a proposal, never an authorization."
