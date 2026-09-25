@@ -1,0 +1,87 @@
+semantic_handoff:
+  version: "0.1"
+  id: "SH-HO-20260925-001"
+  status: "ready"
+
+  project:
+    name: "Shirakami Project"
+    phase: "Phase 2"
+
+  source:
+    actor: "chatgpt"
+    timestamp: "2026-09-25"
+
+  objective: >
+    Establish a shared multi-agent coordination layer so that ChatGPT,
+    Codex, GitHub AI, and GitHub can operate from the same project state
+    without transferring human authority.
+
+  protocol:
+    applicable:
+      - "Local Repository Operation Protocol v0.1"
+      - "Shirakami Project Handoff Protocol"
+      - "一変更一検証"
+
+  evidence:
+    evidence_ids:
+      - "AGENT-COORDINATION-001"
+    provenance:
+      - "AGENT_COORDINATION.yaml"
+      - "SHIRAKAMI_STATE.yaml"
+      - "handoff/SEMANTIC_HANDOFF_TEMPLATE.yaml"
+
+  repository:
+    expected_state: >
+      Shared agent roles, authority boundaries, synchronization rules, and
+      Semantic Handoff conventions are explicitly represented in the
+      Shirakami-Project repository.
+    target_paths:
+      - "AGENT_COORDINATION.yaml"
+      - "SHIRAKAMI_STATE.yaml"
+      - "handoff/SEMANTIC_HANDOFF_TEMPLATE.yaml"
+    base_commit: "24d722b271708ff755f82670840bda69b770c499"
+
+  change:
+    requested: >
+      Use this handoff as the canonical context package for the next
+      repository-local implementation task. Codex should inspect the current
+      repository state before modifying anything and report proposed changes,
+      verification scope, and actual observations.
+    constraints:
+      - "Human Gate remains required."
+      - "execution_authorized remains false unless explicitly authorized by a human."
+      - "Do not silently change Protocol semantics."
+      - "Do not treat AI-generated interpretation as Evidence."
+    out_of_scope:
+      - "Automatic merge or publication."
+      - "Automatic transfer of human authority."
+      - "Unrelated repository cleanup."
+
+  verification:
+    rule: "一変更一検証"
+    procedure:
+      - "Read SHIRAKAMI_STATE.yaml."
+      - "Read AGENT_COORDINATION.yaml."
+      - "Read this Semantic Handoff."
+      - "Inspect repository state and identify the smallest next implementation change."
+      - "Run only the verification relevant to that change."
+    expected_observation: >
+      The receiving agent can reconstruct the task context and authority
+      boundary without relying on the preceding ChatGPT conversation.
+
+  unresolved_questions:
+    - "Which repository-local component should first consume this handoff automatically?"
+    - "Should SHIRAKAMI_STATE.yaml record active_handoff_id?"
+    - "Should Evidence IDs become machine-validated references?"
+
+  result:
+    status: "pending"
+    changed_paths: []
+    observed: []
+    deviations: []
+    verification_result: ""
+    commit: ""
+
+  human_gate:
+    required: true
+    decision: "pending"
