@@ -14,6 +14,8 @@ on:
       - "scripts/test_validate_codex_trace.py"
       - "scripts/record_codex_trace.py"
       - "scripts/test_record_codex_trace.py"
+      - "scripts/bind_codex_trace.py"
+      - "scripts/test_bind_codex_trace.py"
       - ".github/workflows/codex-handoff-consumer.yml"
   pull_request:
     paths:
@@ -46,3 +48,5 @@ jobs:
         run: pytest -q scripts/test_record_codex_result.py
       - name: Verify Semantic Handoff trace recorder
         run: pytest -q scripts/test_record_codex_trace.py
+      - name: Verify Codex trace commit binding
+        run: pytest -q scripts/test_bind_codex_trace.py
