@@ -8,7 +8,7 @@ from pathlib import Path
 import yaml
 
 
-def build_trace(document: dict, trace_id: str) -> dict:
+def build_trace(document: dict, trace_id: str, execution_id: str) -> dict:
     handoff = document.get("semantic_handoff")
     if not isinstance(handoff, dict):
         raise ValueError("invalid Semantic Handoff root")
@@ -17,11 +17,14 @@ def build_trace(document: dict, trace_id: str) -> dict:
     gate = handoff.get("human_gate", {})
     if gate.get("required") is not True:
         raise ValueError("human_gate.required must remain true")
+    if not execution_id:
+        raise ValueError("execution_id is required")
 
     return {
         "codex_traceability": {
             "version": "0.1",
             "trace_id": trace_id,
+            "execution_id": execution_id,
             "source_handoff_id": handoff["id"],
             "evidence_ids": list(handoff.get("evidence", {}).get("evidence_ids", [])),
             "result": {
@@ -47,10 +50,11 @@ def main() -> int:
     parser.add_argument("handoff", type=Path)
     parser.add_argument("-o", "--output", type=Path, required=True)
     parser.add_argument("--trace-id", required=True)
+    parser.add_argument("--execution-id", required=True)
     args = parser.parse_args()
 
     document = yaml.safe_load(args.handoff.read_text(encoding="utf-8"))
-    trace = build_trace(document or {}, args.trace_id)
+    trace = build_trace(document or {}, args.trace_id, args.execution_id)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         yaml.safe_dump(trace, allow_unicode=True, sort_keys=False),

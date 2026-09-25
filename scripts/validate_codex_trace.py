@@ -16,7 +16,7 @@ def validate(payload: dict) -> list[str]:
     if not isinstance(root, dict):
         return ["missing codex_traceability"]
 
-    for key in ("trace_id", "source_handoff_id"):
+    for key in ("trace_id", "execution_id", "source_handoff_id"):
         if not root.get(key):
             errors.append(f"{key} is required")
 
