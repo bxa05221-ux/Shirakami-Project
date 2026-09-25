@@ -1,0 +1,65 @@
+codex_execution_context:
+  version: "0.1"
+  purpose: >
+    Deterministically translate a ready Semantic Handoff into a local
+    repository execution context. This context is descriptive and does not
+    grant execution, publish, merge, or human authority.
+
+  source:
+    semantic_handoff_required: true
+    accepted_status:
+      - "ready"
+      - "in_progress"
+
+  required_fields:
+    - "semantic_handoff.id"
+    - "semantic_handoff.project.name"
+    - "semantic_handoff.project.phase"
+    - "semantic_handoff.objective"
+    - "semantic_handoff.protocol.applicable"
+    - "semantic_handoff.evidence.evidence_ids"
+    - "semantic_handoff.repository.expected_state"
+    - "semantic_handoff.repository.target_paths"
+    - "semantic_handoff.change.requested"
+    - "semantic_handoff.change.constraints"
+    - "semantic_handoff.change.out_of_scope"
+    - "semantic_handoff.verification.rule"
+    - "semantic_handoff.verification.procedure"
+    - "semantic_handoff.human_gate.required"
+
+  derived_context:
+    project: "semantic_handoff.project"
+    objective: "semantic_handoff.objective"
+    protocols: "semantic_handoff.protocol.applicable"
+    evidence_ids: "semantic_handoff.evidence.evidence_ids"
+    provenance: "semantic_handoff.evidence.provenance"
+    repository: "semantic_handoff.repository"
+    requested_change: "semantic_handoff.change.requested"
+    constraints: "semantic_handoff.change.constraints"
+    out_of_scope: "semantic_handoff.change.out_of_scope"
+    verification: "semantic_handoff.verification"
+    unresolved_questions: "semantic_handoff.unresolved_questions"
+
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+    rule: >
+      A generated execution context may guide inspection and implementation
+      within scope, but it must never infer authorization from handoff status,
+      Evidence IDs, protocol IDs, repository state, API input, or agent role.
+
+  validation:
+    fail_if_missing_required_field: true
+    fail_if_human_gate_required_is_false: true
+    fail_if_execution_authorized_is_true_without_explicit_human_decision: true
+    preserve_evidence_ids_verbatim: true
+    preserve_unresolved_questions: true
+
+  output:
+    deterministic: true
+    includes_source_handoff_id: true
+    includes_base_commit: true
+    includes_verification_scope: true
+    includes_authority_state: true
