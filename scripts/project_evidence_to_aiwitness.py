@@ -36,6 +36,7 @@ def build_witness(evidence_document: dict) -> dict:
             "trace_id": source.get("trace_id"),
             "execution_id": source.get("execution_id"),
             "provider": source["provider"],
+            "protocol_ids": list(source["protocol_ids"]),
             "input_evidence_ids": list(record["input_evidence_ids"]),
         },
         "observation": {
