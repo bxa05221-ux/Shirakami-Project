@@ -7,6 +7,7 @@ on:
       - "scripts/**"
       - "api/**"
       - "aiwitness/**"
+      - "runtime/**"
       - ".github/workflows/codex-handoff-consumer.yml"
   pull_request:
     paths:
