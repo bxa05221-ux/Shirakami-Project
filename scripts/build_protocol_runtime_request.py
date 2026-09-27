@@ -54,7 +54,7 @@ def main() -> int:
     result = build_protocol_runtime_request(document or {}, args.runtime_target)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(yaml.safe_dump(result, allow_unicode=True, sort_keys=False), encoding="utf-8")
-    print(f"Created runtime request: {result['runtime_request']['request_id']}")
+    print(f"Created runtime request: {result['runtime_request']['handoff_id']}")
     return 0
 
 if __name__ == "__main__":
