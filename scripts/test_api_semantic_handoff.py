@@ -30,6 +30,7 @@ def test_api_get_semantic_handoff_and_http_shape():
     assert body["execution_id"] == "EXEC-001"
     assert body["activity_id"] == "ACTIVITY-001"
     assert body["evidence_ids"] == ["EVIDENCE-001"]
+    assert body["protocol_ids"] == ["PROTOCOL-001"]
     assert body["execution_authorized"] is False
     assert body["publish_authorized"] is False
     assert body["merge_authorized"] is False
