@@ -24,6 +24,22 @@ class FakeProvider(ProviderAdapter):
         )
 
 
+class AlternateProvider(ProviderAdapter):
+    @property
+    def provider_name(self):
+        return "alternate"
+
+    def execute(self, request):
+        return RuntimeResult(
+            handoff_id=request.handoff_id,
+            trace_id=request.trace_id,
+            execution_id=request.execution_id,
+            provider=self.provider_name,
+            output={"ok": False, "provider_specific": True},
+            evidence_ids=request.evidence_ids,
+        )
+
+
 def request():
     return RuntimeRequest(
         handoff_id="SH-001",
@@ -44,6 +60,25 @@ def test_provider_is_replaceable():
     assert result.provider == "fake"
     assert result.handoff_id == "SH-001"
     assert result.evidence_ids == ("E-001",)
+
+
+def test_provider_swap_preserves_lineage_and_authority():
+    providers = [FakeProvider(), AlternateProvider()]
+    results = [provider.execute(request()) for provider in providers]
+
+    assert [result.provider for result in results] == ["fake", "alternate"]
+    assert [(result.handoff_id, result.trace_id, result.execution_id, result.evidence_ids)
+            for result in results] == [
+                ("SH-001", "TR-001", "EX-001", ("E-001",)),
+                ("SH-001", "TR-001", "EX-001", ("E-001",)),
+            ]
+
+    for provider, result in zip(providers, results):
+        provider.validate_result(result)
+        assert result.execution_authorized is False
+        assert result.publish_authorized is False
+        assert result.merge_authorized is False
+        assert result.human_gate_required is True
 
 
 def test_provider_result_has_no_authority():
