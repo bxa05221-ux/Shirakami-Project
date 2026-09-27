@@ -13,14 +13,18 @@ api_boundary:
       - protocol_ids
       - evidence_ids
       - verification_scope
+      - execution_id
     optional:
       - trace_id
+      - activity_id
       - input_data
       - runtime_target
 
   identity:
     handoff_id: "string"
     trace_id: "string | null"
+    execution_id: "string | null"
+    activity_id: "string | null"
     protocol_ids: "list[string]"
     evidence_ids: "list[string]"
 
@@ -38,6 +42,8 @@ api_boundary:
       - handoff_id
       - trace_id
       - evidence_ids
+      - execution_id
+      - activity_id
     must_not_infer:
       - execution_authorized
       - publish_authorized
