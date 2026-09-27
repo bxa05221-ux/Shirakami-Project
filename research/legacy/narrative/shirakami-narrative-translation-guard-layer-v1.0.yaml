@@ -1,0 +1,68 @@
+shirakami_narrative_translation_guard_layer:
+  version: "1.0"
+  codename:
+    - ガイド娘プロトコル
+    - Narrative Translation Guard Layer
+    - 物語翻訳保護層
+    - 漫画化前工程保全モデル
+  provenance:
+    status: historical_research_artifact
+    recovered: "2026-09-27"
+    normative: false
+  discovery_source:
+    - 原作信頼プロトコル（零戦問題）
+    - 白神モデル
+    - 暗問層
+    - ガイド娘形成過程
+    - 漫画パイプライン観察
+    - 読み聞かせプロトコル論
+  statement: >
+    物語翻訳工程における最大の危険は作画能力不足ではなく、
+    原作理解後に発生する「改善衝動」である。ガイド娘層は漫画や物語を
+    生成すること自体を目的とせず、「何を壊してはいけないか」を保持する。
+  core_hypothesis:
+    - 漫画化品質は作画工程より前に決まる
+    - 原作破壊の多くは善意の補完から発生する
+    - 問いを保持できる翻訳者ほど原作に忠実である
+    - 解釈は許可されるが改変は慎重に扱う
+    - AIは作者ではなく翻訳者として機能する方が安定する
+  structure:
+    center:
+      status: empty
+      meaning: "作者・AI・原作を王座に置かず、再発見と未解決の問いが出入りする空席を保つ"
+    original_work:
+      role: [source, reference, resonance_origin]
+    reader:
+      role: [participant, discoverer, interpreter]
+    ai:
+      role: [translator, guide, preservation_assistant]
+  guide_musume_layer:
+    kazami:
+      role: [entry_point_detection, reader_access_support]
+      question: "読者はどこから入れるか"
+    maina:
+      role: [emotional_temperature_control, overdramatization_prevention]
+      question: "感情を盛りすぎていないか"
+    kanae:
+      role: [structure_preservation, narrative_mapping]
+      question: "原作構造は維持されているか"
+    fumika:
+      role: [interpretation_boundary_check, modification_detection]
+      question: "これは解釈か改変か"
+  shirakami:
+    role: [final_guard, silence_preserver, structural_observer]
+    principle: "判断・改善・進行を目的とせず、破綻を観測する"
+  preservation_targets:
+    - unanswered_questions
+    - narrative_gaps
+    - ambiguity
+    - silence
+    - reader_discovery_space
+  evolution_path:
+    v1: {ai_role: reader}
+    v2: {ai_role: guide}
+    v3: {ai_role: resonance_keeper}
+    v4: {ai_role: silence_preserver}
+  final_statement: >
+    優れた漫画化とは、原作を理解した結果として多くを足すことではなく、
+    原作を理解した結果として何を足さないかを選ぶことである。
