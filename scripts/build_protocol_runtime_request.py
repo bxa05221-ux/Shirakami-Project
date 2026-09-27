@@ -29,7 +29,7 @@ def build_protocol_runtime_request(protocol_document: dict, runtime_target: str 
 
     return {"runtime_request": {
         "version": "0.1",
-        "request_id": f"RUNTIME-FROM-{protocol['protocol_id']}",
+        "handoff_id": f"RUNTIME-FROM-{protocol['protocol_id']}",
         "protocol_ids": [protocol["protocol_id"]],
         "evidence_ids": list(protocol["evidence_ids"]),
         "proposal": protocol.get("proposal", {}),
