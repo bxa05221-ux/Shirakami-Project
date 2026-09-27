@@ -14,6 +14,15 @@ FALSE_AUTHORITY = (
     "merge_authorized",
 )
 
+TRACEABILITY_FIELDS = (
+    "handoff_id",
+    "trace_id",
+    "evidence_ids",
+    "execution_id",
+    "activity_id",
+    "protocol_ids",
+)
+
 
 def validate(contract: dict) -> dict:
     root = contract.get("api_boundary")
@@ -31,6 +40,7 @@ def validate(contract: dict) -> dict:
         "protocol_ids",
         "evidence_ids",
         "verification_scope",
+        "execution_id",
     }
     if set(required) != expected_required:
         raise ValueError("required input fields do not match contract")
@@ -43,11 +53,7 @@ def validate(contract: dict) -> dict:
         raise ValueError("human_gate_required must be true")
 
     output = root.get("output", {})
-    if set(output.get("must_preserve", [])) != {
-        "handoff_id",
-        "trace_id",
-        "evidence_ids",
-    }:
+    if set(output.get("must_preserve", [])) != set(TRACEABILITY_FIELDS):
         raise ValueError("traceability preservation contract changed")
 
     forbidden = set(output.get("must_not_infer", []))

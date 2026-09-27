@@ -7,9 +7,15 @@ from execute_runtime_request import execute
 
 def request():
     return {"runtime_request": {
-        "request_id": "RUNTIME-001", "protocol_ids": ["PROTOCOL-001"],
+        "handoff_id": "RUNTIME-001", "trace_id": "TRACE-001", "execution_id": "EXEC-001", "protocol_ids": ["PROTOCOL-001"],
         "evidence_ids": ["EVIDENCE-001"], "proposal": {"change": "proposal"},
-        "runtime_target": "fixture"
+        "runtime_target": "fixture",
+        "authority": {
+            "execution_authorized": False,
+            "publish_authorized": False,
+            "merge_authorized": False,
+            "human_gate_required": True,
+        },
     }}
 
 
@@ -17,6 +23,7 @@ def test_runtime_request_produces_traceable_non_authoritative_result():
     result = execute(request(), {"answer": "ok"})["runtime_result"]
     assert result["handoff_id"] == "RUNTIME-001"
     assert result["provider"] == "fixture"
+    assert result["protocol_ids"] == ["PROTOCOL-001"]
     assert result["evidence_ids"] == ["EVIDENCE-001"]
     assert result["output"] == {"answer": "ok"}
     assert result["authority"] == {
@@ -32,3 +39,35 @@ def test_runtime_request_requires_evidence():
     r["runtime_request"]["evidence_ids"] = []
     with pytest.raises(ValueError, match="evidence_ids"):
         execute(r)
+
+
+def test_runtime_request_rejects_authority_escalation():
+    r = request()
+    r["runtime_request"]["authority"]["publish_authorized"] = True
+    with pytest.raises(ValueError, match="publish_authorized"):
+        execute(r)
+
+
+def test_runtime_execution_closes_into_evidence_and_aiwitness():
+    from build_evidence_record import build_evidence
+    from project_evidence_to_aiwitness import build_witness
+
+    runtime = execute(request(), {"answer": "observed"})["runtime_result"]
+    evidence = build_evidence({"runtime_result": runtime})["evidence_record"]
+    witness = build_witness({"evidence_record": evidence})["aiwitness"]
+
+    assert runtime["trace_id"] == "TRACE-001"
+    assert runtime["execution_id"] == "EXEC-001"
+    assert evidence["source"]["handoff_id"] == runtime["handoff_id"]
+    assert evidence["source"]["trace_id"] == runtime["trace_id"]
+    assert evidence["source"]["execution_id"] == runtime["execution_id"]
+    assert evidence["source"]["provider"] == runtime["provider"]
+    assert evidence["source"]["protocol_ids"] == runtime["protocol_ids"]
+    assert witness["provenance"]["evidence_id"] == evidence["evidence_id"]
+    assert witness["provenance"]["handoff_id"] == runtime["handoff_id"]
+    assert witness["provenance"]["provider"] == runtime["provider"]
+    assert witness["provenance"]["protocol_ids"] == runtime["protocol_ids"]
+    assert witness["authority"]["execution_authorized"] is False
+    assert witness["authority"]["publish_authorized"] is False
+    assert witness["authority"]["merge_authorized"] is False
+    assert witness["authority"]["human_gate_required"] is True

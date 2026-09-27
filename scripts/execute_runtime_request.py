@@ -27,6 +27,7 @@ class FixtureProvider(ProviderAdapter):
             execution_id=request.execution_id,
             provider=self.provider_name,
             output=self._output,
+            protocol_ids=request.protocol_ids,
             evidence_ids=request.evidence_ids,
         )
         self.validate_result(result)
@@ -37,14 +38,26 @@ def execute(document: dict, output: object = None) -> dict:
     request = document.get("runtime_request")
     if not isinstance(request, dict):
         raise ValueError("missing runtime_request")
-    if not request.get("request_id"):
-        raise ValueError("request_id is required")
+    handoff_id = request.get("handoff_id") or request.get("request_id")
+    if not handoff_id:
+        raise ValueError("handoff_id is required")
+    protocol_ids = request.get("protocol_ids") or []
+    if not protocol_ids:
+        raise ValueError("protocol_ids are required")
     evidence_ids = request.get("evidence_ids") or []
     if not evidence_ids:
         raise ValueError("evidence_ids are required")
+    authority = request.get("authority")
+    if not isinstance(authority, dict):
+        raise ValueError("authority is required")
+    for key in ("execution_authorized", "publish_authorized", "merge_authorized"):
+        if authority.get(key) is not False:
+            raise ValueError(f"{key} must remain false")
+    if authority.get("human_gate_required") is not True:
+        raise ValueError("human_gate_required must remain true")
     provider = FixtureProvider(output if output is not None else {"status": "fixture"})
     runtime_request = RuntimeRequest(
-        handoff_id=request.get("request_id"),
+        handoff_id=handoff_id,
         trace_id=request.get("trace_id"),
         execution_id=request.get("execution_id"),
         project=request.get("project", "shirakami"),
@@ -62,6 +75,7 @@ def execute(document: dict, output: object = None) -> dict:
         "execution_id": result.execution_id,
         "provider": result.provider,
         "output": result.output,
+        "protocol_ids": list(result.protocol_ids),
         "evidence_ids": list(result.evidence_ids),
         "authority": {
             "execution_authorized": result.execution_authorized,

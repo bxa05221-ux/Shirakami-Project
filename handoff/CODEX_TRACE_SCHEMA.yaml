@@ -1,6 +1,8 @@
 codex_traceability:
   version: "0.1"
   trace_id: ""
+  execution_id: ""
+  activity_id: null
   source_handoff_id: ""
   evidence_ids: []
   result:
@@ -22,6 +24,8 @@ codex_traceability:
 
   rules:
     - "source_handoff_id must identify the originating Semantic Handoff."
+    - "trace_id and execution_id identify lineage only; they never grant authority."
+    - "activity_id identifies the originating external Agent Activity when available; it never grants authority."
     - "evidence_ids must be preserved from the originating Handoff or explicitly recorded as newly observed."
     - "A commit identifies repository history only; it never grants authority."
     - "Verification results describe observed verification only; they never grant authority."

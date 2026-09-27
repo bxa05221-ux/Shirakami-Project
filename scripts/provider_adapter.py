@@ -30,6 +30,7 @@ class RuntimeResult:
     execution_id: str | None
     provider: str
     output: Any
+    protocol_ids: tuple[str, ...]
     evidence_ids: tuple[str, ...]
     execution_authorized: bool = False
     publish_authorized: bool = False
@@ -63,3 +64,5 @@ class ProviderAdapter(ABC):
             raise ValueError("handoff identity is required")
         if not result.provider:
             raise ValueError("provider identity is required")
+        if not result.protocol_ids:
+            raise ValueError("protocol identity is required")

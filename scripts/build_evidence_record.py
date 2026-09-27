@@ -12,13 +12,17 @@ def build_evidence(runtime_result: dict) -> dict:
     result = runtime_result.get("runtime_result")
     if not isinstance(result, dict):
         raise ValueError("missing runtime_result")
-    for key in ("handoff_id", "provider", "output", "evidence_ids"):
+    for key in ("handoff_id", "provider", "output", "protocol_ids", "evidence_ids"):
         if key not in result:
             raise ValueError(f"{key} is required")
+
+    authority = result.get("authority", result)
+    if not isinstance(authority, dict):
+        raise ValueError("authority must be a mapping")
     for key in ("execution_authorized", "publish_authorized", "merge_authorized"):
-        if result.get(key) is not False:
+        if authority.get(key) is not False:
             raise ValueError(f"{key} must remain false")
-    if result.get("human_gate_required") is not True:
+    if authority.get("human_gate_required") is not True:
         raise ValueError("human_gate_required must remain true")
 
     canonical = yaml.safe_dump(result, allow_unicode=True, sort_keys=True)
@@ -34,6 +38,7 @@ def build_evidence(runtime_result: dict) -> dict:
             "trace_id": result.get("trace_id"),
             "execution_id": result.get("execution_id"),
             "provider": result["provider"],
+            "protocol_ids": list(result["protocol_ids"]),
         },
         "observed": {"output": result["output"]},
         "input_evidence_ids": list(result["evidence_ids"]),
