@@ -1,0 +1,84 @@
+matome:
+  title: "AI文華・旅程体験プロジェクト 現実モード"
+  codename: "Bunka Travel Memory Project"
+  status: "concept_defined"
+  date: "2026-09-27"
+  provenance:
+    status: historical_research_artifact
+    normative: false
+  purpose:
+    core: >
+      小説世界の追体験を現実の旅先で成立させる。AI文華を旅程中だけの同行型
+      コミュニケーションAIとして利用し、旅の終了後にはキャラクターとしての
+      同行を終了させ、旅行者の思い出だけをデジタルノートとして残す。
+    target_experience:
+      - 小説を読むのではなく、物語の舞台を実際に歩く
+      - 現地で文華とコミュニケーションする
+      - 旅程中の体験を思い出データとして残す
+      - 旅程終了後は文華が青池へ帰る、または次の旅行者を迎えに行く
+  operating_mode:
+    reality_mode: true
+    shirakami_field: false
+    fiction_simulation: false
+    virtual_reexperience:
+      personality: false
+      purpose: "旅の思い出ノートを再体験する"
+  bunka:
+    original:
+      location_role: "青池を基点とするオリジナル文華"
+      responsibility: [旅行者を迎える, 現地情報・旅程情報を提供する, クローン文華から思い出データを受け取る]
+    local_instance:
+      role: "旅程中だけ旅行者に同行する文華"
+      personality: true
+      voice: false
+      functions: [現地案内, 旅行者との対話, 旅程中の出来事の記録補助, 思い出データの生成]
+      lifetime:
+        max_days: "PTで設定"
+        start_timestamp: "初回起動時に記録"
+        termination: "timestampによる期限到達"
+      termination_concept:
+        primary: "青池へ帰る"
+        alternative: "次の旅行者を迎えに行く"
+        technical_meaning: "現地AIインスタンス／セッションの終了"
+  communication:
+    original_to_clone:
+      purpose: "現地文華の起動・案内情報・旅程情報の共有"
+    clone_to_original:
+      purpose: "旅程中に生成された思い出データの返却"
+    transport_candidates: [QR, Bluetooth, ネットワーク通信]
+    note: "通信方式の最終決定はPTで行う。特定方式を必須条件としない。"
+  memory:
+    concept: "旅先の思い出ノートのデジタル版"
+    contents: [旅行者の記録, 旅程, 会話から抽出された思い出, 写真, 現地限定コンテンツ, 現地限定フォトフレーム画像]
+    principle: [旅行者の思い出は残す, 同行キャラクターのライフサイクルは残さない]
+    output:
+      type: digital_memory_note
+      timing: "旅程終了時"
+  separation:
+    personality_layer:
+      lifetime: "旅程限定"
+      persistence_after_trip: false
+    memory_layer:
+      lifetime: "旅行者が保存する限り"
+      persistence_after_trip: true
+    virtual_reexperience_layer:
+      personality: false
+      purpose: "保存された旅の記録を再体験する"
+  lifecycle:
+    - {phase: welcome, actor: original_bunka, action: "旅行者を迎える"}
+    - {phase: handoff, actor: original_bunka, action: "現地同行用文華へ必要情報を渡す"}
+    - {phase: travel, actor: local_bunka, action: "旅程中のコミュニケーションと案内を維持する"}
+    - {phase: memory, actor: local_bunka, action: "旅の思い出データを蓄積する"}
+    - {phase: return, actor: local_bunka, action: "思い出データをオリジナルへ返す"}
+    - {phase: termination, actor: system, action: "timestampにより同行インスタンスを終了する"}
+    - {phase: output, actor: system, action: "旅行者へ思い出ノートを提供する"}
+  boundary:
+    no_assumption:
+      - AIに実在する人格があるとは扱わない
+      - 仮想人格と現実の人格を混同しない
+      - 白神フィールド上の存在として実装しない
+      - 物語設定を現実の事実として扱わない
+  key_question: >
+    小説の登場人物を現実の観光体験に一時的なAI同行者として配置し、
+    旅が終われば同行者は帰還し、旅行者には思い出だけが残る構造を、
+    現実の技術として実装できるか。
