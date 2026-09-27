@@ -80,3 +80,5 @@ jobs:
         run: pytest -q scripts/test_reobservation.py
       - name: Verify re-observation lineage boundary
         run: pytest -q scripts/test_reobservation_lineage.py
+      - name: Verify Conflict / Deadman / Life boundary
+        run: pytest -q scripts/test_conflict_boundary.py
