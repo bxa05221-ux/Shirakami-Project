@@ -88,3 +88,5 @@ jobs:
         run: pytest -q scripts/test_symbolic_context_bridge.py
       - name: Verify Symbolic Recursion → Re-observation lineage
         run: pytest -q scripts/test_symbolic_reobservation.py
+      - name: Verify Symbolic Interpretation / Evidence boundary
+        run: pytest -q scripts/test_symbolic_evidence_boundary.py
