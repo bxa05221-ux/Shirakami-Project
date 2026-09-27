@@ -1,0 +1,72 @@
+matome:
+  title: "共通モデル構築・プロジェクト的目"
+  codename: "Common Model Construction"
+  status: "active"
+  date: "2026-09-27"
+  purpose:
+    core: >
+      白神モデルを基盤として、AI・人間・プロジェクト・外部環境の間で
+      Context、Evidence、Protocol、Runtime、Human Gateを接続し、
+      再利用可能な共通モデルを構築する。
+    secondary: >
+      個別プロジェクトで生じた知見や実装を、他のプロジェクトへ安全に
+      移植・検証できる共通構造として整理する。
+  governing_principle:
+    - AIは判断主体ではなく、判断を支援するシミュレータである
+    - AIが動いても、決定権は動かない
+    - ContextはAI内部に沈殿させず、外部化・追跡可能にする
+    - Evidenceと推論を混同しない
+    - ProtocolはAIモデルから独立させる
+    - Runtimeは交換可能とする
+    - Human Gateを最終的な判断境界とする
+    - 白神モデルは特定のAIモデルへの依存を要求しない
+    - 白神モデルは人間の判断を置き換えない
+  architecture:
+    conceptual_flow: [Landscape, Context, Protocol, Evidence, Runtime, Adapter, Backend, Human Gate, Verification]
+    core_loop: [Observation, Evidence, Analysis, Protocol, Runtime, Verification, Evidence]
+    boundary:
+      ai: {role: "simulation / analysis / generation", authority: false}
+      human: {role: "interpretation / decision / approval", authority: true}
+      protocol: {role: "semantic coordination", authority: false}
+      evidence: {role: "traceability / provenance", authority: false}
+  project_role:
+    name: "共通モデル構築"
+    function: "個別の白神プロジェクトを横断して、共通する構造・境界・プロトコル・検証方法を抽出し、再利用可能なモデルへ統合する。"
+    position:
+      upstream: "各個別プロジェクト"
+      downstream: "白神モデル / Shirakami-Project"
+      bridge: "Semantic Handoff"
+  handoff:
+    unit: "Matome YAML"
+    purpose: [プロジェクト状態の圧縮, Contextの受け渡し, Evidence境界の維持, レビュアー間の意味共有, 別AI・別Project・別Runtimeへの移植]
+    rule: "Matome YAMLは結論そのものではなく、次の実行主体が文脈を再構成するためのhandoff unitとする。"
+  semantic_handoff:
+    enabled: true
+    principle: "意味・根拠・状態・境界・未確定事項を保持したまま次の実行主体へ引き渡す。"
+    required_elements: [Context, Evidence, Evidence ID, Observation, Candidate, Validation, Human Gate, Provenance]
+  evidence:
+    rule: [EvidenceはObservationと区別する, EvidenceはCandidateと区別する, CandidateはDecisionと区別する, Evidence IDを安定識別子として扱う]
+    authority:
+      evidence_is_decision: false
+  reviewer_protocol:
+    purpose: "複数のレビュアー・AI・Project間で、同じ対象を異なる視点から検討しながら、判断権限を統合しない。"
+    input: [Reviewer Matome YAML, Evidence, Project Context]
+    output: [Observation, Candidate, Structural Validation, Unresolved Issues]
+    final_authority: "Human Gate"
+  thread_rpg:
+    status: "available_as_contextual_renderer"
+    role: "共通モデル上のContextや判断候補を、物語的・対話的な形式でシミュレーションするためのRenderer。"
+    principle: "キャラクターや物語上の判断を、現実世界の決定そのものと混同しない。"
+    reference_phrase: ["ヒンメルだったらそうする"]
+  aiwitness:
+    role: "AIやRuntimeが何を実行したかを記録し、実行事実と権限・判断・承認を分離する。"
+    boundary:
+      execution_record: true
+      decision_authority: false
+      approval_authority: false
+  implementation:
+    current_focus: [Semantic Handoff, Evidence ID Boundary, AIwitness Boundary, Reviewer Protocol, Project間Context共有, Matome YAMLによる状態移送]
+  non_goals: [AIによる最終意思決定, 特定LLMへの固定, AIの権限拡大, Evidenceによる自動的な正当化, モデル性能そのものを共通モデルの目的にすること]
+  human_gate:
+    final_authority: true
+    statement: "AIは候補・分析・シミュレーション・記録を提供できるが、現実世界における最終判断と責任は人間に残す。"
