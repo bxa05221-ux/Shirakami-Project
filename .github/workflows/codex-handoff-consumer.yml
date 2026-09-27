@@ -78,3 +78,5 @@ jobs:
         run: pytest -q scripts/test_context_transition.py
       - name: Verify re-observation queue boundary
         run: pytest -q scripts/test_reobservation.py
+      - name: Verify re-observation lineage boundary
+        run: pytest -q scripts/test_reobservation_lineage.py
