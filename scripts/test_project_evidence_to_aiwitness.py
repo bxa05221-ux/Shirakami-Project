@@ -8,7 +8,7 @@ from project_evidence_to_aiwitness import build_witness
 def evidence():
     return {"evidence_record": {
         "version": "0.1", "evidence_id": "EVIDENCE-001", "kind": "runtime_observation",
-        "source": {"handoff_id": "SH-001", "trace_id": "TR-001", "execution_id": "EX-001", "provider": "fake"},
+        "source": {"handoff_id": "SH-001", "trace_id": "TR-001", "execution_id": "EX-001", "provider": "fake", "protocol_ids": ["P-001"]},
         "observed": {"output": {"ok": True}}, "input_evidence_ids": ["E-000"],
         "authority": {"execution_authorized": False, "publish_authorized": False, "merge_authorized": False, "human_gate_required": True},
     }}
@@ -19,6 +19,7 @@ def test_evidence_identity_reaches_aiwitness():
     assert witness["provenance"]["evidence_id"] == "EVIDENCE-001"
     assert witness["provenance"]["trace_id"] == "TR-001"
     assert witness["provenance"]["execution_id"] == "EX-001"
+    assert witness["provenance"]["protocol_ids"] == ["P-001"]
     assert witness["observation"]["output"] == {"ok": True}
 
 
