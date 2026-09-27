@@ -28,7 +28,7 @@ def test_symbolic_trace_is_bound_to_reobservation_lineage():
     )
 
     assert lineage.observations_for("reobs-01") == ("obs-09",)
-    assert symbolic.items()[0].symbol_id == "symbol-home"
+    assert symbolic.traces()[0].symbol_id == "symbol-home"
     assert record.symbol_id == "symbol-home"
     assert record.interpretations == ("safety", "constraint", "belonging")
 
