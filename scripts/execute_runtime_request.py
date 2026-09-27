@@ -43,6 +43,14 @@ def execute(document: dict, output: object = None) -> dict:
     evidence_ids = request.get("evidence_ids") or []
     if not evidence_ids:
         raise ValueError("evidence_ids are required")
+    authority = request.get("authority")
+    if not isinstance(authority, dict):
+        raise ValueError("authority is required")
+    for key in ("execution_authorized", "publish_authorized", "merge_authorized"):
+        if authority.get(key) is not False:
+            raise ValueError(f"{key} must remain false")
+    if authority.get("human_gate_required") is not True:
+        raise ValueError("human_gate_required must remain true")
     provider = FixtureProvider(output if output is not None else {"status": "fixture"})
     runtime_request = RuntimeRequest(
         handoff_id=handoff_id,
