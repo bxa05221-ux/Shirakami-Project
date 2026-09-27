@@ -10,9 +10,10 @@ def test_trace_is_generated_from_handoff():
             "human_gate": {"required": True, "decision": "pending"},
         }
     }
-    trace = build_trace(handoff, "TRACE-001", "EXEC-001")["codex_traceability"]
+    trace = build_trace(handoff, "TRACE-001", "EXEC-001", "ACTIVITY-001")["codex_traceability"]
     assert trace["trace_id"] == "TRACE-001"
     assert trace["execution_id"] == "EXEC-001"
+    assert trace["activity_id"] == "ACTIVITY-001"
     assert trace["source_handoff_id"] == "SH-HO-20260925-001"
     assert trace["evidence_ids"] == ["AGENT-COORDINATION-001"]
     assert trace["result"]["status"] == "pending"
