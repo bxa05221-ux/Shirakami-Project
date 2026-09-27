@@ -38,11 +38,11 @@ def test_real_evidence_id_reaches_handoff_and_aiwitness():
         protocol_ids=["PROTOCOL-001"],
         verification_scope="lineage",
     )
-    witness = build_witness({"codex_traceability": {
-        **trace["codex_traceability"],
-        "verification": {"status": "passed", "tests": ["evidence-lineage"]},
-    }})["aiwitness"]
+    witness = build_witness({"evidence_record": evidence})["aiwitness"]
     assert evidence["evidence_id"] in handoff.evidence_ids
-    assert witness["provenance"]["evidence_ids"] == handoff.evidence_ids
+    assert witness["provenance"]["evidence_id"] == evidence["evidence_id"]
+    assert witness["provenance"]["evidence_id"] in handoff.evidence_ids
+    assert witness["provenance"]["trace_id"] == handoff.trace_id
+    assert witness["provenance"]["execution_id"] == handoff.execution_id
     assert handoff.execution_authorized is False
     assert witness["authority"]["merge_authorized"] is False
