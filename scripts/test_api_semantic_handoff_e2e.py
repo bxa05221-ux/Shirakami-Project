@@ -59,3 +59,67 @@ def test_http_boundary_preserves_lineage_and_authority():
     assert body["merge_authorized"] is False
     assert body["human_gate_required"] is True
     assert body["decision_authority"] is False
+
+def test_provider_swap_preserves_evidence_and_aiwitness_lineage():
+    runtime_results = [
+        {
+            "runtime_result": {
+                "handoff_id": "SH-HO-SWAP-001",
+                "trace_id": "TRACE-SWAP-001",
+                "execution_id": "EXEC-SWAP-001",
+                "provider": "provider-a",
+                "output": {"provider": "a", "observed": True},
+                "evidence_ids": ["EVIDENCE-INPUT-001"],
+                "execution_authorized": False,
+                "publish_authorized": False,
+                "merge_authorized": False,
+                "human_gate_required": True,
+            }
+        },
+        {
+            "runtime_result": {
+                "handoff_id": "SH-HO-SWAP-001",
+                "trace_id": "TRACE-SWAP-001",
+                "execution_id": "EXEC-SWAP-001",
+                "provider": "provider-b",
+                "output": {"provider": "b", "observed": True},
+                "evidence_ids": ["EVIDENCE-INPUT-001"],
+                "execution_authorized": False,
+                "publish_authorized": False,
+                "merge_authorized": False,
+                "human_gate_required": True,
+            }
+        },
+    ]
+
+    records = [build_evidence(result)["evidence_record"] for result in runtime_results]
+    witnesses = [
+        build_witness({"evidence_record": record})["aiwitness"]
+        for record in records
+    ]
+
+    assert [record["source"]["provider"] for record in records] == ["provider-a", "provider-b"]
+    assert [
+        (record["source"]["handoff_id"], record["source"]["trace_id"],
+         record["source"]["execution_id"], record["input_evidence_ids"])
+        for record in records
+    ] == [
+        ("SH-HO-SWAP-001", "TRACE-SWAP-001", "EXEC-SWAP-001", ["EVIDENCE-INPUT-001"]),
+        ("SH-HO-SWAP-001", "TRACE-SWAP-001", "EXEC-SWAP-001", ["EVIDENCE-INPUT-001"]),
+    ]
+    assert [
+        (witness["provenance"]["handoff_id"], witness["provenance"]["trace_id"],
+         witness["provenance"]["execution_id"], witness["provenance"]["provider"],
+         witness["provenance"]["input_evidence_ids"])
+        for witness in witnesses
+    ] == [
+        ("SH-HO-SWAP-001", "TRACE-SWAP-001", "EXEC-SWAP-001", "provider-a", ["EVIDENCE-INPUT-001"]),
+        ("SH-HO-SWAP-001", "TRACE-SWAP-001", "EXEC-SWAP-001", "provider-b", ["EVIDENCE-INPUT-001"]),
+    ]
+
+    for record, witness in zip(records, witnesses):
+        assert witness["provenance"]["evidence_id"] == record["evidence_id"]
+        assert witness["authority"]["execution_authorized"] is False
+        assert witness["authority"]["publish_authorized"] is False
+        assert witness["authority"]["merge_authorized"] is False
+        assert witness["authority"]["human_gate_required"] is True
