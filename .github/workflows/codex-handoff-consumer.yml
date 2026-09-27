@@ -82,3 +82,5 @@ jobs:
         run: pytest -q scripts/test_reobservation_lineage.py
       - name: Verify Conflict / Deadman / Life boundary
         run: pytest -q scripts/test_conflict_boundary.py
+      - name: Verify Symbolic Recursion / Context boundary
+        run: pytest -q scripts/test_symbolic_recursion.py
