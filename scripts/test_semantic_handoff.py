@@ -31,6 +31,7 @@ def test_semantic_handoff_preserves_lineage():
     assert handoff.execution_id == "EXEC-001"
     assert handoff.activity_id == "ACTIVITY-001"
     assert handoff.evidence_ids == ("EVIDENCE-001", "EVIDENCE-002")
+    assert handoff.protocol_ids == ("PROTOCOL-001",)
 
 
 def test_semantic_handoff_has_no_authority():
