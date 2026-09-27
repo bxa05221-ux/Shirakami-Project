@@ -86,3 +86,5 @@ jobs:
         run: pytest -q scripts/test_symbolic_recursion.py
       - name: Verify Symbolic Recursion → Context Transition bridge
         run: pytest -q scripts/test_symbolic_context_bridge.py
+      - name: Verify Symbolic Recursion → Re-observation lineage
+        run: pytest -q scripts/test_symbolic_reobservation.py
