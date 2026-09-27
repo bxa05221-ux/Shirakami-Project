@@ -7,7 +7,7 @@ from execute_runtime_request import execute
 
 def request():
     return {"runtime_request": {
-        "handoff_id": "RUNTIME-001", "protocol_ids": ["PROTOCOL-001"],
+        "handoff_id": "RUNTIME-001", "trace_id": "TRACE-001", "execution_id": "EXEC-001", "protocol_ids": ["PROTOCOL-001"],
         "evidence_ids": ["EVIDENCE-001"], "proposal": {"change": "proposal"},
         "runtime_target": "fixture",
         "authority": {
@@ -55,7 +55,11 @@ def test_runtime_execution_closes_into_evidence_and_aiwitness():
     evidence = build_evidence({"runtime_result": runtime})["evidence_record"]
     witness = build_witness({"evidence_record": evidence})["aiwitness"]
 
+    assert runtime["trace_id"] == "TRACE-001"
+    assert runtime["execution_id"] == "EXEC-001"
     assert evidence["source"]["handoff_id"] == runtime["handoff_id"]
+    assert evidence["source"]["trace_id"] == runtime["trace_id"]
+    assert evidence["source"]["execution_id"] == runtime["execution_id"]
     assert evidence["source"]["provider"] == runtime["provider"]
     assert witness["provenance"]["evidence_id"] == evidence["evidence_id"]
     assert witness["provenance"]["handoff_id"] == runtime["handoff_id"]
