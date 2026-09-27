@@ -17,7 +17,7 @@ def protocol():
 
 def test_protocol_becomes_runtime_request_without_execution_authority():
     request = build_protocol_runtime_request(protocol(), "provider-neutral")["runtime_request"]
-    assert request["request_id"] == "RUNTIME-FROM-PROTOCOL-001"
+    assert request["handoff_id"] == "RUNTIME-FROM-PROTOCOL-001"
     assert request["protocol_ids"] == ["PROTOCOL-001"]
     assert request["evidence_ids"] == ["EVIDENCE-001"]
     assert request["runtime_target"] == "provider-neutral"
