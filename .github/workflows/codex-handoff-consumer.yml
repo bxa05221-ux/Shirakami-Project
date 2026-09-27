@@ -84,3 +84,5 @@ jobs:
         run: pytest -q scripts/test_conflict_boundary.py
       - name: Verify Symbolic Recursion / Context boundary
         run: pytest -q scripts/test_symbolic_recursion.py
+      - name: Verify Symbolic Recursion → Context Transition bridge
+        run: pytest -q scripts/test_symbolic_context_bridge.py
