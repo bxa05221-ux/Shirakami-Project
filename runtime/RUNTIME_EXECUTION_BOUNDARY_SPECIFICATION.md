@@ -40,6 +40,7 @@ A provider MUST return a RuntimeResult that preserves:
 - `execution_id`
 - provider identity
 - output
+- `protocol_ids`
 - `evidence_ids`
 
 Provider identity MUST NOT become decision authority.
