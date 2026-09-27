@@ -7,9 +7,15 @@ from execute_runtime_request import execute
 
 def request():
     return {"runtime_request": {
-        "request_id": "RUNTIME-001", "protocol_ids": ["PROTOCOL-001"],
+        "handoff_id": "RUNTIME-001", "protocol_ids": ["PROTOCOL-001"],
         "evidence_ids": ["EVIDENCE-001"], "proposal": {"change": "proposal"},
-        "runtime_target": "fixture"
+        "runtime_target": "fixture",
+        "authority": {
+            "execution_authorized": False,
+            "publish_authorized": False,
+            "merge_authorized": False,
+            "human_gate_required": True,
+        },
     }}
 
 
@@ -32,6 +38,14 @@ def test_runtime_request_requires_evidence():
     r["runtime_request"]["evidence_ids"] = []
     with pytest.raises(ValueError, match="evidence_ids"):
         execute(r)
+
+
+def test_runtime_request_rejects_authority_escalation():
+    r = request()
+    r["runtime_request"]["authority"]["publish_authorized"] = True
+    with pytest.raises(ValueError, match="publish_authorized"):
+        execute(r)
+
 
 def test_runtime_execution_closes_into_evidence_and_aiwitness():
     from build_evidence_record import build_evidence
