@@ -80,7 +80,7 @@ class SemanticHandoff:
             handoff_id=str(trace["source_handoff_id"]),
             trace_id=str(trace["trace_id"]),
             execution_id=str(trace["execution_id"]),
-            activity_id=activity_id,
+            activity_id=activity_id if activity_id is not None else trace.get("activity_id"),
             evidence_ids=tuple(trace["evidence_ids"]),
             project=project,
             objective=objective,
