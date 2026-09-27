@@ -44,6 +44,7 @@ api_boundary:
       - evidence_ids
       - execution_id
       - activity_id
+      - protocol_ids
     must_not_infer:
       - execution_authorized
       - publish_authorized

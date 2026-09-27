@@ -10,6 +10,7 @@ def test_http_boundary_preserves_lineage_and_authority():
         "execution_id": "EXEC-HTTP-001",
         "provider": "test-provider",
         "output": {"observed": True},
+        "protocol_ids": ["PROTOCOL-HTTP-001"],
         "evidence_ids": ["AGENT-COORDINATION-HTTP-001"],
         "execution_authorized": False,
         "publish_authorized": False,
@@ -47,12 +48,14 @@ def test_http_boundary_preserves_lineage_and_authority():
     assert body["trace_id"] == "TRACE-HTTP-001"
     assert body["execution_id"] == "EXEC-HTTP-001"
     assert body["activity_id"] == "ACTIVITY-HTTP-001"
+    assert body["protocol_ids"] == ["PROTOCOL-HTTP-001"]
     assert body["evidence_ids"] == [evidence["evidence_id"]]
 
     witness = build_witness({"evidence_record": evidence})["aiwitness"]
     assert witness["provenance"]["evidence_id"] in body["evidence_ids"]
     assert witness["provenance"]["trace_id"] == body["trace_id"]
     assert witness["provenance"]["execution_id"] == body["execution_id"]
+    assert witness["provenance"]["protocol_ids"] == body["protocol_ids"]
 
     assert body["execution_authorized"] is False
     assert body["publish_authorized"] is False
@@ -69,6 +72,7 @@ def test_provider_swap_preserves_evidence_and_aiwitness_lineage():
                 "execution_id": "EXEC-SWAP-001",
                 "provider": "provider-a",
                 "output": {"provider": "a", "observed": True},
+                "protocol_ids": ["PROTOCOL-SWAP-001"],
                 "evidence_ids": ["EVIDENCE-INPUT-001"],
                 "execution_authorized": False,
                 "publish_authorized": False,
@@ -83,6 +87,7 @@ def test_provider_swap_preserves_evidence_and_aiwitness_lineage():
                 "execution_id": "EXEC-SWAP-001",
                 "provider": "provider-b",
                 "output": {"provider": "b", "observed": True},
+                "protocol_ids": ["PROTOCOL-SWAP-001"],
                 "evidence_ids": ["EVIDENCE-INPUT-001"],
                 "execution_authorized": False,
                 "publish_authorized": False,
@@ -99,6 +104,9 @@ def test_provider_swap_preserves_evidence_and_aiwitness_lineage():
     ]
 
     assert [record["source"]["provider"] for record in records] == ["provider-a", "provider-b"]
+    assert [record["source"]["protocol_ids"] for record in records] == [
+        ["PROTOCOL-SWAP-001"], ["PROTOCOL-SWAP-001"]
+    ]
     assert [
         (record["source"]["handoff_id"], record["source"]["trace_id"],
          record["source"]["execution_id"], record["input_evidence_ids"])
@@ -119,6 +127,7 @@ def test_provider_swap_preserves_evidence_and_aiwitness_lineage():
 
     for record, witness in zip(records, witnesses):
         assert witness["provenance"]["evidence_id"] == record["evidence_id"]
+        assert witness["provenance"]["protocol_ids"] == record["source"]["protocol_ids"]
         assert witness["authority"]["execution_authorized"] is False
         assert witness["authority"]["publish_authorized"] is False
         assert witness["authority"]["merge_authorized"] is False

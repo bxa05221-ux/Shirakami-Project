@@ -20,6 +20,7 @@ TRACEABILITY_FIELDS = (
     "evidence_ids",
     "execution_id",
     "activity_id",
+    "protocol_ids",
 )
 
 
