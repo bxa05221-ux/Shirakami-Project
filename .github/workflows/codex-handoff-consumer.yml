@@ -44,6 +44,10 @@ jobs:
         run: pytest -q scripts/test_record_aiwitness.py
       - name: Verify trace to API context bridge
         run: pytest -q scripts/test_build_api_context.py
+      - name: Verify Semantic Handoff lineage boundary
+        run: pytest -q scripts/test_semantic_handoff.py scripts/test_api_semantic_handoff.py
+      - name: Verify Evidence ID lineage through Handoff and AIwitness
+        run: pytest -q scripts/test_semantic_handoff_evidence_lineage.py
       - name: Verify runtime adapter boundary
         run: pytest -q scripts/test_build_runtime_request.py
       - name: Verify provider adapter boundary
