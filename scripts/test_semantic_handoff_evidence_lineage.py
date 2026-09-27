@@ -10,6 +10,7 @@ def test_real_evidence_id_reaches_handoff_and_aiwitness():
         "execution_id": "EXEC-001",
         "provider": "test-provider",
         "output": {"observed": True},
+        "protocol_ids": ["PROTOCOL-001"],
         "evidence_ids": ["AGENT-COORDINATION-001"],
         "execution_authorized": False,
         "publish_authorized": False,
@@ -44,5 +45,7 @@ def test_real_evidence_id_reaches_handoff_and_aiwitness():
     assert witness["provenance"]["evidence_id"] in handoff.evidence_ids
     assert witness["provenance"]["trace_id"] == handoff.trace_id
     assert witness["provenance"]["execution_id"] == handoff.execution_id
+    assert evidence["source"]["protocol_ids"] == ["PROTOCOL-001"]
+    assert witness["provenance"]["protocol_ids"] == ["PROTOCOL-001"]
     assert handoff.execution_authorized is False
     assert witness["authority"]["merge_authorized"] is False
