@@ -43,6 +43,8 @@ def test_traceability_fields_are_preserved():
         "handoff_id",
         "trace_id",
         "evidence_ids",
+        "execution_id",
+        "activity_id",
     }
 
 
