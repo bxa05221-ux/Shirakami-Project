@@ -38,7 +38,7 @@ def test_runtime_execution_closes_into_evidence_and_aiwitness():
     from project_evidence_to_aiwitness import build_witness
 
     runtime = execute(request(), {"answer": "observed"})["runtime_result"]
-    evidence = build_evidence({"runtime_result": runtime})["evidence_record"]
+    evidence = build_evidence({"runtime_result": {"runtime_result": runtime}})["evidence_record"]
     witness = build_witness({"evidence_record": evidence})["aiwitness"]
 
     assert evidence["source"]["handoff_id"] == runtime["handoff_id"]
