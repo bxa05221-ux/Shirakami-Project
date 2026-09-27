@@ -12,7 +12,7 @@ def build_evidence(runtime_result: dict) -> dict:
     result = runtime_result.get("runtime_result")
     if not isinstance(result, dict):
         raise ValueError("missing runtime_result")
-    for key in ("handoff_id", "provider", "output", "evidence_ids"):
+    for key in ("handoff_id", "provider", "output", "protocol_ids", "evidence_ids"):
         if key not in result:
             raise ValueError(f"{key} is required")
 
@@ -38,6 +38,7 @@ def build_evidence(runtime_result: dict) -> dict:
             "trace_id": result.get("trace_id"),
             "execution_id": result.get("execution_id"),
             "provider": result["provider"],
+            "protocol_ids": list(result["protocol_ids"]),
         },
         "observed": {"output": result["output"]},
         "input_evidence_ids": list(result["evidence_ids"]),
