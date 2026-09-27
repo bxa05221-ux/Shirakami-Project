@@ -23,6 +23,7 @@ def test_runtime_request_produces_traceable_non_authoritative_result():
     result = execute(request(), {"answer": "ok"})["runtime_result"]
     assert result["handoff_id"] == "RUNTIME-001"
     assert result["provider"] == "fixture"
+    assert result["protocol_ids"] == ["PROTOCOL-001"]
     assert result["evidence_ids"] == ["EVIDENCE-001"]
     assert result["output"] == {"answer": "ok"}
     assert result["authority"] == {
@@ -61,9 +62,11 @@ def test_runtime_execution_closes_into_evidence_and_aiwitness():
     assert evidence["source"]["trace_id"] == runtime["trace_id"]
     assert evidence["source"]["execution_id"] == runtime["execution_id"]
     assert evidence["source"]["provider"] == runtime["provider"]
+    assert evidence["source"]["protocol_ids"] == runtime["protocol_ids"]
     assert witness["provenance"]["evidence_id"] == evidence["evidence_id"]
     assert witness["provenance"]["handoff_id"] == runtime["handoff_id"]
     assert witness["provenance"]["provider"] == runtime["provider"]
+    assert witness["provenance"]["protocol_ids"] == runtime["protocol_ids"]
     assert witness["authority"]["execution_authorized"] is False
     assert witness["authority"]["publish_authorized"] is False
     assert witness["authority"]["merge_authorized"] is False
