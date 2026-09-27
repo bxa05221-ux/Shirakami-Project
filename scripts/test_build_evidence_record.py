@@ -8,7 +8,7 @@ from build_evidence_record import build_evidence
 def result():
     return {"runtime_result": {
         "handoff_id": "SH-001", "trace_id": "TR-001", "execution_id": "EX-001",
-        "provider": "fake", "output": {"answer": "observed"}, "evidence_ids": ["E-001"],
+        "provider": "fake", "output": {"answer": "observed"}, "protocol_ids": ["P-001"], "evidence_ids": ["E-001"],
         "execution_authorized": False, "publish_authorized": False,
         "merge_authorized": False, "human_gate_required": True,
     }}
@@ -19,6 +19,7 @@ def test_stable_evidence_id_and_provenance():
     assert record["evidence_id"].startswith("EVIDENCE-")
     assert record["source"]["trace_id"] == "TR-001"
     assert record["source"]["execution_id"] == "EX-001"
+    assert record["source"]["protocol_ids"] == ["P-001"]
     assert record["input_evidence_ids"] == ["E-001"]
 
 
