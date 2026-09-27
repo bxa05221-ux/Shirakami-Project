@@ -37,14 +37,15 @@ def execute(document: dict, output: object = None) -> dict:
     request = document.get("runtime_request")
     if not isinstance(request, dict):
         raise ValueError("missing runtime_request")
-    if not request.get("request_id"):
-        raise ValueError("request_id is required")
+    handoff_id = request.get("handoff_id") or request.get("request_id")
+    if not handoff_id:
+        raise ValueError("handoff_id is required")
     evidence_ids = request.get("evidence_ids") or []
     if not evidence_ids:
         raise ValueError("evidence_ids are required")
     provider = FixtureProvider(output if output is not None else {"status": "fixture"})
     runtime_request = RuntimeRequest(
-        handoff_id=request.get("request_id"),
+        handoff_id=handoff_id,
         trace_id=request.get("trace_id"),
         execution_id=request.get("execution_id"),
         project=request.get("project", "shirakami"),
