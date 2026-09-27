@@ -66,3 +66,5 @@ jobs:
         run: pytest -q scripts/test_validate_api_boundary.py
       - name: Verify AIwitness boundary contract
         run: pytest -q scripts/test_validate_aiwitness_boundary.py
+      - name: Verify Semantic Integrity boundary
+        run: pytest -q scripts/test_semantic_integrity.py
