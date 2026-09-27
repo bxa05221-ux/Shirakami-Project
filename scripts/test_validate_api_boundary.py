@@ -45,6 +45,7 @@ def test_traceability_fields_are_preserved():
         "evidence_ids",
         "execution_id",
         "activity_id",
+        "protocol_ids",
     }
 
 
