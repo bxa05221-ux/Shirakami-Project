@@ -73,7 +73,7 @@ def test_provider_swap_preserves_lineage_and_authority():
     assert [(result.handoff_id, result.trace_id, result.execution_id, result.protocol_ids, result.evidence_ids)
             for result in results] == [
                 ("SH-001", "TR-001", "EX-001", ("P-001",), ("E-001",)),
-                ("SH-001", "TR-001", "EX-001", ("E-001",)),
+                ("SH-001", "TR-001", "EX-001", ("P-001",), ("E-001",)),
             ]
 
     for provider, result in zip(providers, results):
@@ -120,6 +120,7 @@ def test_human_gate_cannot_be_removed():
         "execution_id": "EX-001",
         "provider": "fake",
         "output": {},
+        "protocol_ids": ("P-001",),
         "evidence_ids": ("E-001",),
         "human_gate_required": False,
     }
