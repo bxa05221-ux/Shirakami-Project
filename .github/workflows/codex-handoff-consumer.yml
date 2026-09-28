@@ -92,3 +92,5 @@ jobs:
         run: pytest -q scripts/test_symbolic_evidence_boundary.py
       - name: Verify Symbolic provenance projection
         run: pytest -q scripts/test_project_symbolic_provenance.py
+      - name: Verify Symbolic Human Gate decision boundary
+        run: pytest -q scripts/test_symbolic_decision_boundary.py
