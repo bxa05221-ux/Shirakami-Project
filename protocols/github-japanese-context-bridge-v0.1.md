@@ -1,0 +1,181 @@
+# GitHub Japanese Context Bridge v0.1
+
+## 1. Purpose
+
+GitHub Japanese Context Bridge is an application experiment of Shirakami Project.
+
+Its purpose is not to translate GitHub mechanically from English into Japanese. It places Shirakami between GitHub and the human user so that GitHub's language, state, and evidence can be presented in a human-readable Japanese context.
+
+```text
+GitHub
+  ↓
+Observation
+  ↓
+Evidence
+  ↓
+Context / Language Protocol
+  ↓
+Japanese Explanation
+  ↓
+Human Gate
+```
+
+The human remains the decision authority.
+
+## 2. Problem Definition
+
+GitHub presents repository state through English UI text, technical terminology, issues, pull requests, workflow results, notifications, and other artifacts.
+
+A literal translation does not necessarily communicate:
+
+- what happened;
+- what is confirmed;
+- what is inferred;
+- what action is being requested;
+- what action would change repository state;
+- what requires human judgment.
+
+Therefore the bridge treats Japanese presentation as a **context transformation**, not merely a translation task.
+
+## 3. Scope
+
+### Phase A — Read-only context
+
+The bridge may observe:
+
+- repository metadata;
+- branches;
+- commits;
+- issues;
+- pull requests;
+- changed files;
+- review state;
+- workflow / CI results;
+- relevant GitHub terminology.
+
+It produces Japanese explanations without changing GitHub state.
+
+### Phase B — Evidence-aware explanation
+
+Each explanation should distinguish, where applicable:
+
+- `FACT` — directly observed GitHub information;
+- `INTERPRETATION` — contextual explanation;
+- `UNKNOWN` — information not established by the available evidence;
+- `ACTION` — an available GitHub operation;
+- `HUMAN_GATE` — a decision reserved for the human.
+
+### Phase C — Interactive assistance
+
+After validation of Phase A/B, the bridge may assist with navigation, drafting, or other reversible operations.
+
+Any operation that changes repository state remains behind a Human Gate unless an explicit protocol authorizes otherwise.
+
+## 4. Translation Rule
+
+The bridge should preserve technical identifiers and repository semantics.
+
+Examples:
+
+- Pull Request → PR（プルリクエスト）
+- merge → マージ（変更を対象ブランチへ統合）
+- commit → コミット（変更履歴）
+- branch → ブランチ（作業系統）
+- workflow → ワークフロー（自動処理）
+
+Terminology may be explained, but identifiers such as repository names, branch names, commit SHAs, issue numbers, and PR numbers must not be translated.
+
+## 5. Context Record
+
+A future implementation SHOULD represent a GitHub observation in a structure equivalent to:
+
+```yaml
+source: github
+resource_type: pull_request
+resource_id: "PR#123"
+observed_at: "timestamp"
+
+facts:
+  - type: state
+    value: open
+  - type: review
+    value: requested
+
+interpretation:
+  - "PR #123 is awaiting review."
+
+actions:
+  - "review"
+  - "comment"
+
+human_gate:
+  required: true
+  reason: "Review and merge decisions belong to the human."
+```
+
+This record is a context handoff unit, not an authorization to act.
+
+## 6. Evidence Boundary
+
+The bridge MUST NOT silently convert:
+
+- translation into fact;
+- interpretation into fact;
+- suggestion into authorization;
+- AI output into repository state;
+- repository state into human approval.
+
+The distinction between observation and interpretation is part of the protocol.
+
+## 7. Human Gate
+
+The bridge may explain what GitHub can do.
+
+It does not decide what the human should do.
+
+```text
+GitHub state
+    ↓
+Shirakami observation
+    ↓
+Japanese context
+    ↓
+Human judgment
+    ↓
+Optional GitHub operation
+```
+
+## 8. Verification
+
+A prototype should be tested against real GitHub artifacts using a fixed set of cases:
+
+1. repository overview;
+2. issue with a clear request;
+3. PR awaiting review;
+4. PR with CI failure;
+5. PR with changed files;
+6. merge-ready PR;
+7. ambiguous English wording;
+8. terminology that has multiple Japanese interpretations.
+
+For each case, the evaluator should be able to compare the original GitHub evidence with the Japanese context and identify any semantic loss or unsupported inference.
+
+## 9. Non-goals
+
+This protocol does not attempt to:
+
+- replace GitHub's official UI;
+- replace GitHub's own documentation;
+- create a general-purpose machine translation system;
+- give AI authority over repository decisions;
+- conceal uncertainty behind fluent Japanese.
+
+## 10. Shirakami Principle
+
+> **Do not translate only the words. Preserve the context that makes the words meaningful.**
+
+GitHub Japanese Context Bridge is therefore an application test of the Shirakami proposition:
+
+> **AI is a simulator, not an authority.**
+
+The bridge should make GitHub easier to understand while keeping the repository, evidence, and final decision under human control.
