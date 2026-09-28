@@ -1,0 +1,25 @@
+symbolic_provenance:
+  version: "0.1"
+  role: "contextual provenance for re-observation"
+  authority: false
+  evidence: false
+  identity:
+    symbol_id: "string"
+    expression: "string"
+  interpretation:
+    values: "list[string]"
+    rule: "multiple interpretations may coexist; none is authoritative"
+  reobservation:
+    link_id: "string"
+    request_id: "string"
+    source_observation_id: "string"
+    result_observation_id: "string"
+  evidence_boundary:
+    creates_evidence_id: false
+    replaces_evidence: false
+    validates_symbolic_meaning: false
+    evidence_must_retain_own_provenance: true
+  aiwitness:
+    allowed_location: "observation.verification_observed.symbolic_provenance"
+    rule: "record the path to observation without converting interpretation into fact"
+  human_gate_required: true
