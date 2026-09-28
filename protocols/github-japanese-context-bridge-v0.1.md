@@ -37,7 +37,26 @@ A literal translation does not necessarily communicate:
 
 Therefore the bridge treats Japanese presentation as a **context transformation**, not merely a translation task.
 
-## 3. Scope
+## 3. Human-readable Roles
+
+The bridge should not expose internal agent names or personas as the primary user interface. Instead, each observation function is presented as a clear Japanese role describing its responsibility.
+
+| Internal source | Display role | Responsibility |
+|---|---|---|
+| Issue | **問題・要望担当** | 何を解決したいのか、何が求められているのかを整理する |
+| Code | **プログラム担当** | 実際のプログラムと関連する実装を確認する |
+| Pull Request | **変更担当** | 何を変更しようとしているのかを整理する |
+| CI / Workflow | **自動テスト担当** | 自動処理・テストの結果を確認する |
+| Commit | **作業履歴担当** | いつ、何が変更されたかを確認する |
+| Evidence | **事実確認担当** | 確認できる事実と未確認事項を分離する |
+| Protocol | **ルール担当** | 定義された仕様・手順との整合性を確認する |
+| Human Gate | **最終判断** | 採用・変更・保留などを人間が判断する |
+
+Technical terms may be shown parenthetically when useful, for example **自動テスト担当（CI）** or **変更担当（Pull Request / PR）**. The role description remains the primary explanation.
+
+Roles are observers and reporters, not independent decision authorities. Multiple roles may contribute to one context record.
+
+## 4. Scope
 
 ### Phase A — Read-only context
 
@@ -71,7 +90,7 @@ After validation of Phase A/B, the bridge may assist with navigation, drafting, 
 
 Any operation that changes repository state remains behind a Human Gate unless an explicit protocol authorizes otherwise.
 
-## 4. Translation Rule
+## 5. Translation Rule
 
 The bridge should preserve technical identifiers and repository semantics.
 
@@ -85,7 +104,7 @@ Examples:
 
 Terminology may be explained, but identifiers such as repository names, branch names, commit SHAs, issue numbers, and PR numbers must not be translated.
 
-## 5. Context Record
+## 6. Context Record
 
 A future implementation SHOULD represent a GitHub observation in a structure equivalent to:
 
@@ -94,6 +113,10 @@ source: github
 resource_type: pull_request
 resource_id: "PR#123"
 observed_at: "timestamp"
+
+role:
+  display_name: "変更担当"
+  internal_source: "pull_request"
 
 facts:
   - type: state
@@ -115,7 +138,7 @@ human_gate:
 
 This record is a context handoff unit, not an authorization to act.
 
-## 6. Evidence Boundary
+## 7. Evidence Boundary
 
 The bridge MUST NOT silently convert:
 
@@ -127,7 +150,7 @@ The bridge MUST NOT silently convert:
 
 The distinction between observation and interpretation is part of the protocol.
 
-## 7. Human Gate
+## 8. Human Gate
 
 The bridge may explain what GitHub can do.
 
@@ -138,14 +161,14 @@ GitHub state
     ↓
 Shirakami observation
     ↓
-Japanese context
+Role-based Japanese context
     ↓
 Human judgment
     ↓
 Optional GitHub operation
 ```
 
-## 8. Verification
+## 9. Verification
 
 A prototype should be tested against real GitHub artifacts using a fixed set of cases:
 
@@ -160,7 +183,9 @@ A prototype should be tested against real GitHub artifacts using a fixed set of 
 
 For each case, the evaluator should be able to compare the original GitHub evidence with the Japanese context and identify any semantic loss or unsupported inference.
 
-## 9. Non-goals
+The role labels themselves should also be evaluated for comprehension by GitHub beginners.
+
+## 10. Non-goals
 
 This protocol does not attempt to:
 
@@ -170,7 +195,7 @@ This protocol does not attempt to:
 - give AI authority over repository decisions;
 - conceal uncertainty behind fluent Japanese.
 
-## 10. Shirakami Principle
+## 11. Shirakami Principle
 
 > **Do not translate only the words. Preserve the context that makes the words meaningful.**
 
