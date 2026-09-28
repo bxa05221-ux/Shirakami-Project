@@ -28,6 +28,44 @@ Shirakami Project は、AIそのものを賢くするのではなく、**人間�
 
 ---
 
+## Return Protocol
+
+Shirakami は、clone された後の利用・観測・検証を、必要に応じてプロジェクトへ戻せる **Return Protocol** を定義します。
+
+> **Clone is the entry. Return is optional. Human judgment decides what returns.**
+
+cloneした利用者は、自由に読んだり、試したり、改変したりできます。何か返したい場合は、体験や観測を次の形に接続できます。
+
+| 利用者側で起きたこと | Return |
+|---|---|
+| 使ってみた | Observation |
+| 新しい事実を発見した | Evidence |
+| 問題を見つけた | Issue |
+| コード・仕様・ドキュメントを変更した | Pull Request |
+| 意味・目的・条件を引き継ぎたい | 的目YAML |
+
+帰還された内容は、自動的に採用されるわけではありません。
+
+```text
+Clone
+  ↓
+Use / Modify / Observe
+  ↓
+Return
+  ↓
+Verification
+  ↓
+Human Gate
+  ↓
+Adopt / Hold / Reject
+```
+
+AIはReturnの整理やIssue / Evidence / PR / 的目YAMLの下書きを支援できますが、帰還・採用・判断を自動化するものではありません。
+
+→ [`protocols/return-protocol-v0.1.md`](protocols/return-protocol-v0.1.md)
+
+---
+
 ## Landscape
 
 Shirakami Project は、単一のアプリケーションではありません。
