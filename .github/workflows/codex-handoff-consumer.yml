@@ -102,3 +102,5 @@ jobs:
         run: pytest -q scripts/test_phase5_symbolic_boundary_roadmap_check.py
       - name: Verify Phase 5 Human Gate note
         run: pytest -q scripts/test_symbolic_human_gate_note.py
+      - name: Verify Phase 5 Human Gate summary
+        run: pytest -q scripts/test_symbolic_human_gate_summary.py
