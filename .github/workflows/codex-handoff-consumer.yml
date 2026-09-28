@@ -2,21 +2,9 @@ name: Codex Handoff Consumer Verification
 
 on:
   push:
-    paths:
-      - "handoff/**"
-      - "scripts/**"
-      - "api/**"
-      - "aiwitness/**"
-      - "runtime/**"
-      - ".github/workflows/codex-handoff-consumer.yml"
+    paths: ["handoff/**","scripts/**","api/**","aiwitness/**","runtime/**",".github/workflows/codex-handoff-consumer.yml"]
   pull_request:
-    paths:
-      - "handoff/**"
-      - "scripts/**"
-      - "api/**"
-      - "aiwitness/**"
-      - "runtime/**"
-      - ".github/workflows/codex-handoff-consumer.yml"
+    paths: ["handoff/**","scripts/**","api/**","aiwitness/**","runtime/**",".github/workflows/codex-handoff-consumer.yml"]
 
 jobs:
   consume-and-test:
@@ -84,3 +72,37 @@ jobs:
         run: pytest -q scripts/test_conflict_boundary.py
       - name: Verify Symbolic Recursion / Context boundary
         run: pytest -q scripts/test_symbolic_recursion.py
+      - name: Verify Symbolic Recursion → Context Transition bridge
+        run: pytest -q scripts/test_symbolic_context_bridge.py
+      - name: Verify Symbolic Recursion → Re-observation lineage
+        run: pytest -q scripts/test_symbolic_reobservation.py
+      - name: Verify Symbolic Interpretation / Evidence boundary
+        run: pytest -q scripts/test_symbolic_evidence_boundary.py
+      - name: Verify Symbolic provenance projection
+        run: pytest -q scripts/test_project_symbolic_provenance.py
+      - name: Verify Symbolic Human Gate decision boundary
+        run: pytest -q scripts/test_symbolic_decision_boundary.py
+      - name: Verify Symbolic Human Gate contract
+        run: pytest -q scripts/test_symbolic_human_gate_contract.py
+      - name: Verify Phase 5 symbolic boundary roadmap
+        run: pytest -q scripts/test_phase5_symbolic_boundary_roadmap.py
+      - name: Verify Phase 5 Human Gate note
+        run: pytest -q scripts/test_symbolic_human_gate_note.py
+      - name: Verify Phase 5 Human Gate summary
+        run: pytest -q scripts/test_symbolic_human_gate_summary.py
+      - name: Verify Phase 5 Human Gate final checkpoint
+        run: pytest -q scripts/test_symbolic_human_gate_final.py
+      - name: Verify Phase 5 Human Gate PR checkpoint
+        run: pytest -q scripts/test_symbolic_human_gate_pr.py
+      - name: Verify Human Gate → Protocol boundary
+        run: pytest -q scripts/test_human_gate_protocol.py
+      - name: Verify Human-approved Protocol → RuntimeRequest
+        run: pytest -q scripts/test_human_approved_runtime_request.py
+      - name: Verify RuntimeRequest → ExecutionTrace approval lineage
+        run: pytest -q scripts/test_runtime_execution_trace.py
+      - name: Verify ExecutionTrace → AIwitness projection
+        run: pytest -q scripts/test_execution_aiwitness_bridge.py
+      - name: Verify AIwitness → Observation return path
+        run: pytest -q scripts/test_aiwitness_observation_bridge.py
+      - name: Verify Observation → Evidence candidate boundary
+        run: pytest -q scripts/test_observation_evidence_candidate.py

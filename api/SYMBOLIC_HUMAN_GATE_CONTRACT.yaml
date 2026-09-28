@@ -1,0 +1,16 @@
+symbolic_human_gate:
+  version: "0.1"
+  candidate:
+    decision_authority: false
+    human_gate_required: true
+  provenance:
+    observation_ids_required: true
+  interpretation:
+    plural: true
+    authoritative: false
+  evidence:
+    creates_evidence_id: false
+    replaces_evidence: false
+  execution:
+    direct_protocol_execution: false
+    requires_human_gate: true
