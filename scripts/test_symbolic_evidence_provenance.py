@@ -25,6 +25,7 @@ def test_symbolic_origin_is_provenance_not_evidence():
     assert provenance["symbolic_is_evidence"] is False
     assert provenance["decision_authority"] is False
     assert provenance["human_gate_required"] is True
+    assert provenance["symbolic_origin"]["reobservation_link_id"] == "link-01"
     assert provenance["symbolic_origin"]["interpretations"] == [
         "care",
         "control",
