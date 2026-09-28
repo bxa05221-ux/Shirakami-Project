@@ -1,0 +1,1 @@
+Phase 5: symbolic candidates are non-authoritative until Human Gate. Next boundary is Human Gate → Protocol / Runtime.
