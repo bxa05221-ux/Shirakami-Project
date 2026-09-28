@@ -102,3 +102,5 @@ jobs:
         run: pytest -q scripts/test_runtime_execution_trace.py
       - name: Verify ExecutionTrace → AIwitness projection
         run: pytest -q scripts/test_execution_aiwitness_bridge.py
+      - name: Verify AIwitness → Observation return path
+        run: pytest -q scripts/test_aiwitness_observation_bridge.py
