@@ -56,7 +56,42 @@ Technical terms may be shown parenthetically when useful, for example **自動�
 
 Roles are observers and reporters, not independent decision authorities. Multiple roles may contribute to one context record.
 
-## 4. Scope
+## 4. 担当者間会議（保守安価）
+
+複数の担当が関係するGitHub事象では、各担当の観測を持ち寄る担当者間会議を設ける。これを白神では**保守安価**と呼ぶ。
+
+保守安価の役割は、担当者の代わりに判断することではなく、観測結果を照合し、共通点・相違点・未確認事項を整理して、人間が判断できるContextへまとめることである。
+
+```text
+問題・要望担当 ─┐
+プログラム担当 ─┤
+変更担当 ─────┤
+自動テスト担当 ─┤
+作業履歴担当 ───┤
+事実確認担当 ───┤
+ルール担当 ─────┘
+          ↓
+       保守安価
+   （担当者間会議）
+          ↓
+    統合されたContext
+          ↓
+       最終判断
+```
+
+保守安価の役割は以下を明示する。
+
+- 各担当の観測結果
+- 観測間で一致している事項
+- 観測間で食い違っている事項
+- 証拠が不足している事項
+- 人間による確認または判断が必要な事項
+
+保守安価自身は、マージ、採用、却下その他の最終決定を行わない。
+
+会議の発言は、事実・解釈・未知を混同しない。担当者間で意見が一致しない場合も、その不一致自体をContextとして保持する。
+
+## 5. Scope
 
 ### Phase A — Read-only context
 
@@ -90,7 +125,7 @@ After validation of Phase A/B, the bridge may assist with navigation, drafting, 
 
 Any operation that changes repository state remains behind a Human Gate unless an explicit protocol authorizes otherwise.
 
-## 5. Translation Rule
+## 6. Translation Rule
 
 The bridge should preserve technical identifiers and repository semantics.
 
@@ -104,7 +139,7 @@ Examples:
 
 Terminology may be explained, but identifiers such as repository names, branch names, commit SHAs, issue numbers, and PR numbers must not be translated.
 
-## 6. Context Record
+## 7. Context Record
 
 A future implementation SHOULD represent a GitHub observation in a structure equivalent to:
 
@@ -138,7 +173,7 @@ human_gate:
 
 This record is a context handoff unit, not an authorization to act.
 
-## 7. Evidence Boundary
+## 8. Evidence Boundary
 
 The bridge MUST NOT silently convert:
 
@@ -150,7 +185,7 @@ The bridge MUST NOT silently convert:
 
 The distinction between observation and interpretation is part of the protocol.
 
-## 8. Human Gate
+## 9. Human Gate
 
 The bridge may explain what GitHub can do.
 
@@ -163,12 +198,14 @@ Shirakami observation
     ↓
 Role-based Japanese context
     ↓
+担当者間会議（保守安価）
+    ↓
 Human judgment
     ↓
 Optional GitHub operation
 ```
 
-## 9. Verification
+## 10. Verification
 
 A prototype should be tested against real GitHub artifacts using a fixed set of cases:
 
@@ -185,7 +222,9 @@ For each case, the evaluator should be able to compare the original GitHub evide
 
 The role labels themselves should also be evaluated for comprehension by GitHub beginners.
 
-## 10. Non-goals
+The prototype should additionally test whether the担当者間会議（保守安価） can accurately surface agreement, disagreement, and missing evidence without creating an unsupported conclusion.
+
+## 11. Non-goals
 
 This protocol does not attempt to:
 
@@ -195,7 +234,7 @@ This protocol does not attempt to:
 - give AI authority over repository decisions;
 - conceal uncertainty behind fluent Japanese.
 
-## 11. Shirakami Principle
+## 12. Shirakami Principle
 
 > **Do not translate only the words. Preserve the context that makes the words meaningful.**
 
