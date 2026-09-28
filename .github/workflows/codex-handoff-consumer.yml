@@ -110,3 +110,5 @@ jobs:
         run: pytest -q scripts/test_human_gate_protocol.py
       - name: Verify Human-approved Protocol → RuntimeRequest
         run: pytest -q scripts/test_human_approved_runtime_request.py
+      - name: Verify RuntimeRequest → ExecutionTrace approval lineage
+        run: pytest -q scripts/test_runtime_execution_trace.py
