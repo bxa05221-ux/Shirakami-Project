@@ -98,8 +98,6 @@ jobs:
         run: pytest -q scripts/test_symbolic_human_gate_contract.py
       - name: Verify Phase 5 symbolic boundary roadmap
         run: pytest -q scripts/test_phase5_symbolic_boundary_roadmap.py
-      - name: Verify Phase 5 symbolic boundary checkpoint
-        run: pytest -q scripts/test_phase5_symbolic_boundary_roadmap_check.py
       - name: Verify Phase 5 Human Gate note
         run: pytest -q scripts/test_symbolic_human_gate_note.py
       - name: Verify Phase 5 Human Gate summary
@@ -108,3 +106,5 @@ jobs:
         run: pytest -q scripts/test_symbolic_human_gate_final.py
       - name: Verify Phase 5 Human Gate PR checkpoint
         run: pytest -q scripts/test_symbolic_human_gate_pr.py
+      - name: Verify Human Gate → Protocol boundary
+        run: pytest -q scripts/test_human_gate_protocol.py
