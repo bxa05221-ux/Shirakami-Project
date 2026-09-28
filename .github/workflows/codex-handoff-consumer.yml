@@ -98,3 +98,5 @@ jobs:
         run: pytest -q scripts/test_symbolic_human_gate_contract.py
       - name: Verify Phase 5 symbolic boundary roadmap
         run: pytest -q scripts/test_phase5_symbolic_boundary_roadmap.py
+      - name: Verify Phase 5 symbolic boundary checkpoint
+        run: pytest -q scripts/test_phase5_symbolic_boundary_roadmap_check.py
