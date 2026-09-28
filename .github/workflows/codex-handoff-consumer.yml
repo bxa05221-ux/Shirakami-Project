@@ -2,21 +2,9 @@ name: Codex Handoff Consumer Verification
 
 on:
   push:
-    paths:
-      - "handoff/**"
-      - "scripts/**"
-      - "api/**"
-      - "aiwitness/**"
-      - "runtime/**"
-      - ".github/workflows/codex-handoff-consumer.yml"
+    paths: ["handoff/**","scripts/**","api/**","aiwitness/**","runtime/**",".github/workflows/codex-handoff-consumer.yml"]
   pull_request:
-    paths:
-      - "handoff/**"
-      - "scripts/**"
-      - "api/**"
-      - "aiwitness/**"
-      - "runtime/**"
-      - ".github/workflows/codex-handoff-consumer.yml"
+    paths: ["handoff/**","scripts/**","api/**","aiwitness/**","runtime/**",".github/workflows/codex-handoff-consumer.yml"]
 
 jobs:
   consume-and-test:
@@ -112,3 +100,5 @@ jobs:
         run: pytest -q scripts/test_human_approved_runtime_request.py
       - name: Verify RuntimeRequest → ExecutionTrace approval lineage
         run: pytest -q scripts/test_runtime_execution_trace.py
+      - name: Verify ExecutionTrace → AIwitness projection
+        run: pytest -q scripts/test_execution_aiwitness_bridge.py
