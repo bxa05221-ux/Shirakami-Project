@@ -108,3 +108,5 @@ jobs:
         run: pytest -q scripts/test_symbolic_human_gate_pr.py
       - name: Verify Human Gate → Protocol boundary
         run: pytest -q scripts/test_human_gate_protocol.py
+      - name: Verify Human-approved Protocol → RuntimeRequest
+        run: pytest -q scripts/test_human_approved_runtime_request.py
