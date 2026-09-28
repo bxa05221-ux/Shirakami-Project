@@ -90,3 +90,5 @@ jobs:
         run: pytest -q scripts/test_symbolic_reobservation.py
       - name: Verify Symbolic Interpretation / Evidence boundary
         run: pytest -q scripts/test_symbolic_evidence_boundary.py
+      - name: Verify Symbolic provenance → Evidence ID boundary
+        run: pytest -q scripts/test_symbolic_evidence_provenance.py
