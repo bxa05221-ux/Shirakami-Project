@@ -33,7 +33,8 @@ def build_evidence_record_from_validated(
         "observed": observed,
     }
     canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    evidence_id = f"EVIDENCE-{hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]}"
+    digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    evidence_id = f"EVIDENCE-{digest[:16]}"
 
     return {
         "version": "0.2",
