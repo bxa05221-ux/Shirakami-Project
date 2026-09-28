@@ -108,3 +108,5 @@ jobs:
         run: pytest -q scripts/test_observation_evidence_candidate.py
       - name: Verify Observation → Evidence structural validation
         run: pytest -q scripts/test_observation_evidence_validation.py
+      - name: Verify Validated EvidenceCandidate → EvidenceRecord
+        run: pytest -q scripts/test_validated_evidence_record.py
