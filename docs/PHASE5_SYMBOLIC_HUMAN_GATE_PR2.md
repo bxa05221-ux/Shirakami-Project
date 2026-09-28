@@ -1,0 +1,1 @@
+Phase 5 checkpoint: symbolic candidates remain non-authoritative until Human Gate. Next boundary: Human Gate → Protocol / Runtime.
