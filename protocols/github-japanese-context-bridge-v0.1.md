@@ -2,12 +2,14 @@
 
 ## 1. Purpose
 
-GitHub Japanese Context Bridge is an application experiment of Shirakami Project.
+GitHub Japanese Context Bridge is an application experiment derived from the Shirakami model and implemented in the independent `github-context-bridge` repository.
 
-Its purpose is not to translate GitHub mechanically from English into Japanese. It places Shirakami between GitHub and the human user so that GitHub's language, state, and evidence can be presented in a human-readable Japanese context.
+Its purpose is not to translate GitHub mechanically from English into Japanese. It places a Shirakami-based context layer between GitHub and the human user so that GitHub's language, state, and evidence can be presented in a human-readable Japanese context.
 
 ```text
 GitHub
+  ↓
+github-context-bridge
   ↓
 Observation
   ↓
@@ -129,7 +131,7 @@ Roles are observers and reporters, not independent decision authorities. Multipl
 
 ### Phase A — Read-only context
 
-The bridge may observe:
+The independent `github-context-bridge` repository may observe:
 
 - repository metadata;
 - branches;
@@ -141,7 +143,7 @@ The bridge may observe:
 - workflow / CI results;
 - relevant GitHub terminology.
 
-It produces Japanese explanations without changing GitHub state.
+The Shirakami-side protocol defines how these observations become Japanese explanations without changing GitHub state.
 
 ### Phase B — Evidence-aware explanation
 
@@ -228,7 +230,7 @@ It does not decide what the human should do.
 ```text
 GitHub state
     ↓
-Shirakami observation
+github-context-bridge observation
     ↓
 Role-based Japanese context
     ↓
@@ -266,11 +268,14 @@ This protocol does not attempt to:
 - replace GitHub's own documentation;
 - create a general-purpose machine translation system;
 - give AI authority over repository decisions;
-- conceal uncertainty behind fluent Japanese.
+- conceal uncertainty behind fluent Japanese;
+- duplicate the GitHub-specific runtime and adapter implementation maintained in the independent bridge repository.
 
 ## 13. Shirakami Principle
 
 > **Do not translate only the words. Preserve the context that makes the words meaningful.**
+
+The independent `github-context-bridge` repository is the application/adapter side; this Shirakami protocol defines the Context, Evidence, Language Protocol, Verification, and Human Gate boundary that the application implements.
 
 GitHub Japanese Context Bridge is therefore an application test of the Shirakami proposition:
 
