@@ -90,7 +90,7 @@ Technical terms may be shown parenthetically when useful, for example **自動�
 
 Roles are observers and reporters, not independent decision authorities. Multiple roles may contribute to one context record.
 
-## 4. 担当者間会議（保守安価）
+## 5. 担当者間会議（保守安価）
 
 複数の担当が関係するGitHub事象では、各担当の観測を持ち寄る担当者間会議を設ける。これを白神では**保守安価**と呼ぶ。
 
@@ -125,7 +125,7 @@ Roles are observers and reporters, not independent decision authorities. Multipl
 
 会議の発言は、事実・解釈・未知を混同しない。担当者間で意見が一致しない場合も、その不一致自体をContextとして保持する。
 
-## 5. Scope
+## 6. Scope
 
 ### Phase A — Read-only context
 
@@ -159,7 +159,7 @@ After validation of Phase A/B, the bridge may assist with navigation, drafting, 
 
 Any operation that changes repository state remains behind a Human Gate unless an explicit protocol authorizes otherwise.
 
-## 6. Translation Rule
+## 7. Translation Rule
 
 The bridge should preserve technical identifiers and repository semantics.
 
@@ -173,7 +173,7 @@ Examples:
 
 Terminology may be explained, but identifiers such as repository names, branch names, commit SHAs, issue numbers, and PR numbers must not be translated.
 
-## 7. Context Record
+## 8. Context Record
 
 A future implementation SHOULD represent a GitHub observation in a structure equivalent to:
 
@@ -207,7 +207,7 @@ human_gate:
 
 This record is a context handoff unit, not an authorization to act.
 
-## 8. Evidence Boundary
+## 9. Evidence Boundary
 
 The bridge MUST NOT silently convert:
 
@@ -219,7 +219,7 @@ The bridge MUST NOT silently convert:
 
 The distinction between observation and interpretation is part of the protocol.
 
-## 9. Human Gate
+## 10. Human Gate
 
 The bridge may explain what GitHub can do.
 
@@ -239,7 +239,7 @@ Human judgment
 Optional GitHub operation
 ```
 
-## 10. Verification
+## 11. Verification
 
 A prototype should be tested against real GitHub artifacts using a fixed set of cases:
 
@@ -258,7 +258,7 @@ The role labels themselves should also be evaluated for comprehension by GitHub 
 
 The prototype should additionally test whether the担当者間会議（保守安価） can accurately surface agreement, disagreement, and missing evidence without creating an unsupported conclusion.
 
-## 11. Non-goals
+## 12. Non-goals
 
 This protocol does not attempt to:
 
@@ -268,7 +268,7 @@ This protocol does not attempt to:
 - give AI authority over repository decisions;
 - conceal uncertainty behind fluent Japanese.
 
-## 12. Shirakami Principle
+## 13. Shirakami Principle
 
 > **Do not translate only the words. Preserve the context that makes the words meaningful.**
 
