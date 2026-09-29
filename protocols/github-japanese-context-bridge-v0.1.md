@@ -37,7 +37,41 @@ A literal translation does not necessarily communicate:
 
 Therefore the bridge treats Japanese presentation as a **context transformation**, not merely a translation task.
 
-## 3. Human-readable Roles
+## 3. 日本語ブリッジの基本表示原則
+
+このプロトコルでは、**日本語を単なる翻訳結果として扱わない**。
+
+日本語表示は、GitHubから観測した状態を、人間が判断できるContextへ変換した結果である。
+
+したがって、表示順序は原則として次のとおりとする。
+
+```text
+観測された事実
+    ↓
+証拠
+    ↓
+日本語によるContext説明
+    ↓
+未確認事項（UNKNOWN）
+    ↓
+可能な操作
+    ↓
+Human Gate
+```
+
+### 日本語表示のルール
+
+- GitHub上の固有識別子は原文のまま保持する。
+- 技術用語は必要に応じて日本語で意味を補足する。
+- 原文にない事実を、日本語の自然さのために補わない。
+- 推測・解釈は、確認済みの事実と明示的に分離する。
+- 不明なものは「不明」「確認できない」などと表示し、推測で埋めない。
+- 操作可能であることと、その操作を実行すべきことを分離する。
+- 最終的な判断・承認はHuman Gateに残す。
+
+つまり、**日本語の流暢さよりEvidence Boundaryを優先する。**
+
+## 4. Human-readable Roles
 
 The bridge should not expose internal agent names or personas as the primary user interface. Instead, each observation function is presented as a clear Japanese role describing its responsibility.
 
