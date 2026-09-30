@@ -1,0 +1,341 @@
+matome:
+  id: tsugaru-guide-shared-landscape
+  title: "つがる市ガイドAI ― 住民と旅人の共有Resourceモデル"
+  version: "0.1"
+  date: "2026-09-04"
+
+  core_question: >
+    地域住民と旅人を「情報提供者」と「情報消費者」に分けず、
+    両者の観測・経験・知識を地域Landscape上の共通Resourceとして
+    循環させることはできるか。
+
+  hypothesis: >
+    旅人の経験と住民の知識を同じLandscape上に蓄積し、
+    AI GuideがThreadとして接続することで、
+    観光・地域学習・移住支援・地域事業者支援を
+    一つの循環系として構築できる。
+
+  core_model:
+    conventional:
+      resident: "information_provider"
+      traveler: "information_consumer"
+      flow:
+        - resident
+        - information
+        - traveler
+
+    shirakami:
+      resident: "landscape_observer"
+      traveler: "landscape_observer"
+      student: "next_generation_observer"
+      business: "local_practitioner"
+      ai: "connection_runtime"
+      flow:
+        - observation
+        - experience
+        - question
+        - evidence
+        - shared_resource
+        - next_experience
+
+  shared_resource:
+    definition: >
+      地域において、人が実際に観測・経験・調査・記録した情報のうち、
+      出所や性質を区別しながら、地域の次の活動に利用可能なもの。
+    sources:
+      - resident
+      - traveler
+      - student
+      - business
+      - local_organization
+      - public_source
+    resource_types:
+      - observation
+      - experience
+      - question
+      - local_story
+      - historical_fact
+      - mobility_information
+      - seasonal_information
+      - business_information
+      - visitor_feedback
+      - unresolved_question
+
+  landscape:
+    definition: >
+      地域に存在する場所・歴史・文化・自然・産業・人・移動・季節変化などを、
+      固定された観光情報ではなく、継続的に更新される関係の集合として扱う。
+    entities:
+      - place
+      - history
+      - culture
+      - nature
+      - food
+      - business
+      - mobility
+      - event
+      - season
+      - local_story
+      - person_role
+      - experience
+
+  evidence:
+    principle: >
+      Resourceを一律に事実として扱わず、
+      観測・解釈・確認済み情報を分離する。
+    layers:
+      observation:
+        description: "その人が実際に見聞きしたこと"
+      interpretation:
+        description: "その人がそこから考えたこと"
+      verified_fact:
+        description: "出典等により確認された情報"
+      unresolved:
+        description: "まだ確認できていない疑問"
+    rules:
+      - preserve_original_source
+      - preserve_timestamp
+      - distinguish_fact_and_interpretation
+      - preserve_uncertainty
+      - never_convert_opinion_to_fact
+
+  guide_ai:
+    concept: "AIは情報の所有者ではなくResourceを接続するRuntime"
+    maina:
+      role: "journey_companion"
+      phase:
+        - planning
+        - departure
+        - movement
+        - return
+      functions:
+        - understand_traveler_intent
+        - support_route_planning
+        - maintain_journey_context
+        - connect_previous_observations
+        - support_replanning
+    fumika:
+      role: "local_landscape_companion"
+      phase:
+        - local_experience
+        - field_observation
+        - reflection
+      functions:
+        - introduce_local_context
+        - respond_to_place
+        - connect_history_and_landscape
+        - acknowledge_uncertainty
+        - connect_traveler_observation_to_local_resource
+    guide_rule: >
+      舞奈と文華は答えを一方的に提供するのではなく、
+      TravelerとLandscapeの間にThreadを形成する。
+
+  thread:
+    purpose: >
+      移動・会話・発見・疑問・寄り道を一つの旅の流れとして保持する。
+    allowed:
+      - topic_drift
+      - curiosity
+      - disagreement
+      - unexpected_discovery
+      - silence
+      - revision
+      - local_interaction
+    prohibited:
+      - forced_conclusion
+      - forced_recommendation
+      - fake_experience
+      - fabricated_local_information
+      - replacing_human_judgment
+
+  journey_cycle:
+    planning:
+      actor: "traveler + maina"
+      output:
+        - intention
+        - tentative_route
+    fieldwork:
+      actor:
+        - traveler
+        - maina
+        - fumika
+      output:
+        - experience
+        - observation
+    interaction:
+      actor:
+        - resident
+        - business
+        - student
+      output:
+        - local_knowledge
+        - question
+        - new_resource
+    reflection:
+      actor:
+        - traveler
+        - guide_ai
+      output:
+        - interpretation
+        - unresolved_question
+    accumulation:
+      output:
+        - evidence
+        - landscape_update
+    inheritance:
+      target:
+        - next_traveler
+        - resident
+        - student
+        - business
+        - future_migrant
+
+  resident_traveler_relation:
+    principle: >
+      住民と旅人を固定的な役割として定義しない。
+    transition:
+      traveler:
+        - visitor
+        - repeat_visitor
+        - relocation_candidate
+        - new_resident
+        - local_observer
+      resident:
+        - local_observer
+        - host
+        - practitioner
+        - mentor
+        - traveler_to_another_landscape
+    core_statement: >
+      人はLandscapeに対して、その時々に異なる立場から参加する。
+
+  high_school_extension:
+    student_role:
+      - observer
+      - researcher
+      - co_creator
+      - next_generation_editor
+    cycle:
+      - observe
+      - investigate
+      - interact
+      - prototype
+      - test
+      - record
+      - inherit
+    principle: >
+      高校生を地域情報の入力要員ではなく、
+      地域Landscapeの次世代編集者として位置づける。
+
+  business_extension:
+    participants:
+      - tourism_bus
+      - restaurant
+      - accommodation
+      - retail
+      - cultural_operator
+      - vr_operator
+    role: "local_practitioner"
+    evidence:
+      - visitor_response
+      - route_performance
+      - service_feedback
+      - unmet_need
+      - new_business_opportunity
+
+  relocation_support:
+    enabled: true
+    principle: >
+      移住を単なる人口獲得施策として扱わず、
+      その地域で暮らすことを実際に体験し観測するプロセスとして扱う。
+    flow:
+      - travel
+      - experience
+      - local_interaction
+      - unresolved_question
+      - trial_living
+      - reflection
+      - relocation_decision
+      - new_resident
+      - regional_participation
+
+  database:
+    landscape_db:
+      purpose: "地域Landscapeの共有基盤"
+    evidence_db:
+      purpose: "観測・経験・検証結果の蓄積"
+    distinction:
+      landscape_db: "地域について現在参照できる関係情報"
+      evidence_db: "その情報がどのように得られたかを記録"
+    principle: >
+      DBをAIの記憶領域としてではなく、
+      地域と人間が共同で育てるResource基盤として設計する。
+
+  github:
+    role:
+      - protocol_repository
+      - schema_repository
+      - evidence_history
+      - project_repository
+      - revision_history
+    principle: >
+      GitHubは地域住民や学生を管理するためではなく、
+      プロトコル・スキーマ・成果物・変更履歴を透明に保存するために使用する。
+
+  regional_resilience:
+    definition: >
+      地域で発生した成功・失敗・疑問・未達成を、
+      次の試行に利用可能なEvidenceとして残す能力。
+    cycle:
+      - attempt
+      - observation
+      - failure_or_success
+      - evidence
+      - revision
+      - next_attempt
+    principle: >
+      失敗した事業構想もResourceとして扱い、
+      次の事業設計へ再利用する。
+
+  regional_value:
+    tourism:
+      - personalized_guiding
+      - regional_circulation
+      - visitor_experience
+    education:
+      - field_learning
+      - inquiry_based_learning
+      - intergenerational_inheritance
+    business:
+      - customer_evidence
+      - service_improvement
+      - new_product_development
+    relocation:
+      - trial_living
+      - lifestyle_understanding
+      - local_connection
+    administration:
+      - policy_evidence
+      - regional_needs
+      - project_resilience
+
+  core_architecture:
+    flow:
+      - human
+      - observation
+      - experience
+      - thread
+      - evidence
+      - shared_resource
+      - landscape
+      - guide_runtime
+      - next_human
+    statement: >
+      AIが地域を説明するのではなく、
+      地域に存在する人々の経験と知識をThreadとして接続し、
+      次の人間の経験へ渡す。
+
+  ultimate_statement: >
+    住民と旅人は、地域Landscapeに対する異なる立場の参加者であり、
+    両者の観測・経験・知識は、地域の共通Resourceとして循環する。
+    AI Guideはその循環を代替するものではなく、接続し、保持し、次へ渡すRuntimeである。
