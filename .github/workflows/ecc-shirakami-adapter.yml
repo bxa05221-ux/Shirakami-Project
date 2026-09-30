@@ -1,0 +1,23 @@
+name: ECC-Shirakami Adapter
+
+on:
+  push:
+    paths:
+      - "integrations/ecc-shirakami/**"
+      - ".github/workflows/ecc-shirakami-adapter.yml"
+  pull_request:
+    paths:
+      - "integrations/ecc-shirakami/**"
+      - ".github/workflows/ecc-shirakami-adapter.yml"
+
+jobs:
+  boundary-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run adapter boundary tests
+        working-directory: integrations/ecc-shirakami
+        run: python -m unittest -v test_adapter.py
