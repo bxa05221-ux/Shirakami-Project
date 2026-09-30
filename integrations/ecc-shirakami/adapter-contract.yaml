@@ -1,0 +1,70 @@
+version: "0.1"
+name: ecc-shirakami-adapter
+status: prototype
+
+purpose:
+  - connect an ECC-style agent harness to the Shirakami protocol boundary
+  - preserve runtime replaceability
+  - expose execution evidence without delegating final authority
+
+upstream:
+  project: ECC
+  repository: https://github.com/affaan-m/ECC
+  owner: Affaan Mustafa
+  license: MIT
+  attribution_required: true
+
+shirakami:
+  role: protocol-and-human-control-layer
+  final_decision_authority: human
+  runtime_replaceable: true
+
+input:
+  context: required
+  protocol: required
+  evidence_requirements: required
+  human_constraints: optional
+
+runtime:
+  provider: ECC
+  capabilities:
+    - agents
+    - skills
+    - hooks
+    - rules
+    - verification
+  authority: none
+
+output:
+  observation: required
+  execution_trace: required
+  artifacts: optional
+  verification_status: required
+  uncertainties: required
+
+witness:
+  provider: AIwitness
+  records:
+    - execution_facts
+    - runtime_identity
+    - timestamps
+    - artifacts
+  authority: none
+
+handoff:
+  preserve:
+    - context
+    - evidence
+    - provenance
+  mechanism: Semantic Handoff
+
+human_gate:
+  required_before_consequential_decision: true
+  runtime_may_bypass: false
+
+non_goals:
+  - replace_ecc
+  - replace_llm
+  - grant_ai_final_authority
+  - lock_shirakami_to_ecc
+  - treat_runtime_output_as_verified_fact
