@@ -1,4 +1,4 @@
-version: "0.1"
+version: "0.2"
 status: draft
 purpose: "Define repository boundaries before any destructive migration."
 
@@ -19,6 +19,25 @@ repositories:
     visibility_target: public-candidate
     license_target: MIT
     policy: "Stable specifications and contracts; publication after review."
+
+  - name: Shirakami-Runtime-Integration
+    role: model-and-runtime-integration
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Neutral interoperability layer for replaceable AI models, coding agents, agent harnesses, and development platforms; publication after review."
+    public_scope:
+      - adapter-contracts
+      - provider-neutral-interfaces
+      - reproducible-integration-tests
+      - public-examples
+      - compatibility-documentation
+    private_scope:
+      - credentials
+      - private-prompts
+      - provider-confidential-material
+      - unreleased-ip
+      - gadget-physical-implementation
+    boundary_rule: "Connect replaceable runtimes to Shirakami; do not define Shirakami authority and do not make any specific provider canonical."
 
   - name: github-context-bridge-public
     role: public-github-bridge
