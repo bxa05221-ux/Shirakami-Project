@@ -1,51 +1,91 @@
-# Repository Boundary Map v0.2
+# Repository Boundary Map v0.3
 
-This document defines the first-pass repository boundaries for the Shirakami project.
+This document defines the repository boundaries and the public/private/cooperative layers for the Shirakami project.
 
-## Principle
+## Three-layer architecture
 
-The repository layout is itself a boundary:
+### Public
 
-- Public repositories contain reusable, reviewed software and specifications.
-- Private repositories contain research, experiments, unreleased implementation, and IP candidates.
-- New potentially protectable technical content is held for review before publication.
-- Legacy repositories are preserved rather than destructively rewritten during the first phase.
-- AI providers and execution systems are treated as replaceable Runtimes, not as part of Shirakami's core authority.
+Public repositories contain **stable, reviewed artifacts intended for reuse**:
 
-## Proposed public-facing set
+- `shirakami-model`
+- `shirakami-specification`
+- `Shirakami-Runtime-Integration`
+- `github-context-bridge-public`
+- `shirakami-ui-for-ai`
 
-1. `shirakami-model` — core architecture and model documentation
-2. `shirakami-specification` — normative contracts and specifications
-3. `Shirakami-Runtime-Integration` — provider/runtime adapters and interoperability contracts
-4. `github-context-bridge-public` — public GitHub Context Bridge
-5. `shirakami-ui-for-ai` — reusable UI/observation component
+### Private development
 
-## Private set
+The development environment remains deliberately closed:
 
-- `Shirakami-Project` — integration/governance workspace
-- `github-context-bridge` — bridge research
-- `shirakami-research` — research and IP review
-- `shirakami-os-lab` — experiments
-- `shirakami-OS` — legacy history and current reference Runtime/Adapter implementation
-- `shirakami-ai-governance` — governance/market experiments
+- `Shirakami-Project`
+- `github-context-bridge`
+- `shirakami-research`
+- `shirakami-os-lab`
+- `shirakami-OS`
+- `shirakami-ai-governance`
+
+This boundary allows experiments, provider-specific testing, unreleased implementation, internal evaluation, and IP-sensitive material to mature before publication.
+
+**Private status is a development-control boundary, not a guarantee of secrecy, confidentiality, or patent protection.** Publication and IP questions remain subject to separate review.
+
+## Cooperative showcase
+
+A proposed `shirakami-showcase` repository will demonstrate cooperation between Shirakami and external projects.
+
+Its purpose is not to collect other projects into Shirakami or claim their work as Shirakami's own. It will show how independently maintained projects can be connected through Shirakami.
+
+For each external project, the showcase should record:
+
+- upstream repository
+- author/project credit
+- applicable license
+- version or commit used
+- modifications, if any
+- Shirakami-authored adapter/integration
+- execution evidence where appropriate
+- provenance
+
+The preferred integration pattern is:
+
+```
+External Project
+      ↓
+Adapter / Connector
+      ↓
+Shirakami Runtime Integration
+      ↓
+Context / Protocol
+      ↓
+Evidence / AIwitness
+      ↓
+Human Gate
+```
+
+External code should remain distinguishable from Shirakami-authored code. Whole-repository copying should not be the default.
+
+The showcase must not imply endorsement, official partnership, or ownership by an upstream project without explicit authorization.
 
 ## Runtime Integration boundary
 
-`Shirakami-Runtime-Integration` is intended to become the neutral connection layer between Shirakami and replaceable AI/execution systems.
+`Shirakami-Runtime-Integration` is the neutral connection layer between Shirakami and replaceable AI/execution systems.
 
-Examples:
+Examples include:
 
 - OpenAI / compatible APIs
 - Gemini
 - Claude
 - Codex
+- GitHub Copilot
+- Copilot CLI
+- GitHub Models
 - ECC
 - local LLMs
-- future runtimes
+- future AI agents and development platforms
 
 It should contain **how to connect**, not **which runtime is authoritative**.
 
-The new repository is therefore a proposed destination, not yet a migration target. Existing Runtime/Adapter code in `shirakami-OS` remains untouched until a separate migration review.
+The new repository is a proposed destination, not yet a migration target. Existing Runtime/Adapter code in `shirakami-OS` remains untouched until a separate migration review.
 
 ## Not yet public
 
@@ -54,3 +94,19 @@ Concrete gadget/physical implementation details remain outside the public releas
 ## Migration policy
 
 The first phase is deliberately non-destructive. Files are not deleted merely to make the tree look clean. Each future move should have its own PR and provenance note.
+
+## Publication gate
+
+```
+classify
+   ↓
+license_check
+   ↓
+ip_review
+   ↓
+human_gate
+   ↓
+release
+```
+
+When uncertain, hold publication.
