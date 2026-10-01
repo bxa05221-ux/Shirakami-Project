@@ -1,0 +1,78 @@
+version: "0.1"
+status: draft
+purpose: "Define repository boundaries before any destructive migration."
+
+repositories:
+  - name: Shirakami-Project
+    role: integration-and-governance
+    visibility_target: private
+    policy: "Integration workspace; no automatic publication."
+
+  - name: shirakami-model
+    role: core-model-and-architecture
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Public-facing core only after publication review."
+
+  - name: shirakami-specification
+    role: normative-specifications
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Stable specifications and contracts; publication after review."
+
+  - name: github-context-bridge-public
+    role: public-github-bridge
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Public implementation and examples only; no private credentials or unreleased IP."
+
+  - name: github-context-bridge
+    role: bridge-research
+    visibility_target: private
+    policy: "Experimental/private bridge work; publication candidates move through review."
+
+  - name: shirakami-research
+    role: research-and-ip-review
+    visibility_target: private
+    policy: "Research, evidence, candidates, and pre-publication review."
+
+  - name: shirakami-os-lab
+    role: experimental-lab
+    visibility_target: private
+    policy: "Experiments and fixtures; promote only validated artifacts."
+
+  - name: shirakami-OS
+    role: legacy-history
+    visibility_target: private
+    policy: "Preserve historical implementation and provenance; do not reorganize destructively."
+
+  - name: shirakami-ai-governance
+    role: governance-and-market-experiments
+    visibility_target: private
+    policy: "Governance/market experiments; publish only reviewed reusable protocols."
+
+  - name: shirakami-ui-for-ai
+    role: ui-for-ai-component
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Reusable UI/observation component; publication after review."
+
+publication_gate:
+  stages:
+    - classify
+    - license_check
+    - ip_review
+    - human_gate
+    - release
+  default_if_uncertain: hold
+  rule: "Do not publish new potentially protectable technical content before IP review."
+
+gadget_boundary:
+  status: private
+  rule: "Keep concrete physical implementation details out of public repositories until IP review."
+
+migration_rule:
+  - "Inventory before moving."
+  - "Preserve provenance and history where practical."
+  - "Do not delete source artifacts during the first reorganization phase."
+  - "Use separate pull requests for each migration group."
