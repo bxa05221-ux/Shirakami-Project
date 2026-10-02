@@ -13,6 +13,48 @@ Shirakami Project は、AIそのものを賢くするのではなく、**人間�
 
 ---
 
+## Public Repository Map
+
+公開Repositoryは、それぞれ異なる責任範囲を持ちます。すべてを一つのRepositoryに集約するのではなく、**概念・仕様・Runtime・プロジェクト入口・外部観測**を分離しています。
+
+| Repository | Public role |
+|---|---|
+| [`Shirakami-Project`](https://github.com/bxa05221-ux/Shirakami-Project) | 全体Landscape / Reviewer入口 |
+| [`shirakami-model`](https://github.com/bxa05221-ux/shirakami-model) | 白神モデル / Language Protocol OS の概念 |
+| [`shirakami-specification`](https://github.com/bxa05221-ux/shirakami-specification) | Protocol・構造・仕様 |
+| [`shirakami-OS`](https://github.com/bxa05221-ux/shirakami-OS) | Runtime・実装・Tests |
+| [`github-context-bridge-public`](https://github.com/bxa05221-ux/github-context-bridge-public) | GitHub Context Bridge / 外部Repository観測の公開Prototype |
+
+### Public / Private Boundary
+
+公開Repositoryは、内部研究・実験・開発本体と同一ではありません。
+
+```text
+                    Shirakami Project
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+       Concept         Specification     Runtime
+          │                │                │
+   shirakami-model  shirakami-specification  shirakami-OS
+          │                │                │
+          └────────────────┼────────────────┘
+                           │
+                    Public Reviewer Entry
+                           │
+                  github-context-bridge-public
+                           │
+                    External Observation
+
+        Private side: Research / Lab / Governance /
+        domain experiments / heavy-use implementation
+```
+
+**Public Repositoryに存在しないものが、存在しないとは限りません。**
+内部研究・実験・開発本体は別Repositoryで管理します。
+
+---
+
 ## Reviewer Entry
 
 白神をレビューする場合、説明だけを読む必要はありません。
@@ -61,6 +103,8 @@ Shirakami Project は、単一のアプリケーションではありません�
 | [`shirakami-model`](https://github.com/bxa05221-ux/shirakami-model) | 白神モデル / Language Protocol OS |
 | [`shirakami-specification`](https://github.com/bxa05221-ux/shirakami-specification) | Protocol・構造・仕様 |
 | [`shirakami-OS`](https://github.com/bxa05221-ux/shirakami-OS) | Runtime・実装・Tests |
+| [`github-context-bridge`](https://github.com/bxa05221-ux/github-context-bridge) | Privateな開発・実験本体 |
+| [`github-context-bridge-public`](https://github.com/bxa05221-ux/github-context-bridge-public) | 公開Prototype / 外部Repository観測 |
 
 関連するApplicationや実験用Repositoryは、それぞれの責任範囲に応じて接続されます。
 
@@ -193,7 +237,8 @@ Shirakami は現在、プロトタイプから実運用へ向けたシェイク�
 2. **Model** — 白神が何を目指すのか
 3. **Specification** — どのような構造で扱うのか
 4. **OS / Runtime** — それをどう実装するのか
-5. **Research** — 背後にある理論・仮説・実験
+5. **Context Bridge Public** — 外部Repositoryをどう観測するのか
+6. **Research** — 背後にある理論・仮説・実験
 
 ---
 
