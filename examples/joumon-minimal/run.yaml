@@ -1,0 +1,22 @@
+context_id: joumon-poc-context-001
+protocol_id: joumon-poc-protocol-001
+runs:
+  - runtime_id: mock-runtime-a
+    adapter_version: "0.1"
+    output: "Candidate action A; requires human review."
+    observed: true
+    evidence:
+      evidence_id: joumon-poc-evidence-a
+      authority: non-authoritative
+  - runtime_id: mock-runtime-b
+    adapter_version: "0.1"
+    output: "Candidate action B; requires human review."
+    observed: true
+    evidence:
+      evidence_id: joumon-poc-evidence-b
+      authority: non-authoritative
+human_gate:
+  decision_status: pending
+  decision_authority: human
+verification:
+  status: planned
