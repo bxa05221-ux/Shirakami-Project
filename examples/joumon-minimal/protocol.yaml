@@ -1,0 +1,4 @@
+protocol_id: joumon-poc-protocol-001
+input_context_id: joumon-poc-context-001
+runtime_role: replaceable
+human_gate_required: true
