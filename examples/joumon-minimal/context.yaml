@@ -1,0 +1,7 @@
+context_id: joumon-poc-context-001
+task: "Produce one short candidate action for the supplied Context."
+constraints:
+  - "The candidate requires human review."
+authority:
+  final_decision: human
+  ai_role: simulation_and_assistance
