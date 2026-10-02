@@ -1,0 +1,142 @@
+matome:
+  title: "JOUMON Semantic Handoff"
+  codename: "JOUMON"
+  version: "0.1"
+  status: "experimental"
+  statement: >
+    異なるAI Runtime間でContext、Protocol、Evidence、Lineageを保持したまま
+    Semantic Handoffを行い、Runtimeの交換可能性を確保する。
+    HandoffおよびVerificationは決定権を持たず、最終決定権はHuman Gateに残す。
+
+purpose:
+  primary:
+    - "異なるRuntime間でContextを継承する"
+    - "EvidenceとRuntime provenanceを保持する"
+    - "Semantic HandoffをProvider-neutralな境界として提供する"
+    - "Matome YAMLを意味単位として利用する"
+  non_goals:
+    - "AI Runtimeそのものを統一する"
+    - "特定Providerへの依存"
+    - "AIによる最終決定"
+    - "Verificationによる権限付与"
+    - "Handoffによる権限継承"
+    - "Runtime間の優劣ランキング"
+
+architecture:
+  flow:
+    - "Context"
+    - "Protocol"
+    - "Runtime"
+    - "Evidence"
+    - "Lineage"
+    - "Semantic Handoff"
+    - "Matome"
+    - "Runtime"
+    - "Verification"
+    - "Human Gate"
+  runtime_model:
+    principle: "Runtime is replaceable."
+    provider_neutral: true
+    provider_lock_in: false
+
+semantic_handoff:
+  preserves:
+    - "context_id"
+    - "protocol_id"
+    - "evidence"
+    - "lineage"
+    - "runtime_provenance"
+  authority:
+    handoff: false
+    verification: false
+    final_decision: "human"
+
+evidence:
+  role: "observation"
+  authoritative: false
+  required_fields:
+    - "evidence_id"
+    - "context_id"
+    - "protocol_id"
+    - "runtime_id"
+    - "provider"
+    - "runtime_type"
+    - "mode"
+    - "observed_output"
+
+lineage:
+  required: true
+  minimum_chain:
+    - "context -> protocol"
+    - "protocol -> runtime"
+    - "runtime -> evidence"
+
+verification:
+  role: "structural_and_provenance_check"
+  authority: false
+  must_not:
+    - "approve"
+    - "promote"
+    - "activate"
+    - "select_final_decision"
+
+matome_bridge:
+  direction:
+    - "Semantic Handoff -> Matome"
+    - "Matome -> Semantic Handoff"
+  roundtrip:
+    required: true
+  invariants:
+    - "handoff identity preserved"
+    - "context identity preserved"
+    - "protocol identity preserved"
+    - "evidence identity preserved"
+    - "runtime provenance preserved"
+    - "lineage preserved"
+    - "human final authority preserved"
+
+multi_runtime:
+  enabled: true
+  target_runtime_count: 9
+  rule: >
+    Runtime同士を直接結合するのではなく、共通Semantic Boundaryを介して接続する。
+  adapter_contract:
+    required:
+      - "Context input"
+      - "Protocol input"
+      - "RuntimeResult output"
+      - "Evidence conversion"
+      - "Lineage generation"
+
+provider:
+  sdk_location: "outside_protocol_core"
+  credentials_location: "outside_repository"
+  network_behavior: "outside_protocol_core"
+  current_adapter:
+    name: "OpenAI-compatible"
+    status: "adapter-boundary"
+    live_execution_verified: false
+
+human_gate:
+  required: true
+  automatic: false
+  final_decision_authority: "human"
+  rule: >
+    AI Runtime、Evidence、Verification、Semantic Handoffのいずれも
+    Human Gateの決定権を継承または代替しない。
+
+status:
+  architecture: "implemented-poc"
+  mock_runtime_chain: "implemented"
+  matome_roundtrip: "implemented-poc"
+  multi_hop: "implemented-poc"
+  human_gate: "implemented-poc"
+  live_adapter_boundary: "implemented-poc"
+  live_provider_execution: "not_yet_verified"
+  production_readiness: false
+
+principle:
+  statement: "AIを接続するのではなく、AI間を流れる意味を接続する。"
+
+authority_rule:
+  statement: "AIが動いても、決定権は動かない。"
