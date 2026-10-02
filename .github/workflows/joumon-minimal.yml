@@ -1,0 +1,25 @@
+name: JOUMON Minimal PoC
+
+on:
+  push:
+    paths:
+      - "examples/joumon-minimal/**"
+      - ".github/workflows/joumon-minimal.yml"
+  pull_request:
+    paths:
+      - "examples/joumon-minimal/**"
+      - ".github/workflows/joumon-minimal.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/joumon-minimal
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run JOUMON boundary tests
+        run: python -m pytest -q
