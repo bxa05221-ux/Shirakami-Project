@@ -24,7 +24,7 @@ def test_matome_drives_multiple_runtime_observations():
         ("runtime-b", "provider-b", provider_b),
     ])
     assert context.context_id.startswith("matome:0.1:JOUMON")
-    assert protocol.context_id == context.context_id
+    assert protocol.input_context_id == context.context_id
     assert len(observations) == 2
     e1, l1 = observations[0]
     e2, l2 = observations[1]
