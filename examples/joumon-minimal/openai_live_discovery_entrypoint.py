@@ -22,6 +22,7 @@ LIVE_REQUEST_TIMEOUT_SECONDS = 60.0
 
 
 def discover_model(client: Any) -> str:
+    fallback_model = os.environ.get("JOUMON_FALLBACK_MODEL")
     last_error = None
     for attempt in range(len(DISCOVERY_RETRY_DELAYS_SECONDS) + 1):
         try:
@@ -40,6 +41,8 @@ def discover_model(client: Any) -> str:
             )
         except Exception as exc:
             last_error = exc
+            if fallback_model:
+                return fallback_model
             if attempt >= len(DISCOVERY_RETRY_DELAYS_SECONDS):
                 raise
             time.sleep(DISCOVERY_RETRY_DELAYS_SECONDS[attempt])
