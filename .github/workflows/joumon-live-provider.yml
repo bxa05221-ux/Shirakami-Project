@@ -1,0 +1,32 @@
+name: JOUMON Live Provider Observation
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'Provider model identifier'
+        required: true
+        type: string
+      statement:
+        description: 'Observation statement'
+        required: true
+        type: string
+
+jobs:
+  live-observation:
+    runs-on: ubuntu-latest
+    environment: joumon-live
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip openai pyyaml
+      - name: Run live JOUMON observation
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ inputs.model }}
+          JOUMON_STATEMENT: ${{ inputs.statement }}
+        run: python examples/joumon-minimal/openai_live_entrypoint.py

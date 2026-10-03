@@ -1,0 +1,140 @@
+version: "0.3"
+status: draft
+purpose: "Define repository boundaries before any destructive migration."
+
+architecture:
+  layers:
+    public:
+      purpose: "Stable, reviewed artifacts intended for reuse and external interoperability."
+    private_development:
+      purpose: "Development, research, experiments, unreleased implementation, and pre-publication review."
+    cooperative_showcase:
+      purpose: "Demonstrate cooperation between Shirakami and external projects without claiming external work as Shirakami-owned."
+      proposed_repository: shirakami-showcase
+
+repositories:
+  - name: Shirakami-Project
+    role: integration-and-governance
+    visibility_target: private
+    policy: "Private development workspace; no automatic publication."
+
+  - name: shirakami-model
+    role: core-model-and-architecture
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Public-facing core only after publication review."
+
+  - name: shirakami-specification
+    role: normative-specifications
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Stable specifications and contracts; publication after review."
+
+  - name: Shirakami-Runtime-Integration
+    role: model-and-runtime-integration
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Neutral interoperability layer for replaceable AI models, coding agents, agent harnesses, and development platforms; publication after review."
+    public_scope:
+      - adapter-contracts
+      - provider-neutral-interfaces
+      - reproducible-integration-tests
+      - public-examples
+      - compatibility-documentation
+    private_scope:
+      - credentials
+      - private-prompts
+      - provider-confidential-material
+      - unreleased-ip
+      - gadget-physical-implementation
+    boundary_rule: "Connect replaceable runtimes to Shirakami; do not define Shirakami authority and do not make any specific provider canonical."
+
+  - name: shirakami-showcase
+    role: cooperative-integration-showcase
+    status: proposed
+    visibility_target: public-candidate
+    license_target: "Review per component; Shirakami-authored material may target MIT."
+    policy: "Demonstrate cooperative integration with external projects while preserving upstream identity, licensing, provenance, and attribution."
+    public_scope:
+      - integration-adapters
+      - reproducible-examples
+      - upstream-references
+      - license-notices
+      - credits-and-provenance
+      - pinned-versions-or-commits
+      - modification-notes
+      - execution-evidence
+    private_scope:
+      - credentials
+      - private-prompts
+      - provider-confidential-material
+      - unreleased-ip
+    cooperation_rules:
+      - "Do not present upstream code as Shirakami-authored."
+      - "Record upstream repository, author/project, license, version or commit, and relevant modifications."
+      - "Keep external code and Shirakami-authored integration code clearly distinguishable."
+      - "Respect upstream license and attribution requirements individually."
+      - "Prefer adapters/connectors over copying entire upstream repositories."
+      - "Do not imply endorsement or official partnership without explicit authorization."
+
+  - name: github-context-bridge-public
+    role: public-github-bridge
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Public implementation and examples only; no private credentials or unreleased IP."
+
+  - name: github-context-bridge
+    role: bridge-research
+    visibility_target: private
+    policy: "Experimental/private bridge work; publication candidates move through review."
+
+  - name: shirakami-research
+    role: research-and-ip-review
+    visibility_target: private
+    policy: "Research, evidence, candidates, and pre-publication review."
+
+  - name: shirakami-os-lab
+    role: experimental-lab
+    visibility_target: private
+    policy: "Experiments and fixtures; promote only validated artifacts."
+
+  - name: shirakami-OS
+    role: legacy-history
+    visibility_target: private
+    policy: "Preserve historical implementation and provenance; do not reorganize destructively."
+
+  - name: shirakami-ai-governance
+    role: governance-and-market-experiments
+    visibility_target: private
+    policy: "Governance/market experiments; publish only reviewed reusable protocols."
+
+  - name: shirakami-ui-for-ai
+    role: ui-for-ai-component
+    visibility_target: public-candidate
+    license_target: MIT
+    policy: "Reusable UI/observation component; publication after review."
+
+private_development_boundary:
+  rule: "Keep the development environment private so experiments, provider-specific testing, unreleased implementation, internal evaluation, and IP-sensitive material can mature without accidental publication."
+  clarification: "Private status is a development-control boundary, not a guarantee of secrecy, confidentiality, or patent protection."
+  release_rule: "Only reviewed, intentionally selected artifacts cross from private development into public repositories."
+
+publication_gate:
+  stages:
+    - classify
+    - license_check
+    - ip_review
+    - human_gate
+    - release
+  default_if_uncertain: hold
+  rule: "Do not publish new potentially protectable technical content before IP review."
+
+gadget_boundary:
+  status: private
+  rule: "Keep concrete physical implementation details out of public repositories until IP review."
+
+migration_rule:
+  - "Inventory before moving."
+  - "Preserve provenance and history where practical."
+  - "Do not delete source artifacts during the first reorganization phase."
+  - "Use separate pull requests for each migration group."
