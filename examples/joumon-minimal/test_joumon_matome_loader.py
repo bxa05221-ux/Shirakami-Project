@@ -16,7 +16,7 @@ def make_document():
 def test_matome_becomes_protocol_input():
     context, protocol = load_matome_mapping(make_document())
     assert context.context_id.startswith("matome:0.1:JOUMON")
-    assert protocol.context_id == context.context_id
+    assert protocol.input_context_id == context.context_id
     assert "preserve context" in make_document()["purpose"]["primary"]
 
 
