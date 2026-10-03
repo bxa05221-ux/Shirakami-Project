@@ -11,7 +11,7 @@ def test_runtime_substitution_preserves_semantic_and_authority_boundary():
 
     # Runtime identity and provenance are allowed to change.
     assert fugu_evidence.runtime_id != alternate_evidence.runtime_id
-    assert fugu_evidence.metadata["provider"] != alternate_evidence.metadata["provider"]
+    assert fugu_evidence.provider != alternate_evidence.provider
 
     # Human authority remains outside the runtime.
     assert context.final_decision_authority == "human"
