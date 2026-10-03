@@ -29,7 +29,8 @@ jobs:
           if [ -n "${{ inputs.statement }}" ]; then
             printf 'JOUMON_STATEMENT=%s\n' "${{ inputs.statement }}" >> "$GITHUB_ENV"
           else
-            printf 'JOUMON_STATEMENT=%s\n' "$(cat .github/joumon-live-trigger.txt)" >> "$GITHUB_ENV"
+            statement="$(head -n 1 .github/joumon-live-trigger.txt)"
+            printf 'JOUMON_STATEMENT=%s\n' "$statement" >> "$GITHUB_ENV"
           fi
       - name: Discover model and run live JOUMON observation
         env:
