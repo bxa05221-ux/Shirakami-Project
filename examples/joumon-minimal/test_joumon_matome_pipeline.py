@@ -33,3 +33,6 @@ def test_matome_drives_multiple_runtime_observations():
     assert e1.provider != e2.provider
     assert l1.evidence_id == e1.evidence_id
     assert l2.evidence_id == e2.evidence_id
+
+
+# CI revalidation marker: this test suite must execute against the fixed contract.
