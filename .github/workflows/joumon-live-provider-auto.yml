@@ -34,4 +34,5 @@ jobs:
       - name: Discover model and run live JOUMON observation
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          JOUMON_FALLBACK_MODEL: gpt-5.6-sol
         run: python examples/joumon-minimal/openai_live_discovery_entrypoint.py

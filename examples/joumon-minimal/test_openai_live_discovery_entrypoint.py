@@ -2,7 +2,6 @@ from types import SimpleNamespace
 
 import openai_live_discovery_entrypoint as entrypoint
 
-
 from openai_live_discovery_entrypoint import discover_model
 
 
@@ -55,3 +54,14 @@ def test_discover_model_retries_transient_failure(monkeypatch):
 
     assert discover_model(client) == "gpt-4o"
     assert client.models.calls == 3
+
+
+def test_discover_model_uses_explicit_fallback_after_provider_failure(monkeypatch):
+    class FailingModels:
+        def list(self):
+            raise RuntimeError("temporary 504")
+
+    client = SimpleNamespace(models=FailingModels())
+    monkeypatch.setenv("JOUMON_FALLBACK_MODEL", "gpt-5.6-sol")
+
+    assert discover_model(client) == "gpt-5.6-sol"
