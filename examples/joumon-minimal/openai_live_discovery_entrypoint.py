@@ -1,6 +1,7 @@
 """JOUMON live OpenAI entrypoint with API-visible model discovery."""
 
 import os
+import time
 from typing import Any
 
 from joumon_openai_adapter import build_openai_compatible_adapter
@@ -16,17 +17,32 @@ PREFERRED_MODEL_IDS = (
     "gpt-5",
 )
 
+DISCOVERY_RETRY_DELAYS_SECONDS = (5, 15, 30)
+
 
 def discover_model(client: Any) -> str:
-    models = client.models.list().data
-    available = {model.id for model in models}
-    for model_id in PREFERRED_MODEL_IDS:
-        if model_id in available:
-            return model_id
-    fallback = sorted(model_id for model_id in available if model_id.startswith("gpt-"))
-    if fallback:
-        return fallback[0]
-    raise RuntimeError("No GPT model is available to the supplied OpenAI API key")
+    last_error = None
+    for attempt in range(len(DISCOVERY_RETRY_DELAYS_SECONDS) + 1):
+        try:
+            models = client.models.list().data
+            available = {model.id for model in models}
+            for model_id in PREFERRED_MODEL_IDS:
+                if model_id in available:
+                    return model_id
+            fallback = sorted(
+                model_id for model_id in available if model_id.startswith("gpt-")
+            )
+            if fallback:
+                return fallback[0]
+            raise RuntimeError(
+                "No GPT model is available to the supplied OpenAI API key"
+            )
+        except Exception as exc:
+            last_error = exc
+            if attempt >= len(DISCOVERY_RETRY_DELAYS_SECONDS):
+                raise
+            time.sleep(DISCOVERY_RETRY_DELAYS_SECONDS[attempt])
+    raise RuntimeError("Model discovery failed") from last_error
 
 
 def require_live_config() -> tuple[str, str]:
