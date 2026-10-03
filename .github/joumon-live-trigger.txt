@@ -1,0 +1,1 @@
+JOUMONのSemantic Handoffにおいて、ContextとEvidenceの連続性を観測する。
