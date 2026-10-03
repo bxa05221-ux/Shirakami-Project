@@ -18,6 +18,7 @@ PREFERRED_MODEL_IDS = (
 )
 
 DISCOVERY_RETRY_DELAYS_SECONDS = (5, 15, 30)
+LIVE_REQUEST_TIMEOUT_SECONDS = 60.0
 
 
 def discover_model(client: Any) -> str:
@@ -59,11 +60,18 @@ def run_live_observation_once():
     api_key, statement = require_live_config()
     from openai import OpenAI
 
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(
+        api_key=api_key,
+        timeout=LIVE_REQUEST_TIMEOUT_SECONDS,
+        max_retries=0,
+    )
     selected_model = discover_model(client)
 
     def invoke(request: LiveAdapterRequest, requested_model: str) -> str:
-        response = client.responses.create(model=requested_model, input=request.prompt)
+        response = client.responses.create(
+            model=requested_model,
+            input=request.prompt,
+        )
         return response.output_text
 
     adapter = build_openai_compatible_adapter(
