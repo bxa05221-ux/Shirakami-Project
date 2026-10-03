@@ -12,6 +12,14 @@ class ConsumerRuntime:
         self.runtime_id = runtime_id
         self.provider = provider
 
+    def execute(self, request: RuntimeRequest) -> RuntimeResult:
+        return RuntimeResult(
+            runtime_id=self.runtime_id,
+            context_id=request.context_id,
+            output=f"{self.runtime_id} produced a candidate for task: {request.task}; human review remains required.",
+            metadata={"provider": self.provider, "mode": "mock", "runtime_type": "model"},
+        )
+
     def execute_handoff(self, handoff):
         prior = [e.evidence_id for e in handoff.evidence]
         return RuntimeResult(
