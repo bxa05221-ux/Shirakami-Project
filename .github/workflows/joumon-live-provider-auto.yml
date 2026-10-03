@@ -23,17 +23,15 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: python -m pip install --upgrade pip openai pyyaml
-      - name: Read observation statement
-        id: statement
+      - name: Resolve observation statement
         shell: bash
         run: |
           if [ -n "${{ inputs.statement }}" ]; then
-            printf '%s' "${{ inputs.statement }}" > /tmp/joumon_statement.txt
+            printf 'JOUMON_STATEMENT=%s\n' "${{ inputs.statement }}" >> "$GITHUB_ENV"
           else
-            cp .github/joumon-live-trigger.txt /tmp/joumon_statement.txt
+            printf 'JOUMON_STATEMENT=%s\n' "$(cat .github/joumon-live-trigger.txt)" >> "$GITHUB_ENV"
           fi
       - name: Discover model and run live JOUMON observation
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          JOUMON_STATEMENT_FILE: /tmp/joumon_statement.txt
         run: python examples/joumon-minimal/openai_live_discovery_entrypoint.py
