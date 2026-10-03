@@ -22,7 +22,9 @@ class LiveRuntimeAdapter:
         self.invoke = invoke
 
     def execute(self, context: Context, protocol: ProtocolSpec) -> RuntimeResult:
-        request = LiveAdapterRequest(context.context_id, protocol.protocol_id, context.description)
+        if protocol.input_context_id != context.context_id:
+            raise ValueError("protocol/context mismatch")
+        request = LiveAdapterRequest(context.context_id, protocol.protocol_id, context.task)
         output = self.invoke(request)
         return RuntimeResult(
             runtime_id=self.runtime_id,
