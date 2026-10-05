@@ -15,6 +15,7 @@ def _server():
                 "human_gate": False,
                 "state_snapshot": True,
             },
+            "get_state": lambda self: {},
         }
     )()
     server = ThreadingHTTPServer(("127.0.0.1", 0), ShirakamiHTTPHandler)
