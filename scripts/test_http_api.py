@@ -13,6 +13,7 @@ def _server():
                 "semantic_handoff": True,
                 "candidate_creation": True,
                 "human_gate": False,
+                "state_snapshot": True,
             },
         }
     )()
@@ -37,6 +38,11 @@ def test_health_and_capabilities():
         capabilities = json.loads(response.read())["capabilities"]
         assert capabilities["candidate_creation"] is True
         assert capabilities["human_gate"] is False
+
+        connection.request("GET", "/v1/state")
+        response = connection.getresponse()
+        assert response.status == 200
+        assert json.loads(response.read())["state"] == {}
 
         connection.request("POST", "/v1/human-gate")
         response = connection.getresponse()
