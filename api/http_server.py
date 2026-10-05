@@ -32,6 +32,9 @@ class ShirakamiHTTPHandler(BaseHTTPRequestHandler):
         if path == "/v1/capabilities":
             self._json(200, {"capabilities": self.api.capabilities})
             return
+        if path == "/v1/state":
+            self._json(200, {"state": self.api.get_state()})
+            return
         if path.startswith("/v1/semantic-handoff/"):
             status, payload = self.api.get(
                 path, project="http-api",
