@@ -9,11 +9,16 @@ from .semantic_handoff import SemanticHandoffStore
 class ShirakamiAPI:
     def __init__(self, traces: Mapping[str, Mapping[str, Any]]):
         self._handoffs = SemanticHandoffStore(traces)
+        self._state = dict(traces.get("__shirakami_state__", {}))
         self.capabilities = {
             "semantic_handoff": True,
             "candidate_creation": True,
             "human_gate": False,
+            "state_snapshot": True,
         }
+
+    def get_state(self) -> dict[str, Any]:
+        return dict(self._state)
 
     def get_semantic_handoff(
         self, trace_id: str, *, project: str, objective: str,
