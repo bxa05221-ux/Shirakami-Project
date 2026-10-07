@@ -49,6 +49,33 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_verification_target_binding(events, verification) -> None:
+    target_id = verification.get("target_id")
+    if not target_id:
+        raise FullSystemAuthorityError("verification target_id is required")
+    verification_events = [
+        event for event in events
+        if event.get("event_type") == "verification"
+        and event.get("verification_id") == verification.get("verification_id")
+    ]
+    if not verification_events:
+        raise FullSystemAuthorityError("verification event missing")
+    observation_ids = {
+        event.get("parent_event_id")
+        for event in verification_events
+        if event.get("parent_event_id")
+    }
+    observations = {
+        event.get("event_id"): event
+        for event in events
+        if event.get("event_type") == "observation"
+    }
+    if not observation_ids:
+        raise FullSystemAuthorityError("verification observation binding missing")
+    if not any(observations.get(oid, {}).get("target_id") == target_id for oid in observation_ids):
+        raise FullSystemAuthorityError("verification target does not match observation")
+
+
 def _validate_verification_semantic_binding(verification, decision, approval, execution) -> None:
     for field in ("context_version", "evidence_hash", "protocol_hash", "proposal_id"):
         value = verification.get(field)
@@ -95,6 +122,7 @@ def validate_full_system_authority(
             current_revoked_verifiers=verifier_revoked_at,
         )
         _validate_system_temporal_binding(events, verification, decision, approval, execution)
+        _validate_verification_target_binding(events, verification)
         _validate_verification_semantic_binding(verification, decision, approval, execution)
         validate_full_human_gate(
             ui_event=ui_event, identity=identity, decision=decision,
