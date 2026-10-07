@@ -56,20 +56,34 @@ def test_future_evidence_is_rejected():
 
 def test_replayed_decision_is_rejected():
     events = [
-        {
-            "event_id": "d1",
-            "event_type": "human_decision",
-            "decision_id": "D1",
-            "occurred_at": "2026-10-07T10:00:00+09:00",
-        },
-        {
-            "event_id": "d2",
-            "event_type": "human_decision",
-            "decision_id": "D1",
-            "occurred_at": "2026-10-07T10:01:00+09:00",
-        },
+        {"event_id": "d1", "event_type": "human_decision", "decision_id": "D1",
+         "occurred_at": "2026-10-07T10:00:00+09:00"},
+        {"event_id": "d2", "event_type": "human_decision", "decision_id": "D1",
+         "occurred_at": "2026-10-07T10:01:00+09:00"},
     ]
     with pytest.raises(TemporalIntegrityError, match="decision replay"):
+        validate_event_graph(events)
+
+
+def test_replayed_approval_is_rejected():
+    events = _base()
+    events.append({
+        "event_id": "approval-2",
+        "event_type": "human_approval",
+        "approval_id": "A1",
+        "context_version": 10,
+        "occurred_at": "2026-10-07T10:07:00+09:00",
+        "parent_event_id": "obs-1",
+    })
+    with pytest.raises(TemporalIntegrityError, match="approval replay"):
+        validate_event_graph(events)
+
+
+def test_execution_before_approval_is_rejected():
+    events = _base()
+    events[-1]["occurred_at"] = "2026-10-07T10:04:00+09:00"
+    events[-1]["parent_event_id"] = None
+    with pytest.raises(TemporalIntegrityError, match="execution precedes approval"):
         validate_event_graph(events)
 
 
