@@ -1007,6 +1007,11 @@ def test_authority_edge_cannot_follow_competing_parent(event_type, parent_event_
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
+@pytest.mark.parametrize(("event_type", "parent_event_id"), [
+    ("evidence", "obs-1"), ("protocol", "proposal-1"), ("proposal", "evidence-1"),
+    ("verification", "protocol-1"), ("human_decision", "proposal-1"),
+    ("human_approval", "verification-1"), ("execution", "decision-1"),
+])
 def test_semantic_parent_rebinding_blocks(event_type, parent_event_id):
     bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id)
     with pytest.raises(FullSystemAuthorityError):
@@ -1321,7 +1326,7 @@ def test_duplicate_protocol_identity_with_mutated_binding_is_rejected():
 
 
 def test_duplicate_proposal_identity_with_mutated_binding_is_rejected():
-    duplicate = {**EVENTS[3], "event_id": "proposal-attack", "protocol_hash": "P2"}
+    duplicate = {**EVENTS[2], "event_id": "proposal-attack", "protocol_hash": "P2"}
     with pytest.raises(FullSystemAuthorityError):
         call(events=list(EVENTS) + [duplicate])
 
