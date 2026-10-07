@@ -231,6 +231,33 @@ def test_competing_current_proposal_identity_blocks_authority():
         call(events=[*EVENTS, competing])
 
 
+def test_competing_current_verification_identity_blocks_authority():
+    competing = dict(VERIFICATION)
+    competing["verification_id"] = VERIFICATION["verification_id"]
+    competing["event_id"] = "verification-2"
+    competing["parent_event_id"] = "obs-1"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing])
+
+
+def test_competing_current_approval_identity_blocks_authority():
+    competing = dict(APPROVAL)
+    competing["approval_id"] = APPROVAL["approval_id"]
+    competing["event_id"] = "approval-2"
+    competing["parent_event_id"] = "decision-1"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing])
+
+
+def test_competing_current_execution_identity_blocks_authority():
+    competing = dict(EXECUTION)
+    competing["approval_id"] = EXECUTION["approval_id"]
+    competing["event_id"] = "execution-2"
+    competing["parent_event_id"] = "approval-1"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing])
+
+
 def test_competing_current_decision_identity_blocks_authority():
     competing = {
         "event_id": "decision-2",
