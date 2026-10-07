@@ -615,6 +615,13 @@ def test_unselected_proposal_cannot_inherit_selected_human_approval():
 
 
 
+def test_duplicate_selected_verification_identity_is_rejected():
+    duplicate = dict(EVENTS[5])
+    duplicate["event_id"] = "verification-duplicate"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
 def test_selected_verification_event_parent_cannot_be_rebound():
     bad = replace_event(list(EVENTS), "verification", parent_event_id="obs-2")
     with pytest.raises(FullSystemAuthorityError):
