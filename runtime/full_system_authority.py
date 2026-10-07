@@ -167,18 +167,23 @@ def _validate_temporal_permutation(events, verification, decision, approval, exe
         "human_approval": approval.get("approval_id"),
         "execution": execution.get("approval_id"),
     }
+    selected_fields = {
+        "evidence": ("evidence_hash", verification.get("evidence_hash")),
+        "protocol": ("protocol_hash", verification.get("protocol_hash")),
+        "proposal": ("proposal_id", verification.get("proposal_id")),
+        "verification": ("verification_id", selected_ids["verification"]),
+        "human_decision": ("decision_id", selected_ids["human_decision"]),
+        "human_approval": ("approval_id", selected_ids["human_approval"]),
+        "execution": ("approval_id", selected_ids["execution"]),
+    }
     positions = []
     for event_type in ("observation", "evidence", "verification", "proposal", "human_decision", "human_approval", "execution"):
-        if event_type in selected_ids:
+        if event_type in selected_fields:
+            field, value = selected_fields[event_type]
             matches = [
                 event for event in events
                 if event.get("event_type") == event_type
-                and event.get({
-                    "verification": "verification_id",
-                    "human_decision": "decision_id",
-                    "human_approval": "approval_id",
-                    "execution": "approval_id",
-                }[event_type]) == selected_ids[event_type]
+                and event.get(field) == value
             ]
         else:
             matches = [event for event in events if event.get("event_type") == event_type]
