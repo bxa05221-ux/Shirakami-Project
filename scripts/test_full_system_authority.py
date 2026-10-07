@@ -323,6 +323,77 @@ def test_competing_parent_cannot_be_smuggled_through_valid_timestamps():
     with pytest.raises(FullSystemAuthorityError):
         call(events=[*EVENTS, competing])
 
+def test_multiple_composite_attacks_fail_closed_regardless_of_injection_order():
+    attacks = [
+        {
+            "event_id": "attack-evidence",
+            "event_type": "evidence",
+            "evidence_hash": "E1",
+            "context_version": "C1",
+            "occurred_at": "2026-10-07T10:02:30+00:00",
+            "parent_event_id": "obs-1",
+        },
+        {
+            "event_id": "attack-proposal",
+            "event_type": "proposal",
+            "proposal_id": "PR1",
+            "protocol_hash": "P1",
+            "context_version": "C1",
+            "evidence_hash": "E1",
+            "occurred_at": "2026-10-07T10:04:40+00:00",
+            "parent_event_id": "protocol-1",
+        },
+        {
+            "event_id": "attack-decision",
+            "event_type": "human_decision",
+            "decision_id": "D1",
+            "proposal_id": "PR1",
+            "occurred_at": "2026-10-07T10:05:10+00:00",
+            "parent_event_id": "verification-1",
+        },
+        {
+            "event_id": "attack-execution",
+            "event_type": "execution",
+            "approval_id": "A1",
+            "context_version": "C1",
+            "evidence_hash": "E1",
+            "protocol_hash": "P1",
+            "proposal_id": "PR1",
+            "occurred_at": "2026-10-07T10:06:30+00:00",
+            "parent_event_id": "approval-1",
+        },
+    ]
+    orders = [
+        attacks,
+        list(reversed(attacks)),
+        [attacks[1], attacks[3], attacks[0], attacks[2]],
+    ]
+    for injected in orders:
+        with pytest.raises(FullSystemAuthorityError):
+            call(events=[*EVENTS, *injected])
+
+
+def test_invalid_history_cannot_turn_into_authority_by_being_appended_last():
+    valid_history = {
+        "event_id": "history-valid",
+        "event_type": "observation",
+        "target_id": "T2",
+        "occurred_at": "2026-10-07T08:00:00+00:00",
+    }
+    attack = {
+        "event_id": "late-attack",
+        "event_type": "proposal",
+        "proposal_id": "PR1",
+        "protocol_hash": "P1",
+        "context_version": "C1",
+        "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:04:40+00:00",
+        "parent_event_id": "protocol-1",
+    }
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, valid_history, attack])
+
+
 
 def test_same_semantic_identity_is_not_history_even_with_different_event_id():
     mutations = [
