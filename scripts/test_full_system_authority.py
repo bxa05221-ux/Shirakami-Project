@@ -453,3 +453,18 @@ def test_temporal_permutation_blocks(event_type, occurred_at):
     bad = replace_event(EVENTS, event_type, occurred_at=occurred_at)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+@pytest.mark.parametrize(("event_type", "parent_event_id"), [
+    ("evidence", "protocol-1"),
+    ("protocol", "proposal-1"),
+    ("proposal", "evidence-1"),
+    ("verification", "protocol-1"),
+    ("human_decision", "proposal-1"),
+    ("human_approval", "verification-1"),
+    ("execution", "decision-1"),
+])
+def test_semantic_parent_rebinding_blocks(event_type, parent_event_id):
+    bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id)
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
