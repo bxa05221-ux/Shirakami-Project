@@ -30,6 +30,14 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
     execution_events = [e for e in events if e.get("event_type") == "execution" and e.get("approval_id") == approval_id]
     if not all((verification_events, decision_events, approval_events, execution_events)):
         raise FullSystemAuthorityError("system temporal artifacts are incomplete")
+    for artifact_name, matches in (
+        ("verification", verification_events),
+        ("decision", decision_events),
+        ("approval", approval_events),
+        ("execution", execution_events),
+    ):
+        if len(matches) != 1:
+            raise FullSystemAuthorityError(f"selected {artifact_name} identity is ambiguous")
     verification_event = verification_events[0]
     decision_event = decision_events[0]
     approval_event = approval_events[0]
