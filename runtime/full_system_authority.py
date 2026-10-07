@@ -50,19 +50,29 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
 
 
 def _validate_semantic_event_uniqueness(events) -> None:
+    # Only uniquely identified semantic artifacts are subject to duplicate
+    # rejection. Multiple observations may legitimately share a target.
     semantic_keys = (
-        ("event_type", "target_id"),
-        ("event_type", "context_version", "evidence_hash", "protocol_hash", "proposal_id"),
+        ("evidence", "evidence_hash"),
+        ("protocol", "protocol_hash"),
+        ("proposal", "proposal_id"),
+        ("verification", "verification_id"),
+        ("human_decision", "decision_id"),
+        ("human_approval", "approval_id"),
+        ("execution", "approval_id"),
     )
-    for fields in semantic_keys:
-        seen = set()
+    seen = set()
+    for event_type, identity_field in semantic_keys:
         for event in events:
-            values = tuple(event.get(field) for field in fields)
-            if all(value is None for value in values):
+            if event.get("event_type") != event_type:
                 continue
-            if values in seen:
+            identity = event.get(identity_field)
+            if identity is None:
+                continue
+            key = (event_type, identity)
+            if key in seen:
                 raise FullSystemAuthorityError("ambiguous duplicate semantic event")
-            seen.add(values)
+            seen.add(key)
 
 
 def _validate_unique_event_ids(events) -> None:
@@ -485,8 +495,8 @@ def validate_full_system_authority(
         _validate_semantic_parent_chain(events)
         _validate_parent_binding_content(events)
         _validate_parent_time_constraints(events)
-        _validate_event_graph_acyclic(events)
         _validate_unique_event_ids(events)
+        _validate_event_graph_acyclic(events)
         _validate_semantic_event_uniqueness(events)
         _validate_temporal_permutation(events, verification)
         _validate_observation_evidence_temporal_binding(events, verification)
