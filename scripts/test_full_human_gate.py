@@ -40,3 +40,27 @@ def test_human_identity_substitution_blocks():
     with pytest.raises(FullHumanGateError): gate(d={**D,"principal_id":"H2"})
 def test_full_chain_still_requires_human_approval():
     with pytest.raises(FullHumanGateError): gate(d={**D,"human_approval":False},u={**UI,"human_approval":False})
+
+def test_multi_layer_mutation_blocks():
+    with pytest.raises(FullHumanGateError):
+        gate(
+            p={**A, "evidence_hash": "E-MUT"},
+            e={**E, "protocol_hash": "P-MUT"},
+            u={**UI, "synthetic": True},
+        )
+
+def test_cross_layer_authority_injection_blocks():
+    with pytest.raises(FullHumanGateError):
+        gate(
+            p={**A, "runtime_authority": True},
+            e={**E, "context_version": "C-MUT"},
+            u={**UI, "runtime_generated": True},
+        )
+
+def test_human_gate_cannot_be_created_by_consistent_ai_claims():
+    with pytest.raises(FullHumanGateError):
+        gate(
+            d={**D, "actor_type": "runtime", "runtime_authority": True},
+            p={**A, "runtime_authority": True},
+            u={**UI, "actor_type": "runtime", "runtime_generated": True},
+        )
