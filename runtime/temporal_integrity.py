@@ -21,19 +21,16 @@ def _time(value: str) -> datetime:
 
 
 def validate_event_graph(events: list[Mapping[str, Any]]) -> None:
-    """Fail closed on replay, stale approval, future evidence, and bad causality.
-
-    Required event fields are intentionally explicit. A timestamp is treated
-    as an input claim; this validator checks consistency, not truth of a clock.
-    """
+    """Fail closed on replay, stale approval, future evidence, and bad causality."""
     by_id: dict[str, Mapping[str, Any]] = {}
     for event in events:
         event_id = event.get("event_id")
         if not event_id:
             raise TemporalIntegrityError("event_id is required")
+        event_id = str(event_id)
         if event_id in by_id:
             raise TemporalIntegrityError(f"duplicate event_id: {event_id}")
-        by_id[str(event_id)] = event
+        by_id[event_id] = event
 
     for event in events:
         event_id = str(event["event_id"])
@@ -42,13 +39,9 @@ def validate_event_graph(events: list[Mapping[str, Any]]) -> None:
         if parent_id:
             parent = by_id.get(str(parent_id))
             if parent is None:
-                raise TemporalIntegrityError(
-                    f"missing parent_event_id: {parent_id}"
-                )
+                raise TemporalIntegrityError(f"missing parent_event_id: {parent_id}")
             if current_time < _time(str(parent["occurred_at"])):
-                raise TemporalIntegrityError(
-                    f"event precedes parent: {event_id}"
-                )
+                raise TemporalIntegrityError(f"event precedes parent: {event_id}")
 
         if event.get("event_type") == "human_decision":
             evidence_time = event.get("evidence_occurred_at")
@@ -58,23 +51,26 @@ def validate_event_graph(events: list[Mapping[str, Any]]) -> None:
                 )
 
     decisions: set[str] = set()
+    approvals: dict[str, Mapping[str, Any]] = {}
     for event in events:
-        if event.get("event_type") != "human_decision":
-            continue
-        decision_id = event.get("decision_id")
-        if not decision_id:
-            raise TemporalIntegrityError("decision_id is required")
-        if decision_id in decisions:
-            raise TemporalIntegrityError(
-                f"decision replay: {decision_id}"
-            )
-        decisions.add(str(decision_id))
+        if event.get("event_type") == "human_decision":
+            decision_id = event.get("decision_id")
+            if not decision_id:
+                raise TemporalIntegrityError("decision_id is required")
+            decision_id = str(decision_id)
+            if decision_id in decisions:
+                raise TemporalIntegrityError(f"decision replay: {decision_id}")
+            decisions.add(decision_id)
 
-    approvals = {
-        str(e["approval_id"]): e
-        for e in events
-        if e.get("event_type") == "human_approval" and e.get("approval_id")
-    }
+        if event.get("event_type") == "human_approval":
+            approval_id = event.get("approval_id")
+            if not approval_id:
+                raise TemporalIntegrityError("approval_id is required")
+            approval_id = str(approval_id)
+            if approval_id in approvals:
+                raise TemporalIntegrityError(f"approval replay: {approval_id}")
+            approvals[approval_id] = event
+
     for event in events:
         if event.get("event_type") != "execution":
             continue
@@ -83,9 +79,7 @@ def validate_event_graph(events: list[Mapping[str, Any]]) -> None:
             raise TemporalIntegrityError("execution requires approval_id")
         approval = approvals.get(str(approval_id))
         if approval is None:
-            raise TemporalIntegrityError(
-                f"approval not found: {approval_id}"
-            )
+            raise TemporalIntegrityError(f"approval not found: {approval_id}")
         if event.get("context_version") != approval.get("context_version"):
             raise TemporalIntegrityError(
                 f"stale approval/context mismatch: {approval_id}"
