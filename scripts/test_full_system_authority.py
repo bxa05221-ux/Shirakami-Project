@@ -94,6 +94,7 @@ VERIFICATION = {
 EVENTS = [
     {"event_id": "obs-1", "event_type": "observation", "target_id": "T1",
      "occurred_at": "2026-10-07T10:00:00+00:00"},
+    {"event_id": "evidence-1", "event_type": "evidence", "evidence_hash": "E1", "occurred_at": "2026-10-07T10:02:00+00:00", "parent_event_id": "obs-1"},
     {"event_id": "verification-1", "event_type": "verification",
      "verification_id": "V1",
      "occurred_at": "2026-10-07T10:04:00+00:00",
@@ -279,5 +280,26 @@ def test_verification_target_substitution_blocks():
 def test_observation_target_substitution_blocks():
     bad = [dict(e) for e in EVENTS]
     bad[0] = {**bad[0], "target_id": "T2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+def test_evidence_provenance_substitution_blocks():
+    bad = [dict(e) for e in EVENTS]
+    for index, event in enumerate(bad):
+        if event.get("event_type") == "evidence":
+            bad[index] = {**event, "evidence_hash": "E2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_evidence_from_other_observation_blocks():
+    bad = [dict(e) for e in EVENTS]
+    bad.append({
+        "event_id": "obs-2", "event_type": "observation",
+        "target_id": "T2", "occurred_at": "2026-10-07T10:01:00+00:00",
+    })
+    for index, event in enumerate(bad):
+        if event.get("event_type") == "evidence":
+            bad[index] = {**event, "parent_event_id": "obs-2"}
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
