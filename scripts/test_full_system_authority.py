@@ -84,10 +84,18 @@ VERIFICATION = {
 EVENTS = [
     {"event_id": "obs-1", "event_type": "observation",
      "occurred_at": "2026-10-07T10:00:00+00:00"},
+    {"event_id": "verification-1", "event_type": "verification",
+     "verification_id": "V1",
+     "occurred_at": "2026-10-07T10:04:00+00:00",
+     "parent_event_id": "obs-1"},
+    {"event_id": "decision-1", "event_type": "human_decision",
+     "decision_id": "D1",
+     "occurred_at": "2026-10-07T10:05:00+00:00",
+     "parent_event_id": "verification-1"},
     {"event_id": "approval-1", "event_type": "human_approval",
      "approval_id": "A1", "context_version": "C1",
      "occurred_at": "2026-10-07T10:05:00+00:00",
-     "parent_event_id": "obs-1"},
+     "parent_event_id": "decision-1"},
     {"event_id": "exec-1", "event_type": "execution",
      "approval_id": "A1", "context_version": "C1",
      "occurred_at": "2026-10-07T10:06:00+00:00",
@@ -171,3 +179,30 @@ def test_runtime_authority_cannot_cross_complete_chain():
 def test_revoked_verifier_cannot_restore_authority():
     with pytest.raises(FullSystemAuthorityError):
         call(verifier_revoked_at=frozenset({"v1"}))
+
+
+def test_future_verification_relative_to_decision_blocks():
+    bad = [dict(e) for e in EVENTS]
+    bad[1] = {**bad[1], "occurred_at": "2026-10-07T10:06:00+00:00"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_execution_before_approval_blocks_full_system():
+    bad = [dict(e) for e in EVENTS]
+    bad[-1] = {**bad[-1], "occurred_at": "2026-10-07T10:04:30+00:00"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_decision_from_wrong_temporal_position_blocks():
+    bad = [dict(e) for e in EVENTS]
+    bad[2] = {**bad[2], "occurred_at": "2026-10-07T10:03:00+00:00"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_missing_verification_event_blocks():
+    bad = [e for e in EVENTS if e["event_type"] != "verification"]
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
