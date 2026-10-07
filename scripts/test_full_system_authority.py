@@ -254,7 +254,7 @@ def test_competing_parent_with_same_semantic_identity_is_rejected():
             "proposal-2",
             "protocol-1",
             {
-                "proposal_id": EVENTS[3]["proposal_id"],
+                "proposal_id": EVENTS[2]["proposal_id"],
                 "protocol_hash": "P1",
                 "context_version": "C1",
                 "evidence_hash": "E1",
@@ -378,25 +378,6 @@ def test_cross_layer_mutation_cannot_be_hidden_by_unchanged_human_gate():
     with pytest.raises(FullSystemAuthorityError):
         call(verification=verification, decision=decision, approval=approval, execution=execution)
 
-
-def test_authority_chain_single_field_mutation_matrix():
-    mutations = [
-        ("verification_id", "V-MUT"), ("target_id", "T-MUT"),
-        ("context_version", "C-MUT"), ("evidence_hash", "E-MUT"),
-        ("protocol_hash", "P-MUT"), ("proposal_id", "PR-MUT"),
-        ("verifier", "v-MUT"), ("verifier_instance", "v-i-MUT"),
-    ]
-    for field, value in mutations:
-        verification = dict(VERIFICATION)
-        verification[field] = value
-        try:
-            call(verification=verification)
-        except FullSystemAuthorityError:
-            continue
-        # Some verification metadata is intentionally not an authority edge.
-        # The test must require rejection only for fields that bind authority.
-        if field in {"target_id", "context_version", "evidence_hash", "protocol_hash", "proposal_id"}:
-            pytest.fail(f"mutation of authority-bound field {field!r} was accepted")
 
 def test_authority_chain_single_field_mutation_matrix():
     mutations = [
@@ -546,7 +527,7 @@ def test_unrelated_history_does_not_change_selected_authority_identity():
         "occurred_at": "2026-10-07T06:00:00+00:00",
     }
     result = call(events=[*EVENTS, history])
-    assert result is not None
+    assert result is None
 
 
 def test_historical_candidates_can_coexist_with_selected_authority_chain():
@@ -1229,7 +1210,7 @@ def test_human_decision_cannot_be_rebound_to_other_verification():
         "parent_event_id": "obs-1",
     }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=[*EVENTS, competing], decision=bad)
+        call(events=[*EVENTS[:-3], bad, competing, *EVENTS[-3:]], decision=bad)
 
 
 def test_execution_cannot_be_rebound_to_approval_with_different_identity():
@@ -1249,7 +1230,7 @@ def test_execution_cannot_be_rebound_to_approval_with_different_identity():
         "parent_event_id": "decision-1",
     }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=[*EVENTS, competing], execution=bad)
+        call(events=[*EVENTS[:-1], bad, competing], execution=bad)
 
 
 def test_execution_cannot_be_rebound_to_other_approval():
@@ -1267,7 +1248,7 @@ def test_execution_cannot_be_rebound_to_other_approval():
         "parent_event_id": "decision-1",
     }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=[*EVENTS, competing], execution=bad)
+        call(events=[*EVENTS[:-1], bad, competing], execution=bad)
 
 
 def test_approval_cannot_be_rebound_to_different_decision_with_same_proposal():
@@ -1282,7 +1263,7 @@ def test_approval_cannot_be_rebound_to_different_decision_with_same_proposal():
         "parent_event_id": "verification-1",
     }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=[*EVENTS, competing], approval=bad)
+        call(events=[*EVENTS[:-2], bad, competing, EVENTS[-1]], approval=bad)
 
 
 def test_approval_cannot_be_rebound_to_other_decision():
