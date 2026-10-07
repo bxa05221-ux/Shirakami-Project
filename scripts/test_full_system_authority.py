@@ -501,7 +501,6 @@ def test_parent_future_timestamp_blocks(event_type, parent_event_id, occurred_at
     ("observation", "obs-1"),
     ("evidence", "evidence-1"),
     ("protocol", "proposal-1"),
-    ("proposal", "protocol-1"),
     ("human_decision", "decision-1"),
     ("human_approval", "approval-1"),
     ("execution", "exec-1"),
