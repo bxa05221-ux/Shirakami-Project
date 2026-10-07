@@ -663,6 +663,30 @@ def test_later_approve_cannot_override_prior_reject_without_new_binding():
         call(decision=reject, signature=sign_human_decision(reject, SECRET))
 
 
+def test_reject_event_cannot_rebind_existing_approval():
+    reject = {
+        "event_id": "decision-2", "event_type": "human_decision",
+        "decision_id": "D2", "approval_id": "A1",
+        "proposal_id": "PR1", "occurred_at": "2026-10-07T10:07:00+00:00",
+        "parent_event_id": "verification-1",
+    }
+    bad = list(EVENTS) + [reject]
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_second_approve_cannot_reuse_existing_approval_id():
+    second = {
+        "event_id": "decision-2", "event_type": "human_decision",
+        "decision_id": "D2", "approval_id": "A1",
+        "proposal_id": "PR1", "occurred_at": "2026-10-07T10:07:00+00:00",
+        "parent_event_id": "verification-1",
+    }
+    bad = list(EVENTS) + [second]
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
 def test_approval_requires_exact_approve_decision():
     revise = dict(DECISION, decision="revise", human_approval=False)
     approval = dict(APPROVAL)
