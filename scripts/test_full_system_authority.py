@@ -636,6 +636,27 @@ def test_duplicate_selected_proposal_identity_is_rejected():
         call(events=list(EVENTS) + [duplicate])
 
 
+def test_duplicate_selected_decision_identity_is_rejected():
+    duplicate = dict(EVENTS[5])
+    duplicate["event_id"] = "decision-duplicate"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
+def test_duplicate_selected_approval_identity_is_rejected():
+    duplicate = dict(EVENTS[6])
+    duplicate["event_id"] = "approval-duplicate"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
+def test_duplicate_selected_execution_identity_is_rejected():
+    duplicate = dict(EVENTS[7])
+    duplicate["event_id"] = "execution-duplicate"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
 def test_duplicate_selected_verification_identity_is_rejected():
     duplicate = dict(EVENTS[5])
     duplicate["event_id"] = "verification-duplicate"
