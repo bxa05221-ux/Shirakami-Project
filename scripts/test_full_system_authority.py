@@ -212,3 +212,16 @@ def test_missing_verification_event_blocks():
     bad = [e for e in EVENTS if e["event_type"] != "verification"]
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+def test_approval_event_context_substitution_blocks():
+    bad = [dict(e) for e in EVENTS]
+    bad[3] = {**bad[3], "context_version": "C2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_execution_event_approval_substitution_blocks():
+    bad = [dict(e) for e in EVENTS]
+    bad[4] = {**bad[4], "approval_id": "OTHER"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
