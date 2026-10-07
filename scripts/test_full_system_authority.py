@@ -612,6 +612,16 @@ def test_unselected_proposal_cannot_inherit_selected_human_approval():
         call(events=bad)
 
 
+def test_unselected_earlier_human_decision_does_not_replace_selected_chain():
+    earlier = {
+        "event_id": "decision-0", "event_type": "human_decision",
+        "decision_id": "D0", "proposal_id": "PR1",
+        "occurred_at": "2026-10-07T10:04:30+00:00",
+        "parent_event_id": "verification-1",
+    }
+    call(events=[earlier] + list(EVENTS))
+
+
 def test_reordered_competing_human_decision_cannot_replace_selected_decision():
     second = {
         "event_id": "decision-2", "event_type": "human_decision",
