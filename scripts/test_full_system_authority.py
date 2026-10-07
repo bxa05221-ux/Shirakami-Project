@@ -658,6 +658,12 @@ def test_unselected_verification_disagreement_is_evidence_not_authority():
     call(events=list(EVENTS) + [competing])
 
 
+def test_approval_cannot_select_competing_verifier():
+    competing = dict(APPROVAL, verifier="v2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(approval=competing)
+
+
 def test_competing_verification_cannot_replace_selected_verification():
     competing = {
         "event_id": "verification-2", "event_type": "verification",
