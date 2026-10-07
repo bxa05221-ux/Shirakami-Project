@@ -447,6 +447,8 @@ def _validate_verification_target_binding(events, verification) -> None:
     ]
     if not verification_events:
         raise FullSystemAuthorityError("verification event missing")
+    if len(verification_events) != 1:
+        raise FullSystemAuthorityError("selected verification identity is ambiguous")
     observation_ids = {
         event.get("parent_event_id")
         for event in verification_events
