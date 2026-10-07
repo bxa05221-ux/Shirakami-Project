@@ -105,6 +105,7 @@ EVENTS = [
      "parent_event_id": "decision-1"},
     {"event_id": "exec-1", "event_type": "execution",
      "approval_id": "A1", "context_version": "C1",
+     "evidence_hash": "E1", "protocol_hash": "P1", "proposal_id": "PR1",
      "occurred_at": "2026-10-07T10:06:00+00:00",
      "parent_event_id": "approval-1"},
 ]
