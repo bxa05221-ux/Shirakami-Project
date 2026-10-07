@@ -631,7 +631,7 @@ def test_reordered_competing_human_decision_cannot_replace_selected_decision():
         call(events=bad)
 
 
-def test_reordered_competing_approval_cannot_replace_selected_approval():
+def test_competing_approval_cannot_authorize_mismatched_execution():
     second = {
         "event_id": "approval-2", "event_type": "human_approval",
         "approval_id": "A2", "context_version": "C1",
@@ -640,6 +640,7 @@ def test_reordered_competing_approval_cannot_replace_selected_approval():
         "parent_event_id": "decision-1",
     }
     bad = [second] + list(EVENTS)
+    bad = replace_event(bad, "execution", approval_id="A2", proposal_id="PR2")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
