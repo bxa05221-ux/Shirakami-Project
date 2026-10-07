@@ -585,3 +585,14 @@ def test_forked_proposal_cannot_be_rebound_to_verified_proposal():
     bad = replace_event(bad, "human_decision", proposal_id="PR2")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+def test_legitimate_proposal_fork_is_allowed_when_not_selected():
+    fork = {
+        "event_id": "proposal-2", "event_type": "proposal",
+        "proposal_id": "PR2", "protocol_hash": "P1",
+        "context_version": "C1", "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:04:15+00:00",
+        "parent_event_id": "protocol-1",
+    }
+    call(events=list(EVENTS) + [fork])
