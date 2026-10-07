@@ -251,3 +251,21 @@ def test_verification_missing_semantic_binding_blocks():
     bad = {k: v for k, v in VERIFICATION.items() if k != "evidence_hash"}
     with pytest.raises(FullSystemAuthorityError):
         call(verification=bad)
+
+def test_valid_verification_cannot_be_rebound_to_other_decision():
+    bad = {**DECISION, "decision_id": "D2", "approval_id": "A2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=bad)
+
+
+def test_valid_verification_cannot_be_rebound_to_other_context():
+    bad = {**DECISION, "context_version": "C2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=bad)
+
+
+def test_verification_event_cannot_be_rebound_to_other_verification():
+    bad = [dict(e) for e in EVENTS]
+    bad[1] = {**bad[1], "verification_id": "V2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
