@@ -970,46 +970,42 @@ def test_temporal_permutation_blocks(event_type, occurred_at):
         call(events=bad)
 
 
-@pytest.mark.parametrize(("event_type", "parent_event_id"), [
-    ("evidence", "protocol-1"),
-    ("protocol", "proposal-1"),
-    ("proposal", "evidence-1"),
-    ("verification", "protocol-1"),
-    ("human_decision", "proposal-1"),
-    ("human_approval", "verification-1"),
-    ("execution", "decision-1"),
+@pytest.mark.parametrize(("event_type", "parent_event_id", "replacement"), [
+    ("evidence", "protocol-1",
+     {"event_id": "obs-2", "event_type": "observation", "target_id": "T1",
+      "occurred_at": "2026-10-07T10:01:00+00:00"}),
+    ("protocol", "proposal-1",
+     {"event_id": "evidence-2", "event_type": "evidence", "evidence_hash": "E1",
+      "context_version": "C1", "occurred_at": "2026-10-07T10:02:30+00:00",
+      "parent_event_id": "obs-1"}),
+    ("proposal", "evidence-1",
+     {"event_id": "protocol-2", "event_type": "protocol", "protocol_hash": "P1",
+      "context_version": "C1", "evidence_hash": "E1",
+      "occurred_at": "2026-10-07T10:03:30+00:00", "parent_event_id": "evidence-1"}),
+    ("verification", "protocol-1",
+     {"event_id": "obs-2", "event_type": "observation", "target_id": "T1",
+      "occurred_at": "2026-10-07T10:01:00+00:00"}),
+    ("human_decision", "proposal-1",
+     {"event_id": "verification-2", "event_type": "verification",
+      "verification_id": "V2", "occurred_at": "2026-10-07T10:04:15+00:00",
+      "parent_event_id": "obs-1"}),
+    ("human_approval", "verification-1",
+     {"event_id": "decision-2", "event_type": "human_decision",
+      "decision_id": "D2", "proposal_id": "PR1",
+      "occurred_at": "2026-10-07T10:05:30+00:00",
+      "parent_event_id": "verification-1"}),
+    ("execution", "decision-1",
+     {"event_id": "approval-2", "event_type": "human_approval",
+      "approval_id": "A2", "context_version": "C1", "evidence_hash": "E1",
+      "protocol_hash": "P1", "proposal_id": "PR1",
+      "occurred_at": "2026-10-07T10:05:30+00:00",
+      "parent_event_id": "decision-1"}),
 ])
-@pytest.mark.parametrize(("event_type", "replacement"), [
-    ("evidence", {"event_id": "obs-2", "event_type": "observation", "target_id": "T1",
-                   "occurred_at": "2026-10-07T10:01:00+00:00"}),
-    ("protocol", {"event_id": "evidence-2", "event_type": "evidence", "evidence_hash": "E1",
-                  "context_version": "C1", "occurred_at": "2026-10-07T10:02:30+00:00",
-                  "parent_event_id": "obs-1"}),
-    ("proposal", {"event_id": "protocol-2", "event_type": "protocol", "protocol_hash": "P1",
-                  "context_version": "C1", "evidence_hash": "E1",
-                  "occurred_at": "2026-10-07T10:03:30+00:00", "parent_event_id": "evidence-1"}),
-    ("verification", {"event_id": "obs-2", "event_type": "observation", "target_id": "T1",
-                      "occurred_at": "2026-10-07T10:01:00+00:00"}),
-    ("human_decision", {"event_id": "verification-2", "event_type": "verification",
-                        "verification_id": "V2", "occurred_at": "2026-10-07T10:04:15+00:00",
-                        "parent_event_id": "obs-1"}),
-    ("human_approval", {"event_id": "decision-2", "event_type": "human_decision",
-                        "decision_id": "D2", "proposal_id": "PR1",
-                        "occurred_at": "2026-10-07T10:05:30+00:00",
-                        "parent_event_id": "verification-1"}),
-    ("execution", {"event_id": "approval-2", "event_type": "human_approval",
-                   "approval_id": "A2", "context_version": "C1", "evidence_hash": "E1",
-                   "protocol_hash": "P1", "proposal_id": "PR1",
-                   "occurred_at": "2026-10-07T10:05:30+00:00",
-                   "parent_event_id": "decision-1"}),
-])
-def test_authority_edge_cannot_follow_competing_parent(event_type, replacement):
+def test_authority_edge_cannot_follow_competing_parent(event_type, parent_event_id, replacement):
     bad = [dict(e) for e in EVENTS] + [dict(replacement)]
-    parent_id = replacement["event_id"]
-    bad = replace_event(bad, event_type, parent_event_id=parent_id)
+    bad = replace_event(bad, event_type, parent_event_id=parent_event_id)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
-
 
 def test_semantic_parent_rebinding_blocks(event_type, parent_event_id):
     bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id)
