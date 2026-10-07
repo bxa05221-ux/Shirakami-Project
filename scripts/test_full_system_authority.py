@@ -615,6 +615,13 @@ def test_unselected_proposal_cannot_inherit_selected_human_approval():
 
 
 
+def test_duplicate_selected_evidence_identity_is_rejected():
+    duplicate = dict(EVENTS[1])
+    duplicate["event_id"] = "evidence-duplicate"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
 def test_duplicate_selected_verification_identity_is_rejected():
     duplicate = dict(EVENTS[5])
     duplicate["event_id"] = "verification-duplicate"
