@@ -644,6 +644,32 @@ def test_competing_approval_cannot_authorize_mismatched_execution():
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
+def test_stale_approve_cannot_override_later_reject():
+    later_reject = {
+        "event_id": "decision-2", "event_type": "human_decision",
+        "decision_id": "D2", "approval_id": "A2",
+        "proposal_id": "PR1", "occurred_at": "2026-10-07T10:07:00+00:00",
+        "parent_event_id": "verification-1",
+    }
+    bad = list(EVENTS) + [later_reject]
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_later_approve_cannot_override_prior_reject_without_new_binding():
+    reject = dict(DECISION, decision="reject", human_approval=False, approval_id="A2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=reject, signature=sign_human_decision(reject, SECRET))
+
+
+def test_approval_requires_exact_approve_decision():
+    revise = dict(DECISION, decision="revise", human_approval=False)
+    approval = dict(APPROVAL)
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=revise, approval=approval,
+             signature=sign_human_decision(revise, SECRET))
+
+
 def test_reject_decision_cannot_authorize_execution():
     bad_decision = dict(DECISION, decision="reject", human_approval=False)
     bad_identity = dict(IDENTITY)
