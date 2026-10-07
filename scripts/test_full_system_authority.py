@@ -231,6 +231,33 @@ def test_competing_current_proposal_identity_blocks_authority():
         call(events=[*EVENTS, competing])
 
 
+def test_same_semantic_identity_is_not_history_even_with_different_event_id():
+    mutations = [
+        ("evidence", "evidence_hash", EVENTS[1]["evidence_hash"]),
+        ("protocol", "protocol_hash", EVENTS[2]["protocol_hash"]),
+        ("proposal", "proposal_id", EVENTS[3]["proposal_id"]),
+        ("verification", "verification_id", VERIFICATION["verification_id"]),
+        ("human_decision", "decision_id", DECISION["decision_id"]),
+        ("human_approval", "approval_id", APPROVAL["approval_id"]),
+        ("execution", "approval_id", EXECUTION["approval_id"]),
+    ]
+    for event_type, field, value in mutations:
+        competing = {"event_id": f"duplicate-{event_type}", "event_type": event_type, field: value}
+        with pytest.raises(FullSystemAuthorityError):
+            call(events=[*EVENTS, competing])
+
+
+def test_unrelated_history_does_not_change_selected_authority_identity():
+    history = {
+        "event_id": "obs-unrelated",
+        "event_type": "observation",
+        "target_id": "T99",
+        "occurred_at": "2026-10-07T06:00:00+00:00",
+    }
+    result = call(events=[*EVENTS, history])
+    assert result is not None
+
+
 def test_historical_candidates_can_coexist_with_selected_authority_chain():
     history = [
         {
