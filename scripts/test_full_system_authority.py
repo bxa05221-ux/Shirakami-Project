@@ -612,7 +612,7 @@ def test_unselected_proposal_cannot_inherit_selected_human_approval():
         call(events=bad)
 
 
-def test_second_human_decision_cannot_create_second_authority():
+def test_reordered_competing_human_decision_cannot_replace_selected_decision():
     second = {
         "event_id": "decision-2", "event_type": "human_decision",
         "decision_id": "D2", "proposal_id": "PR2",
@@ -626,12 +626,12 @@ def test_second_human_decision_cannot_create_second_authority():
         "occurred_at": "2026-10-07T10:04:15+00:00",
         "parent_event_id": "protocol-1",
     }
-    bad = list(EVENTS) + [fork, second]
+    bad = [second, fork] + list(EVENTS)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
 
-def test_second_approval_cannot_reuse_same_decision_authority():
+def test_reordered_competing_approval_cannot_replace_selected_approval():
     second = {
         "event_id": "approval-2", "event_type": "human_approval",
         "approval_id": "A2", "context_version": "C1",
@@ -639,6 +639,7 @@ def test_second_approval_cannot_reuse_same_decision_authority():
         "proposal_id": "PR2", "occurred_at": "2026-10-07T10:05:10+00:00",
         "parent_event_id": "decision-1",
     }
-    bad = list(EVENTS) + [second]
+    bad = [second] + list(EVENTS)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
