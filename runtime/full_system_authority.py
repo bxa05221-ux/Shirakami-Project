@@ -48,6 +48,20 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
     if not (vt <= dt <= at <= xt):
         raise FullSystemAuthorityError("system temporal order violation")
 
+
+def _validate_verification_semantic_binding(verification, decision, approval, execution) -> None:
+    for field in ("context_version", "evidence_hash", "protocol_hash", "proposal_id"):
+        value = verification.get(field)
+        if not value:
+            raise FullSystemAuthorityError(f"verification binding missing: {field}")
+        if value != decision.get(field):
+            raise FullSystemAuthorityError(f"verification decision {field} mismatch")
+        if value != approval.get(field):
+            raise FullSystemAuthorityError(f"verification approval {field} mismatch")
+        if value != execution.get(field):
+            raise FullSystemAuthorityError(f"verification execution {field} mismatch")
+
+
 def validate_full_system_authority(
     *,
     events,
@@ -81,6 +95,7 @@ def validate_full_system_authority(
             current_revoked_verifiers=verifier_revoked_at,
         )
         _validate_system_temporal_binding(events, verification, decision, approval, execution)
+        _validate_verification_semantic_binding(verification, decision, approval, execution)
         validate_full_human_gate(
             ui_event=ui_event, identity=identity, decision=decision,
             approval=approval, execution=execution, signature=signature,
