@@ -95,6 +95,7 @@ EVENTS = [
     {"event_id": "obs-1", "event_type": "observation", "target_id": "T1",
      "occurred_at": "2026-10-07T10:00:00+00:00"},
     {"event_id": "evidence-1", "event_type": "evidence", "evidence_hash": "E1", "context_version": "C1", "occurred_at": "2026-10-07T10:02:00+00:00", "parent_event_id": "obs-1"},
+    {"event_id": "protocol-1", "event_type": "protocol", "protocol_hash": "P1", "context_version": "C1", "evidence_hash": "E1", "occurred_at": "2026-10-07T10:03:00+00:00", "parent_event_id": "evidence-1"},
     {"event_id": "verification-1", "event_type": "verification",
      "verification_id": "V1",
      "occurred_at": "2026-10-07T10:04:00+00:00",
