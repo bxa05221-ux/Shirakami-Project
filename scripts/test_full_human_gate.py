@@ -79,3 +79,25 @@ def test_cross_layer_binding_matrix_blocks(artifact,field):
     kwargs={"u": mutated} if artifact == "ui" else {"i": mutated} if artifact == "identity" else {"d": mutated} if artifact == "decision" else {"p": mutated} if artifact in ("approval", "persisted") else {"e": mutated}
     with pytest.raises(FullHumanGateError):
         gate(**kwargs)
+
+def test_fixed_signature_decision_mutation_blocks():
+    mutated = {**D, "proposal_id": "P-MUT"}
+    with pytest.raises(FullHumanGateError):
+        validate_full_human_gate(
+            ui_event=UI, identity=I, decision=mutated, approval=A, execution=E,
+            signature=sign_human_decision(D, SECRET), secret=SECRET, persisted=A,
+            decision_time=KW["decision_time"], trusted_principals=KW["trusted_principals"],
+            trusted_keys=KW["trusted_keys"], trusted_from=KW["trusted_from"],
+        )
+
+
+def test_valid_records_cannot_be_mixed_across_contexts():
+    mutated_approval = {**A, "context_version": "C-OTHER"}
+    with pytest.raises(FullHumanGateError):
+        gate(p=mutated_approval)
+
+
+def test_recovery_cannot_restore_mixed_authority():
+    mutated_persisted = {**A, "proposal_id": "P-OTHER"}
+    with pytest.raises(FullHumanGateError):
+        gate(p=mutated_persisted)
