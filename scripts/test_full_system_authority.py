@@ -438,3 +438,18 @@ def test_observation_before_evidence_is_required():
     bad = replace_event(EVENTS, "observation", occurred_at="2026-10-07T10:02:30+00:00")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+@pytest.mark.parametrize(("event_type", "occurred_at"), [
+    ("observation", "2026-10-07T10:07:00+00:00"),
+    ("evidence", "2026-10-07T10:01:00+00:00"),
+    ("verification", "2026-10-07T10:03:00+00:00"),
+    ("proposal", "2026-10-07T10:02:00+00:00"),
+    ("human_decision", "2026-10-07T10:01:30+00:00"),
+    ("human_approval", "2026-10-07T10:01:45+00:00"),
+    ("execution", "2026-10-07T10:01:50+00:00"),
+])
+def test_temporal_permutation_blocks(event_type, occurred_at):
+    bad = replace_event(EVENTS, event_type, occurred_at=occurred_at)
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
