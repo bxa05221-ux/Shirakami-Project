@@ -323,6 +323,62 @@ def test_competing_parent_cannot_be_smuggled_through_valid_timestamps():
     with pytest.raises(FullSystemAuthorityError):
         call(events=[*EVENTS, competing])
 
+def test_cross_layer_single_sided_mutation_matrix():
+    cases = [
+        ("verification", {"evidence_hash": "E-MUT"}),
+        ("decision", {"proposal_id": "PR-MUT"}),
+        ("approval", {"protocol_hash": "P-MUT"}),
+        ("execution", {"approval_id": "A-MUT"}),
+        ("identity", {"principal_id": "H-MUT"}),
+        ("ui_event", {"decision_id": "D-MUT"}),
+        ("persisted", {"context_version": "C-MUT"}),
+    ]
+    for artifact, changes in cases:
+        kwargs = {}
+        if artifact == "verification":
+            value = dict(VERIFICATION); value.update(changes); kwargs["verification"] = value
+        elif artifact == "decision":
+            value = dict(DECISION); value.update(changes); kwargs["decision"] = value
+        elif artifact == "approval":
+            value = dict(APPROVAL); value.update(changes); kwargs["approval"] = value
+        elif artifact == "execution":
+            value = dict(EXECUTION); value.update(changes); kwargs["execution"] = value
+        elif artifact == "identity":
+            value = dict(IDENTITY); value.update(changes); kwargs["identity"] = value
+        elif artifact == "ui_event":
+            value = dict(UI_EVENT); value.update(changes); kwargs["ui_event"] = value
+        else:
+            value = dict(PERSISTED); value.update(changes); kwargs["persisted"] = value
+        with pytest.raises(FullSystemAuthorityError):
+            call(**kwargs)
+
+
+def test_cross_layer_dual_mutation_cannot_restore_authority():
+    paired = [
+        (dict(VERIFICATION, evidence_hash="E-MUT"), dict(DECISION, evidence_hash="E-MUT")),
+        (dict(VERIFICATION, proposal_id="PR-MUT"), dict(APPROVAL, proposal_id="PR-MUT")),
+        (dict(DECISION, context_version="C-MUT"), dict(EXECUTION, context_version="C-MUT")),
+        (dict(APPROVAL, protocol_hash="P-MUT"), dict(EXECUTION, protocol_hash="P-MUT")),
+    ]
+    for verification, decision_or_approval in paired:
+        kwargs = {"verification": verification}
+        if decision_or_approval.get("decision_id"):
+            kwargs["decision"] = decision_or_approval
+        else:
+            kwargs["approval"] = decision_or_approval
+        with pytest.raises(FullSystemAuthorityError):
+            call(**kwargs)
+
+
+def test_cross_layer_mutation_cannot_be_hidden_by_unchanged_human_gate():
+    verification = dict(VERIFICATION, context_version="C-MUT")
+    decision = dict(DECISION)
+    approval = dict(APPROVAL)
+    execution = dict(EXECUTION)
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=verification, decision=decision, approval=approval, execution=execution)
+
+
 def test_authority_chain_single_field_mutation_matrix():
     mutations = [
         ("verification_id", "V-MUT"),
