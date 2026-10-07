@@ -664,6 +664,30 @@ def test_duplicate_selected_verification_identity_is_rejected():
         call(events=list(EVENTS) + [duplicate])
 
 
+def test_duplicate_verification_identity_with_mutated_parent_is_rejected():
+    duplicate = {**EVENTS[5], "event_id": "verification-attack", "parent_event_id": "obs-2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
+def test_duplicate_evidence_identity_with_mutated_parent_is_rejected():
+    duplicate = {**EVENTS[1], "event_id": "evidence-attack", "parent_event_id": "obs-2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
+def test_duplicate_protocol_identity_with_mutated_binding_is_rejected():
+    duplicate = {**EVENTS[2], "event_id": "protocol-attack", "evidence_hash": "E2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
+def test_duplicate_proposal_identity_with_mutated_binding_is_rejected():
+    duplicate = {**EVENTS[3], "event_id": "proposal-attack", "protocol_hash": "P2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
 def test_selected_verification_event_parent_cannot_be_rebound():
     bad = replace_event(list(EVENTS), "verification", parent_event_id="obs-2")
     with pytest.raises(FullSystemAuthorityError):
