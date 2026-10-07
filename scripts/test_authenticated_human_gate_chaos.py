@@ -9,7 +9,7 @@ A={**D}
 I={**{k:D[k] for k in ("decision_id","approval_id","context_version","evidence_hash","protocol_hash","proposal_id")},"principal_id":"H1","authentication_id":"AUTH1","actor_type":"human","authenticated":True,"authentication_method":"test"}
 KW={"decision_time":"2026-10-07T10:00:00+00:00","trusted_principals":frozenset({"H1"}),"trusted_keys":frozenset({"K1"}),"trusted_from":"2026-10-01T00:00:00+00:00"}
 def gate(d=D,p=A,i=I,**extra):
-    return validate_authenticated_human_gate(identity=i,decision=d,approval=p,signature=sign_human_decision(d,SECRET),secret=SECRET,persisted=p,**KW,**extra)
+    params={**KW, **extra}\n    return validate_authenticated_human_gate(identity=i,decision=d,approval=p,signature=sign_human_decision(d,SECRET),secret=SECRET,persisted=p,**params)
 def test_key_rotation_between_signature_and_gate_blocks():
     with pytest.raises(AuthenticatedHumanGateError): gate(current_revoked_keys=frozenset({"K1"}))
 def test_stale_authentication_replay_blocks():
