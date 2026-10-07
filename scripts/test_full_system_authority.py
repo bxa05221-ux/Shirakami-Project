@@ -650,6 +650,46 @@ def test_duplicate_selected_decision_identity_is_rejected():
         call(events=list(EVENTS) + [duplicate])
 
 
+def test_human_decision_cannot_be_rebound_to_other_verification():
+    bad = dict(EVENTS[5])
+    bad["parent_event_id"] = "verification-2"
+    competing = {
+        "event_id": "verification-2",
+        "event_type": "verification",
+        "verification_id": "V2",
+        "target_id": "T1",
+        "result": "pass",
+        "context_version": "C1",
+        "evidence_hash": "E1",
+        "protocol_hash": "P1",
+        "proposal_id": "PR1",
+        "occurred_at": "2026-10-07T10:04:30+00:00",
+        "parent_event_id": "obs-1",
+    }
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing], decision=bad)
+
+
+def test_execution_cannot_be_rebound_to_approval_with_different_identity():
+    bad = dict(EVENTS[7])
+    bad["parent_event_id"] = "approval-2"
+    competing = {
+        "event_id": "approval-2",
+        "event_type": "human_approval",
+        "approval_id": "A2",
+        "context_version": "C1",
+        "evidence_hash": "E1",
+        "protocol_hash": "P1",
+        "proposal_id": "PR1",
+        "verifier": "v1",
+        "human_approval": True,
+        "occurred_at": "2026-10-07T10:05:30+00:00",
+        "parent_event_id": "decision-1",
+    }
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing], execution=bad)
+
+
 def test_execution_cannot_be_rebound_to_other_approval():
     bad = dict(EVENTS[7])
     bad["parent_event_id"] = "approval-2"
