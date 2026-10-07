@@ -1,0 +1,172 @@
+import pytest
+
+from runtime.full_system_authority import (
+    FullSystemAuthorityError,
+    validate_full_system_authority,
+)
+from runtime.human_decision_signature import sign_human_decision
+from runtime.verification_forgery import verification_digest
+
+SECRET = b"system-secret"
+
+DECISION = {
+    "decision_id": "D1",
+    "approval_id": "A1",
+    "context_version": "C1",
+    "evidence_hash": "E1",
+    "protocol_hash": "P1",
+    "proposal_id": "PR1",
+    "principal_id": "H1",
+    "authentication_id": "AUTH1",
+    "key_id": "K1",
+    "decision": "approve",
+    "actor_type": "human",
+    "human_approval": True,
+    "runtime_authority": False,
+}
+
+IDENTITY = {
+    **{k: DECISION[k] for k in (
+        "decision_id", "approval_id", "context_version",
+        "evidence_hash", "protocol_hash", "proposal_id",
+    )},
+    "principal_id": "H1",
+    "authentication_id": "AUTH1",
+    "actor_type": "human",
+    "authenticated": True,
+    "authentication_method": "test",
+}
+
+APPROVAL = {
+    **{k: DECISION[k] for k in (
+        "approval_id", "context_version", "evidence_hash",
+        "protocol_hash", "proposal_id",
+    )},
+    "verifier": "v1",
+}
+
+EXECUTION = {
+    **{k: DECISION[k] for k in (
+        "approval_id", "context_version", "evidence_hash",
+        "protocol_hash", "proposal_id",
+    )},
+    "runtime_authority": False,
+}
+
+PERSISTED = {
+    **APPROVAL,
+    "human_approval": True,
+    "runtime_authority": False,
+}
+
+UI = {
+    **{k: DECISION[k] for k in (
+        "decision_id", "approval_id", "context_version",
+        "evidence_hash", "protocol_hash", "proposal_id",
+    )},
+    "event_type": "human_interaction",
+    "action": "approve",
+    "synthetic": False,
+    "runtime_generated": False,
+    "actor_type": "human",
+    "human_approval": True,
+}
+
+VERIFICATION = {
+    "verification_id": "V1",
+    "target_id": "T1",
+    "result": "pass",
+    "verifier": "v1",
+    "verifier_instance": "v1-i1",
+    "verification_time": "2026-10-07T10:04:00+00:00",
+}
+
+EVENTS = [
+    {"event_id": "obs-1", "event_type": "observation",
+     "occurred_at": "2026-10-07T10:00:00+00:00"},
+    {"event_id": "approval-1", "event_type": "human_approval",
+     "approval_id": "A1", "context_version": "C1",
+     "occurred_at": "2026-10-07T10:05:00+00:00",
+     "parent_event_id": "obs-1"},
+    {"event_id": "exec-1", "event_type": "execution",
+     "approval_id": "A1", "context_version": "C1",
+     "occurred_at": "2026-10-07T10:06:00+00:00",
+     "parent_event_id": "approval-1"},
+]
+
+
+def call(**overrides):
+    data = {
+        "events": EVENTS,
+        "approval": APPROVAL,
+        "execution": EXECUTION,
+        "verification": VERIFICATION,
+        "verification_digest": verification_digest(VERIFICATION),
+        "persisted": PERSISTED,
+        "ui_event": UI,
+        "identity": IDENTITY,
+        "decision": DECISION,
+        "signature": sign_human_decision(DECISION, SECRET),
+        "secret": SECRET,
+        "decision_time": "2026-10-07T10:05:00+00:00",
+        "trusted_principals": frozenset({"H1"}),
+        "trusted_keys": frozenset({"K1"}),
+        "trusted_from": "2026-10-01T00:00:00+00:00",
+        "current_revoked_verifiers": set(),
+    }
+    data.update(overrides)
+    return validate_full_system_authority(**data)
+
+
+def test_complete_system_chain_passes():
+    call()
+
+
+@pytest.mark.parametrize("field", [
+    "context_version", "evidence_hash", "protocol_hash", "proposal_id",
+])
+def test_cross_layer_substitution_blocks(field):
+    bad = {**APPROVAL, field: "OTHER"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(approval=bad)
+
+
+def test_verification_mutation_with_original_digest_blocks():
+    bad = {**VERIFICATION, "result": "fail"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=bad)
+
+
+def test_verifier_substitution_blocks():
+    bad = {**VERIFICATION, "verifier": "v2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=bad)
+
+
+def test_human_decision_from_other_context_blocks():
+    bad = {**DECISION, "context_version": "C2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=bad)
+
+
+def test_fixed_human_signature_rejects_decision_mutation():
+    bad = {**DECISION, "proposal_id": "OTHER"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=bad, signature=sign_human_decision(DECISION, SECRET))
+
+
+def test_persisted_recovery_substitution_blocks():
+    bad = {**PERSISTED, "proposal_id": "OTHER"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(persisted=bad)
+
+
+def test_runtime_authority_cannot_cross_complete_chain():
+    bad = {**EXECUTION, "runtime_authority": True}
+    with pytest.raises(FullSystemAuthorityError):
+        call(execution=bad)
+
+
+def test_revoked_verifier_cannot_restore_authority():
+    with pytest.raises(FullSystemAuthorityError):
+        call(current_revoked_verifiers={"v1"})
