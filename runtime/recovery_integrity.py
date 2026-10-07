@@ -15,7 +15,13 @@ class RecoveryIntegrityError(ValueError):
 
 
 KNOWN_DURABLE_STATES = {"approved", "candidate_created", "verified", "committed"}
-QUARANTINE_STATES = {"unknown", "apply_started", "crashed", "incomplete"}
+QUARANTINE_STATES = {
+    "unknown",
+    "apply_started",
+    "execution_applied",
+    "crashed",
+    "incomplete",
+}
 
 
 def validate_recovery(
@@ -41,9 +47,16 @@ def validate_recovery(
 
 
 def recovery_action(persisted: Mapping[str, Any]) -> str:
-    """Return the only safe recovery action for an interrupted state."""
-    if persisted.get("state") in QUARANTINE_STATES:
+    """Return the only safe recovery action for a persisted state."""
+    state = persisted.get("state")
+    if state in QUARANTINE_STATES:
         return "quarantine_and_reverify"
-    if persisted.get("state") in KNOWN_DURABLE_STATES:
+    if state == "approved":
         return "resume_after_integrity_check"
+    if state == "candidate_created":
+        return "reconcile_candidate"
+    if state == "verified":
+        return "reconcile_verified"
+    if state == "committed":
+        return "reconcile_committed"
     return "quarantine_and_reverify"
