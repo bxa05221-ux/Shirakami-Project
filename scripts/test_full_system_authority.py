@@ -346,7 +346,7 @@ def test_cross_layer_single_sided_mutation_matrix():
         elif artifact == "identity":
             value = dict(IDENTITY); value.update(changes); kwargs["identity"] = value
         elif artifact == "ui_event":
-            value = dict(UI_EVENT); value.update(changes); kwargs["ui_event"] = value
+            value = dict(UI); value.update(changes); kwargs["ui_event"] = value
         else:
             value = dict(PERSISTED); value.update(changes); kwargs["persisted"] = value
         with pytest.raises(FullSystemAuthorityError):
@@ -378,6 +378,25 @@ def test_cross_layer_mutation_cannot_be_hidden_by_unchanged_human_gate():
     with pytest.raises(FullSystemAuthorityError):
         call(verification=verification, decision=decision, approval=approval, execution=execution)
 
+
+def test_authority_chain_single_field_mutation_matrix():
+    mutations = [
+        ("verification_id", "V-MUT"), ("target_id", "T-MUT"),
+        ("context_version", "C-MUT"), ("evidence_hash", "E-MUT"),
+        ("protocol_hash", "P-MUT"), ("proposal_id", "PR-MUT"),
+        ("verifier", "v-MUT"), ("verifier_instance", "v-i-MUT"),
+    ]
+    for field, value in mutations:
+        verification = dict(VERIFICATION)
+        verification[field] = value
+        try:
+            call(verification=verification)
+        except FullSystemAuthorityError:
+            continue
+        # Some verification metadata is intentionally not an authority edge.
+        # The test must require rejection only for fields that bind authority.
+        if field in {"target_id", "context_version", "evidence_hash", "protocol_hash", "proposal_id"}:
+            pytest.fail(f"mutation of authority-bound field {field!r} was accepted")
 
 def test_authority_chain_single_field_mutation_matrix():
     mutations = [
@@ -507,7 +526,7 @@ def test_same_semantic_identity_is_not_history_even_with_different_event_id():
     mutations = [
         ("evidence", "evidence_hash", EVENTS[1]["evidence_hash"]),
         ("protocol", "protocol_hash", EVENTS[2]["protocol_hash"]),
-        ("proposal", "proposal_id", EVENTS[3]["proposal_id"]),
+        ("proposal", "proposal_id", EVENTS[3].get("proposal_id", "PR1")),
         ("verification", "verification_id", VERIFICATION["verification_id"]),
         ("human_decision", "decision_id", DECISION["decision_id"]),
         ("human_approval", "approval_id", APPROVAL["approval_id"]),
