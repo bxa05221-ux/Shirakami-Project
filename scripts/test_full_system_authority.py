@@ -613,6 +613,15 @@ def test_unselected_proposal_cannot_inherit_selected_human_approval():
 
 
 
+
+def test_unselected_earlier_observation_does_not_replace_selected_lineage():
+    competing = {
+        "event_id": "obs-2", "event_type": "observation",
+        "target_id": "T2",
+        "occurred_at": "2026-10-07T10:00:30+00:00",
+    }
+    call(events=[competing] + list(EVENTS))
+
 def test_unselected_earlier_evidence_does_not_replace_selected_evidence():
     competing = {
         "event_id": "evidence-2", "event_type": "evidence",
