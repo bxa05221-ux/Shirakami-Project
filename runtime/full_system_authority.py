@@ -49,6 +49,29 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_proposal_binding(events, verification) -> None:
+    proposal_id = verification.get("proposal_id")
+    protocol_hash = verification.get("protocol_hash")
+    context_version = verification.get("context_version")
+    evidence_hash = verification.get("evidence_hash")
+    if not proposal_id:
+        raise FullSystemAuthorityError("verification proposal_id is required")
+    proposal_events = [
+        event for event in events
+        if event.get("event_type") == "proposal"
+        and event.get("proposal_id") == proposal_id
+    ]
+    if not proposal_events:
+        raise FullSystemAuthorityError("proposal provenance event missing")
+    if not any(
+        event.get("protocol_hash") == protocol_hash
+        and event.get("context_version") == context_version
+        and event.get("evidence_hash") == evidence_hash
+        for event in proposal_events
+    ):
+        raise FullSystemAuthorityError("proposal is not bound to protocol, evidence and context")
+
+
 def _validate_protocol_binding(events, verification) -> None:
     protocol_hash = verification.get("protocol_hash")
     if not protocol_hash:
@@ -185,6 +208,7 @@ def validate_full_system_authority(
         _validate_evidence_provenance(events, verification)
         _validate_evidence_context_binding(events, verification)
         _validate_protocol_binding(events, verification)
+        _validate_proposal_binding(events, verification)
         _validate_verification_semantic_binding(verification, decision, approval, execution)
         validate_full_human_gate(
             ui_event=ui_event, identity=identity, decision=decision,
