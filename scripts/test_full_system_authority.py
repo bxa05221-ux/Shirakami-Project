@@ -58,6 +58,9 @@ EXECUTION = {
 PERSISTED = {
     "decision_id": "D1",
     **APPROVAL,
+    "principal_id": "H1",
+    "authentication_id": "AUTH1",
+    "key_id": "K1",
     "human_approval": True,
     "runtime_authority": False,
 }
