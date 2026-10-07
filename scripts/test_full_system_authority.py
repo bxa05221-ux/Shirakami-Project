@@ -151,6 +151,99 @@ def call(**overrides):
     return validate_full_system_authority(**data)
 
 
+def test_unrelated_historical_observation_can_coexist():
+    competing = {
+        "event_id": "obs-history",
+        "event_type": "observation",
+        "target_id": "T2",
+        "occurred_at": "2026-10-07T09:00:00+00:00",
+    }
+    call(events=[*EVENTS, competing])
+
+
+def test_unrelated_historical_evidence_can_coexist():
+    competing = {
+        "event_id": "evidence-history",
+        "event_type": "evidence",
+        "evidence_hash": "E-history",
+        "context_version": "C0",
+        "occurred_at": "2026-10-07T09:05:00+00:00",
+        "parent_event_id": "obs-history",
+    }
+    observation = {
+        "event_id": "obs-history",
+        "event_type": "observation",
+        "target_id": "T2",
+        "occurred_at": "2026-10-07T09:00:00+00:00",
+    }
+    call(events=[*EVENTS, observation, competing])
+
+
+def test_unrelated_historical_proposal_can_coexist():
+    competing = {
+        "event_id": "proposal-history",
+        "event_type": "proposal",
+        "proposal_id": "PR-history",
+        "protocol_hash": "P-history",
+        "context_version": "C0",
+        "evidence_hash": "E-history",
+        "occurred_at": "2026-10-07T09:10:00+00:00",
+        "parent_event_id": "protocol-history",
+    }
+    protocol = {
+        "event_id": "protocol-history",
+        "event_type": "protocol",
+        "protocol_hash": "P-history",
+        "context_version": "C0",
+        "evidence_hash": "E-history",
+        "occurred_at": "2026-10-07T09:07:00+00:00",
+        "parent_event_id": "evidence-history",
+    }
+    evidence = {
+        "event_id": "evidence-history",
+        "event_type": "evidence",
+        "evidence_hash": "E-history",
+        "context_version": "C0",
+        "occurred_at": "2026-10-07T09:05:00+00:00",
+        "parent_event_id": "obs-history",
+    }
+    observation = {
+        "event_id": "obs-history",
+        "event_type": "observation",
+        "target_id": "T2",
+        "occurred_at": "2026-10-07T09:00:00+00:00",
+    }
+    call(events=[*EVENTS, observation, evidence, protocol, competing])
+
+
+def test_competing_current_proposal_identity_blocks_authority():
+    competing = {
+        "event_id": "proposal-2",
+        "event_type": "proposal",
+        "proposal_id": "PR1",
+        "protocol_hash": "P1",
+        "context_version": "C1",
+        "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:04:40+00:00",
+        "parent_event_id": "protocol-1",
+    }
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing])
+
+
+def test_competing_current_decision_identity_blocks_authority():
+    competing = {
+        "event_id": "decision-2",
+        "event_type": "human_decision",
+        "decision_id": "D1",
+        "proposal_id": "PR1",
+        "occurred_at": "2026-10-07T10:05:10+00:00",
+        "parent_event_id": "verification-1",
+    }
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing])
+
+
 def test_complete_system_chain_passes():
     call()
 
