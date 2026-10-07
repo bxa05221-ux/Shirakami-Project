@@ -22,11 +22,27 @@ class RecoveryIntegrityTests(unittest.TestCase):
         validate_recovery(APPROVAL, persisted)
         self.assertEqual(recovery_action(persisted), "resume_after_integrity_check")
 
+    def test_candidate_recovery_does_not_execute(self):
+        persisted = {**APPROVAL, "state": "candidate_created"}
+        validate_recovery(APPROVAL, persisted)
+        self.assertEqual(recovery_action(persisted), "reconcile_candidate")
+
+    def test_verified_recovery_requires_reconciliation(self):
+        persisted = {**APPROVAL, "state": "verified"}
+        validate_recovery(APPROVAL, persisted)
+        self.assertEqual(recovery_action(persisted), "reconcile_verified")
+
+    def test_committed_recovery_never_resumes_execution(self):
+        persisted = {**APPROVAL, "state": "committed"}
+        validate_recovery(APPROVAL, persisted)
+        self.assertEqual(recovery_action(persisted), "reconcile_committed")
+
     def test_crash_after_apply_start_is_quarantined(self):
-        persisted = {**APPROVAL, "state": "apply_started"}
-        self.assertEqual(recovery_action(persisted), "quarantine_and_reverify")
-        with self.assertRaises(RecoveryIntegrityError):
-            validate_recovery(APPROVAL, persisted)
+        for state in ("apply_started", "execution_applied", "crashed", "incomplete"):
+            persisted = {**APPROVAL, "state": state}
+            self.assertEqual(recovery_action(persisted), "quarantine_and_reverify")
+            with self.assertRaises(RecoveryIntegrityError):
+                validate_recovery(APPROVAL, persisted)
 
     def test_unknown_state_is_fail_closed(self):
         persisted = {**APPROVAL, "state": "mystery"}
