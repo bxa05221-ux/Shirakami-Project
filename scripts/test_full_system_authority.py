@@ -650,6 +650,21 @@ def test_duplicate_selected_decision_identity_is_rejected():
         call(events=list(EVENTS) + [duplicate])
 
 
+def test_approval_cannot_be_rebound_to_other_decision():
+    bad = dict(EVENTS[6])
+    bad["parent_event_id"] = "decision-2"
+    competing = {
+        "event_id": "decision-2",
+        "event_type": "human_decision",
+        "decision_id": "D2",
+        "proposal_id": "PR1",
+        "occurred_at": "2026-10-07T10:05:30+00:00",
+        "parent_event_id": "verification-1",
+    }
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing], approval=bad)
+
+
 def test_duplicate_selected_approval_identity_is_rejected():
     duplicate = dict(EVENTS[6])
     duplicate["event_id"] = "approval-duplicate"
