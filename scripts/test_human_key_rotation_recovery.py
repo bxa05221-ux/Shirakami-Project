@@ -1,33 +1,28 @@
-"""Human signing-key rotation, revocation, replay, and recovery boundary."""
-from __future__ import annotations
-from typing import Any, Mapping
+import pytest
+from runtime.human_key_rotation_recovery import HumanKeyRotationError, validate_key_rotation_recovery
 
-class HumanKeyRotationError(ValueError):
-    pass
+D={"decision_id":"D1","approval_id":"A1","context_version":"C1","evidence_hash":"E1","protocol_hash":"P1","proposal_id":"PR1","principal_id":"H1","authentication_id":"AUTH1","key_id":"K1","human_approval":True,"runtime_authority":False}
+S={**D}
 
-BINDINGS=("decision_id","approval_id","context_version","evidence_hash","protocol_hash","proposal_id","principal_id","authentication_id","key_id")
+def test_valid_recovery():
+    validate_key_rotation_recovery(D,S,trusted_keys=frozenset({"K1"}))
 
-def validate_key_rotation_recovery(
-    decision: Mapping[str, Any],
-    persisted: Mapping[str, Any],
-    *,
-    current_revoked_keys: frozenset[str]=frozenset(),
-    trusted_keys: frozenset[str]=frozenset(),
-) -> None:
-    key_id=decision.get("key_id")
-    if not key_id or key_id not in trusted_keys:
-        raise HumanKeyRotationError("decision key is not currently trusted")
-    if key_id in current_revoked_keys:
-        raise HumanKeyRotationError("decision key is revoked")
-    if decision.get("human_approval") is not True:
-        raise HumanKeyRotationError("missing human approval")
-    if decision.get("runtime_authority") is True or persisted.get("runtime_authority") is True:
-        raise HumanKeyRotationError("runtime authority forbidden")
-    if persisted.get("human_approval") is not True:
-        raise HumanKeyRotationError("persisted state lacks human approval")
-    for field in BINDINGS:
-        if not decision.get(field) or not persisted.get(field):
-            raise HumanKeyRotationError(f"missing binding: {field}")
-        if decision[field] != persisted[field]:
-            raise HumanKeyRotationError(f"binding mismatch: {field}")
-    return
+def test_revoked_key_blocks_recovery():
+    with pytest.raises(HumanKeyRotationError):
+        validate_key_rotation_recovery(D,S,current_revoked_keys=frozenset({"K1"}),trusted_keys=frozenset({"K1"}))
+
+def test_rotated_out_key_blocks_recovery():
+    with pytest.raises(HumanKeyRotationError):
+        validate_key_rotation_recovery(D,S,current_revoked_keys=frozenset({"K1"}),trusted_keys=frozenset({"K2"}))
+
+def test_persisted_binding_mutation_blocks():
+    with pytest.raises(HumanKeyRotationError):
+        validate_key_rotation_recovery(D,{**S,"key_id":"K2"},trusted_keys=frozenset({"K1","K2"}))
+
+def test_replay_scope_mutation_blocks():
+    with pytest.raises(HumanKeyRotationError):
+        validate_key_rotation_recovery(D,{**S,"approval_id":"A2"},trusted_keys=frozenset({"K1"}))
+
+def test_runtime_authority_blocks():
+    with pytest.raises(HumanKeyRotationError):
+        validate_key_rotation_recovery(D,{**S,"runtime_authority":True},trusted_keys=frozenset({"K1"}))
