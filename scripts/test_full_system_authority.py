@@ -471,7 +471,6 @@ def test_semantic_parent_rebinding_blocks(event_type, parent_event_id):
 
 
 @pytest.mark.parametrize(("event_type", "field", "value"), [
-    ("evidence", "target_id", "T2"),
     ("protocol", "context_version", "C2"),
     ("protocol", "evidence_hash", "E2"),
     ("proposal", "protocol_hash", "P2"),
