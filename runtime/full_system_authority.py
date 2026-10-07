@@ -30,7 +30,21 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
     execution_events = [e for e in events if e.get("event_type") == "execution" and e.get("approval_id") == approval_id]
     if not all((verification_events, decision_events, approval_events, execution_events)):
         raise FullSystemAuthorityError("system temporal artifacts are incomplete")
-    vt, dt, at, xt = map(_event_time, (verification_events[0], decision_events[0], approval_events[0], execution_events[0]))
+    verification_event = verification_events[0]
+    decision_event = decision_events[0]
+    approval_event = approval_events[0]
+    execution_event = execution_events[0]
+    if verification_event.get("verification_id") != verification_id:
+        raise FullSystemAuthorityError("verification event binding mismatch")
+    if decision_event.get("decision_id") != decision_id:
+        raise FullSystemAuthorityError("decision event binding mismatch")
+    for field in ("approval_id", "context_version", "evidence_hash", "protocol_hash", "proposal_id"):
+        if approval_event.get(field) != approval.get(field):
+            raise FullSystemAuthorityError(f"approval event {field} mismatch")
+    for field in ("approval_id", "context_version"):
+        if execution_event.get(field) != execution.get(field):
+            raise FullSystemAuthorityError(f"execution event {field} mismatch")
+    vt, dt, at, xt = map(_event_time, (verification_event, decision_event, approval_event, execution_event))
     if not (vt <= dt <= at <= xt):
         raise FullSystemAuthorityError("system temporal order violation")
 
