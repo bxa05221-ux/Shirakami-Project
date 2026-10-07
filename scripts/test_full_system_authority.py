@@ -414,3 +414,15 @@ def test_verification_before_proposal_is_required():
     bad = replace_event(EVENTS, "proposal", occurred_at="2026-10-07T10:04:30+00:00")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+def test_evidence_after_verification_blocks():
+    bad = replace_event(EVENTS, "evidence", occurred_at="2026-10-07T10:05:00+00:00")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_evidence_before_verification_is_required():
+    bad = replace_event(EVENTS, "evidence", occurred_at="2026-10-07T10:03:30+00:00")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
