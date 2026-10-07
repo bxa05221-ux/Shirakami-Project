@@ -102,7 +102,7 @@ EVENTS = [
      "occurred_at": "2026-10-07T10:04:00+00:00",
      "parent_event_id": "obs-1"},
     {"event_id": "decision-1", "event_type": "human_decision",
-     "decision_id": "D1",
+     "decision_id": "D1", "proposal_id": "PR1",
      "occurred_at": "2026-10-07T10:05:00+00:00",
      "parent_event_id": "verification-1"},
     {"event_id": "approval-1", "event_type": "human_approval",
