@@ -23,6 +23,7 @@ def validate_full_system_authority(
     secret: bytes,
     decision_time: str,
     trusted_principals: frozenset[str],
+    trusted_verifiers: frozenset[str],
     trusted_keys: frozenset[str],
     trusted_from: str,
     trusted_until: str | None = None,
