@@ -176,6 +176,9 @@ def _validate_temporal_permutation(events, verification, decision, approval, exe
         "human_approval": ("approval_id", selected_ids["human_approval"]),
         "execution": ("approval_id", selected_ids["execution"]),
     }
+    selected_evidence = next((event for event in events if event.get("event_type") == "evidence" and event.get("evidence_hash") == verification.get("evidence_hash")), None)
+    selected_observation_id = selected_evidence.get("parent_event_id") if selected_evidence else None
+    selected_fields["observation"] = ("event_id", selected_observation_id)
     positions = []
     for event_type in ("observation", "evidence", "verification", "proposal", "human_decision", "human_approval", "execution"):
         if event_type in selected_fields:
