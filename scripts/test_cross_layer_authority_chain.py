@@ -91,7 +91,13 @@ def test_revocation_blocks_resurrection():
 
 def test_verification_mutation_blocks_chain():
     with pytest.raises(CrossLayerAuthorityError):
-        call(verification={"result": "fail"})
+        validate_cross_layer_authority_chain(
+            EVENTS, APPROVAL, EXECUTION,
+            {**VERIFICATION, "result": "fail"},
+            verification_digest(VERIFICATION), PERSISTED,
+            trusted_at=frozenset({"v1"}), revoked_at=frozenset(),
+            current_revoked_verifiers=set(),
+        )
 
 
 def test_verifier_substitution_blocks_chain():
