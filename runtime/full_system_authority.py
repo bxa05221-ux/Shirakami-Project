@@ -49,6 +49,17 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_unique_event_ids(events) -> None:
+    seen = set()
+    for event in events:
+        event_id = event.get("event_id")
+        if not event_id:
+            raise FullSystemAuthorityError("event id missing")
+        if event_id in seen:
+            raise FullSystemAuthorityError("duplicate event id")
+        seen.add(event_id)
+
+
 def _validate_event_graph_acyclic(events) -> None:
     by_id = {event.get("event_id"): event for event in events if event.get("event_id")}
     for start_id in by_id:
@@ -460,6 +471,7 @@ def validate_full_system_authority(
         _validate_parent_binding_content(events)
         _validate_parent_time_constraints(events)
         _validate_event_graph_acyclic(events)
+        _validate_unique_event_ids(events)
         _validate_temporal_permutation(events, verification)
         _validate_observation_evidence_temporal_binding(events, verification)
         _validate_evidence_verification_temporal_binding(events, verification)
