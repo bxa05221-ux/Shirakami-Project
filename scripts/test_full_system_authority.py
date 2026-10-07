@@ -622,6 +622,13 @@ def test_duplicate_selected_evidence_identity_is_rejected():
         call(events=list(EVENTS) + [duplicate])
 
 
+def test_duplicate_selected_protocol_identity_is_rejected():
+    duplicate = dict(EVENTS[2])
+    duplicate["event_id"] = "protocol-duplicate"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
 def test_duplicate_selected_verification_identity_is_rejected():
     duplicate = dict(EVENTS[5])
     duplicate["event_id"] = "verification-duplicate"
