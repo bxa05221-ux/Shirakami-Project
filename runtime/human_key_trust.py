@@ -12,6 +12,7 @@ def validate_human_key_trust(
     decision: Mapping[str, Any],
     *,
     trusted_principals: frozenset[str],
+    trusted_keys: frozenset[str],
     revoked_keys: frozenset[str] = frozenset(),
 ) -> None:
     principal = decision.get("principal_id")
@@ -21,6 +22,8 @@ def validate_human_key_trust(
         raise HumanKeyTrustError("missing human principal or key")
     if principal not in trusted_principals:
         raise HumanKeyTrustError("human principal is not trusted")
+    if key_id not in trusted_keys:
+        raise HumanKeyTrustError("human signing key is not trusted")
     if key_id in revoked_keys:
         raise HumanKeyTrustError("human signing key is revoked")
     if decision.get("actor_type") != "human":
