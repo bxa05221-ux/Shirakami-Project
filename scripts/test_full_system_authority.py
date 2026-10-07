@@ -614,6 +614,30 @@ def test_unselected_proposal_cannot_inherit_selected_human_approval():
 
 
 
+
+def test_selected_verification_event_parent_cannot_be_rebound():
+    bad = replace_event(list(EVENTS), "verification", parent_event_id="obs-2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_selected_evidence_event_parent_cannot_be_rebound():
+    bad = replace_event(list(EVENTS), "evidence", parent_event_id="obs-2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_selected_protocol_event_cannot_be_rebound_to_other_evidence():
+    bad = replace_event(list(EVENTS), "protocol", evidence_hash="E2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_selected_proposal_event_cannot_be_rebound_to_other_protocol():
+    bad = replace_event(list(EVENTS), "proposal", protocol_hash="P2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
 def test_unselected_earlier_observation_does_not_replace_selected_lineage():
     competing = {
         "event_id": "obs-2", "event_type": "observation",
