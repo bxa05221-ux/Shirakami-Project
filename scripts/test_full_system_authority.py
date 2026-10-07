@@ -95,6 +95,7 @@ EVENTS = [
     {"event_id": "obs-1", "event_type": "observation", "target_id": "T1",
      "occurred_at": "2026-10-07T10:00:00+00:00"},
     {"event_id": "evidence-1", "event_type": "evidence", "evidence_hash": "E1", "context_version": "C1", "occurred_at": "2026-10-07T10:02:00+00:00", "parent_event_id": "obs-1"},
+    {"event_id": "proposal-1", "event_type": "proposal", "proposal_id": "PR1", "protocol_hash": "P1", "context_version": "C1", "evidence_hash": "E1", "occurred_at": "2026-10-07T10:03:30+00:00", "parent_event_id": "protocol-1"},
     {"event_id": "protocol-1", "event_type": "protocol", "protocol_hash": "P1", "context_version": "C1", "evidence_hash": "E1", "occurred_at": "2026-10-07T10:03:00+00:00", "parent_event_id": "evidence-1"},
     {"event_id": "verification-1", "event_type": "verification",
      "verification_id": "V1",
@@ -340,5 +341,28 @@ def test_protocol_evidence_substitution_blocks():
 
 def test_protocol_hash_substitution_blocks():
     bad = {**VERIFICATION, "protocol_hash": "P2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=bad)
+
+def test_proposal_protocol_substitution_blocks():
+    bad = replace_event(EVENTS, "proposal", protocol_hash="P2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_proposal_context_substitution_blocks():
+    bad = replace_event(EVENTS, "proposal", context_version="C2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_proposal_evidence_substitution_blocks():
+    bad = replace_event(EVENTS, "proposal", evidence_hash="E2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_proposal_id_cannot_be_rebound():
+    bad = {**VERIFICATION, "proposal_id": "PR2"}
     with pytest.raises(FullSystemAuthorityError):
         call(verification=bad)
