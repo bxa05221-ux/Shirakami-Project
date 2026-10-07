@@ -1,7 +1,7 @@
 """Independent verifier boundary.
 
 Multiple verifier results are evidence only. Agreement does not mint human
-authority, and verifiers must be distinct identities/instances.
+authority, and independent verifiers require distinct identities.
 """
 from __future__ import annotations
 
@@ -23,6 +23,7 @@ def validate_independent_verifiers(
         raise IndependentVerifierError("insufficient independent verifiers")
 
     identities = []
+    instances = []
     for result in results:
         for field in ("verification_id", "target_id", "result", "verifier", "verifier_instance"):
             if result.get(field) in (None, ""):
@@ -31,14 +32,12 @@ def validate_independent_verifiers(
             raise IndependentVerifierError("verifier cannot create human approval")
         if result.get("runtime_authority") is True:
             raise IndependentVerifierError("verifier cannot create runtime authority")
-        identities.append((result["verifier"], result["verifier_instance"]))
+        identities.append(result["verifier"])
+        instances.append((result["verifier"], result["verifier_instance"]))
 
     if len(set(identities)) < minimum_independent:
-        raise IndependentVerifierError("verifiers are not independent")
+        raise IndependentVerifierError("verifier identities are not independent")
+    if len(set(instances)) < len(instances):
+        raise IndependentVerifierError("verifier instances are duplicated")
 
-    # Agreement is deliberately not interpreted as authorization.
-    if all(result["result"] == "pass" for result in results):
-        return
-
-    # Disagreement remains evidence, never authority.
     return
