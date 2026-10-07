@@ -9,7 +9,7 @@ E={**D,"execution_id":"X1"}
 UI={**{k:D[k] for k in ("decision_id","approval_id","context_version","evidence_hash","protocol_hash","proposal_id")},"event_type":"human_interaction","action":"approve","synthetic":False,"runtime_generated":False,"actor_type":"human","human_approval":True}
 KW={"decision_time":"2026-10-07T10:00:00+00:00","trusted_principals":frozenset({"H1"}),"trusted_keys":frozenset({"K1"}),"trusted_from":"2026-10-01T00:00:00+00:00"}
 def gate(d=D,p=A,i=I,e=E,u=UI,**extra):
-    return validate_full_human_gate(ui_event=u,identity=i,decision=d,approval=p,execution=e,signature=sign_human_decision(d,SECRET),secret=SECRET,persisted=p,**KW,**extra)
+    params={**KW, **extra}\n    return validate_full_human_gate(ui_event=u,identity=i,decision=d,approval=p,execution=e,signature=sign_human_decision(d,SECRET),secret=SECRET,persisted=p,**params)
 def test_valid_full_chain_passes(): gate()
 @pytest.mark.parametrize("field",["context_version","evidence_hash","protocol_hash","proposal_id","approval_id"])
 def test_execution_binding_mutation_blocks(field):
