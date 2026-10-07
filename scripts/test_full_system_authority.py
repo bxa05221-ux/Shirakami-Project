@@ -231,6 +231,99 @@ def test_competing_current_proposal_identity_blocks_authority():
         call(events=[*EVENTS, competing])
 
 
+def test_competing_parent_with_same_semantic_identity_is_rejected():
+    mutations = [
+        (
+            "evidence",
+            "evidence-2",
+            "obs-1",
+            {"evidence_hash": EVENTS[1]["evidence_hash"], "context_version": "C1"},
+        ),
+        (
+            "protocol",
+            "protocol-2",
+            "evidence-1",
+            {
+                "protocol_hash": EVENTS[2]["protocol_hash"],
+                "context_version": "C1",
+                "evidence_hash": "E1",
+            },
+        ),
+        (
+            "proposal",
+            "proposal-2",
+            "protocol-1",
+            {
+                "proposal_id": EVENTS[3]["proposal_id"],
+                "protocol_hash": "P1",
+                "context_version": "C1",
+                "evidence_hash": "E1",
+            },
+        ),
+        (
+            "verification",
+            "verification-2",
+            "obs-1",
+            {"verification_id": VERIFICATION["verification_id"], "target_id": "T1"},
+        ),
+        (
+            "human_decision",
+            "decision-2",
+            "verification-1",
+            {"decision_id": DECISION["decision_id"], "proposal_id": "PR1"},
+        ),
+        (
+            "human_approval",
+            "approval-2",
+            "decision-1",
+            {
+                "approval_id": APPROVAL["approval_id"],
+                "context_version": "C1",
+                "evidence_hash": "E1",
+                "protocol_hash": "P1",
+                "proposal_id": "PR1",
+            },
+        ),
+        (
+            "execution",
+            "execution-2",
+            "approval-1",
+            {
+                "approval_id": EXECUTION["approval_id"],
+                "context_version": "C1",
+                "evidence_hash": "E1",
+                "protocol_hash": "P1",
+                "proposal_id": "PR1",
+            },
+        ),
+    ]
+    for event_type, event_id, parent_id, fields in mutations:
+        competing = {
+            "event_id": event_id,
+            "event_type": event_type,
+            "occurred_at": "2026-10-07T10:06:30+00:00",
+            "parent_event_id": parent_id,
+            **fields,
+        }
+        with pytest.raises(FullSystemAuthorityError):
+            call(events=[*EVENTS, competing])
+
+
+def test_competing_parent_cannot_be_smuggled_through_valid_timestamps():
+    competing = {
+        "event_id": "proposal-time-valid-substitute",
+        "event_type": "proposal",
+        "proposal_id": "PR1",
+        "protocol_hash": "P1",
+        "context_version": "C1",
+        "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:04:40+00:00",
+        "parent_event_id": "protocol-1",
+    }
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=[*EVENTS, competing])
+
+
 def test_same_semantic_identity_is_not_history_even_with_different_event_id():
     mutations = [
         ("evidence", "evidence_hash", EVENTS[1]["evidence_hash"]),
