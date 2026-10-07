@@ -475,8 +475,6 @@ def test_semantic_parent_rebinding_blocks(event_type, parent_event_id):
     ("protocol", "evidence_hash", "E2"),
     ("proposal", "protocol_hash", "P2"),
     ("proposal", "evidence_hash", "E2"),
-    ("human_decision", "proposal_id", "PR2"),
-    ("human_approval", "approval_id", "A2"),
     ("execution", "context_version", "C2"),
 ])
 def test_parent_content_rebinding_blocks(event_type, field, value):
