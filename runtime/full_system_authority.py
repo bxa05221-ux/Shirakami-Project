@@ -49,6 +49,28 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_evidence_provenance(events, verification) -> None:
+    evidence_hash = verification.get("evidence_hash")
+    if not evidence_hash:
+        raise FullSystemAuthorityError("verification evidence_hash is required")
+    observation_ids = {
+        event.get("parent_event_id")
+        for event in events
+        if event.get("event_type") == "verification"
+        and event.get("verification_id") == verification.get("verification_id")
+        and event.get("parent_event_id")
+    }
+    evidence_events = [
+        event for event in events
+        if event.get("event_type") == "evidence"
+        and event.get("evidence_hash") == evidence_hash
+    ]
+    if not evidence_events:
+        raise FullSystemAuthorityError("evidence provenance event missing")
+    if not any(event.get("parent_event_id") in observation_ids for event in evidence_events):
+        raise FullSystemAuthorityError("evidence is not derived from verification observation")
+
+
 def _validate_verification_target_binding(events, verification) -> None:
     target_id = verification.get("target_id")
     if not target_id:
@@ -123,6 +145,7 @@ def validate_full_system_authority(
         )
         _validate_system_temporal_binding(events, verification, decision, approval, execution)
         _validate_verification_target_binding(events, verification)
+        _validate_evidence_provenance(events, verification)
         _validate_verification_semantic_binding(verification, decision, approval, execution)
         validate_full_human_gate(
             ui_event=ui_event, identity=identity, decision=decision,
