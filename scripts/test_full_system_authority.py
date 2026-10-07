@@ -82,6 +82,10 @@ VERIFICATION = {
     "verification_id": "V1",
     "target_id": "T1",
     "result": "pass",
+    "context_version": "C1",
+    "evidence_hash": "E1",
+    "protocol_hash": "P1",
+    "proposal_id": "PR1",
     "verifier": "v1",
     "verifier_instance": "v1-i1",
     "verification_time": "2026-10-07T10:04:00+00:00",
@@ -233,3 +237,17 @@ def test_execution_event_evidence_substitution_blocks():
     bad[4] = {**bad[4], "evidence_hash": "OTHER"}
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+@pytest.mark.parametrize("field", [
+    "context_version", "evidence_hash", "protocol_hash", "proposal_id",
+])
+def test_verification_semantic_substitution_blocks(field):
+    bad = {**VERIFICATION, field: "OTHER"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=bad)
+
+
+def test_verification_missing_semantic_binding_blocks():
+    bad = {k: v for k, v in VERIFICATION.items() if k != "evidence_hash"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=bad)
