@@ -49,6 +49,29 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_semantic_parent_chain(events) -> None:
+    expected = {
+        "evidence": ("observation",),
+        "protocol": ("evidence",),
+        "proposal": ("protocol",),
+        "verification": ("observation",),
+        "human_decision": ("verification",),
+        "human_approval": ("human_decision",),
+        "execution": ("human_approval",),
+    }
+    by_id = {event.get("event_id"): event for event in events if event.get("event_id")}
+    for event in events:
+        event_type = event.get("event_type")
+        if event_type not in expected:
+            continue
+        parent_id = event.get("parent_event_id")
+        if not parent_id or parent_id not in by_id:
+            raise FullSystemAuthorityError(f"{event_type} parent event missing")
+        parent_type = by_id[parent_id].get("event_type")
+        if parent_type not in expected[event_type]:
+            raise FullSystemAuthorityError(f"{event_type} parent event type mismatch")
+
+
 def _validate_temporal_permutation(events, verification) -> None:
     required_types = ("observation", "evidence", "verification", "proposal", "human_decision", "human_approval", "execution")
     positions = []
@@ -382,6 +405,7 @@ def validate_full_system_authority(
         _validate_protocol_binding(events, verification)
         _validate_proposal_binding(events, verification)
         _validate_proposal_decision_binding(events, verification, decision, approval, execution)
+        _validate_semantic_parent_chain(events)
         _validate_temporal_permutation(events, verification)
         _validate_observation_evidence_temporal_binding(events, verification)
         _validate_evidence_verification_temporal_binding(events, verification)
