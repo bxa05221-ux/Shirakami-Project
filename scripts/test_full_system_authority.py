@@ -55,6 +55,7 @@ EXECUTION = {
 }
 
 PERSISTED = {
+    "decision_id": "D1",
     **APPROVAL,
     "human_approval": True,
     "runtime_authority": False,
