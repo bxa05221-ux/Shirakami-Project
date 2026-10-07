@@ -612,6 +612,27 @@ def test_unselected_proposal_cannot_inherit_selected_human_approval():
         call(events=bad)
 
 
+
+def test_unselected_earlier_evidence_does_not_replace_selected_evidence():
+    competing = {
+        "event_id": "evidence-2", "event_type": "evidence",
+        "evidence_hash": "E2", "context_version": "C2",
+        "occurred_at": "2026-10-07T10:01:30+00:00",
+        "parent_event_id": "obs-1",
+    }
+    call(events=[competing] + list(EVENTS))
+
+
+def test_unselected_earlier_proposal_does_not_replace_selected_proposal():
+    competing = {
+        "event_id": "proposal-2", "event_type": "proposal",
+        "proposal_id": "PR2", "protocol_hash": "P1",
+        "context_version": "C1", "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:03:30+00:00",
+        "parent_event_id": "protocol-1",
+    }
+    call(events=[competing] + list(EVENTS))
+
 def test_unselected_earlier_human_decision_does_not_replace_selected_chain():
     earlier = {
         "event_id": "decision-0", "event_type": "human_decision",
