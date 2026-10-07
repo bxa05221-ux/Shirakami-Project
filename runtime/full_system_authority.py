@@ -46,6 +46,8 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("verification event binding mismatch")
     if decision_event.get("decision_id") != decision_id:
         raise FullSystemAuthorityError("decision event binding mismatch")
+    if approval_event.get("parent_event_id") != decision_event.get("event_id"):
+        raise FullSystemAuthorityError("approval event is not bound to selected human decision")
     for field in ("approval_id", "context_version", "evidence_hash", "protocol_hash", "proposal_id"):
         if approval_event.get(field) != approval.get(field):
             raise FullSystemAuthorityError(f"approval event {field} mismatch")
