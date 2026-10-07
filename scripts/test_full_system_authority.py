@@ -510,3 +510,15 @@ def test_event_graph_cycle_blocks(event_type, parent_event_id):
     bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+def test_duplicate_event_id_blocks():
+    bad = list(EVENTS) + [dict(EVENTS[0])]
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_missing_event_id_blocks():
+    bad = replace_event(EVENTS, "evidence", event_id=None)
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
