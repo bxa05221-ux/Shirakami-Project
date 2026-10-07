@@ -49,6 +49,29 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_temporal_permutation(events, verification) -> None:
+    required_types = ("observation", "evidence", "verification", "proposal", "human_decision", "human_approval", "execution")
+    positions = []
+    for event_type in required_types:
+        matches = [event for event in events if event.get("event_type") == event_type]
+        if not matches:
+            raise FullSystemAuthorityError("temporal permutation artifacts missing")
+        positions.append((event_type, matches[0]))
+    from datetime import datetime
+    parsed = []
+    for event_type, event in positions:
+        value = str(event.get("occurred_at", ""))
+        try:
+            parsed.append((event_type, datetime.fromisoformat(value.replace("Z", "+00:00"))))
+        except ValueError as exc:
+            raise FullSystemAuthorityError("invalid temporal permutation timestamp") from exc
+    order = {event_type: index for index, (event_type, _) in enumerate(parsed)}
+    if not all(parsed[i][1] <= parsed[i + 1][1] for i in range(len(parsed) - 1)):
+        raise FullSystemAuthorityError("temporal permutation detected")
+    if list(order) != list(required_types):
+        raise FullSystemAuthorityError("temporal permutation detected")
+
+
 def _validate_observation_evidence_temporal_binding(events, verification) -> None:
     evidence_hash = verification.get("evidence_hash")
     evidence_events = [
@@ -359,6 +382,7 @@ def validate_full_system_authority(
         _validate_protocol_binding(events, verification)
         _validate_proposal_binding(events, verification)
         _validate_proposal_decision_binding(events, verification, decision, approval, execution)
+        _validate_temporal_permutation(events, verification)
         _validate_observation_evidence_temporal_binding(events, verification)
         _validate_evidence_verification_temporal_binding(events, verification)
         _validate_verification_proposal_temporal_binding(events, verification)
