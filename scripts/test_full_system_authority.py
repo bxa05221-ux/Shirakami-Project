@@ -442,8 +442,8 @@ def test_observation_before_evidence_is_required():
 
 @pytest.mark.parametrize(("event_type", "occurred_at"), [
     ("observation", "2026-10-07T10:07:00+00:00"),
-    ("evidence", "2026-10-07T10:01:00+00:00"),
-    ("verification", "2026-10-07T10:03:00+00:00"),
+    ("evidence", "2026-10-07T10:07:00+00:00"),
+    ("verification", "2026-10-07T10:07:00+00:00"),
     ("proposal", "2026-10-07T10:02:00+00:00"),
     ("human_decision", "2026-10-07T10:01:30+00:00"),
     ("human_approval", "2026-10-07T10:01:45+00:00"),
