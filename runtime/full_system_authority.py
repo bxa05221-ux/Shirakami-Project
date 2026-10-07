@@ -49,6 +49,22 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_semantic_event_uniqueness(events) -> None:
+    semantic_keys = (
+        ("event_type", "target_id"),
+        ("event_type", "context_version", "evidence_hash", "protocol_hash", "proposal_id"),
+    )
+    for fields in semantic_keys:
+        seen = set()
+        for event in events:
+            values = tuple(event.get(field) for field in fields)
+            if all(value is None for value in values):
+                continue
+            if values in seen:
+                raise FullSystemAuthorityError("ambiguous duplicate semantic event")
+            seen.add(values)
+
+
 def _validate_unique_event_ids(events) -> None:
     seen = set()
     for event in events:
@@ -472,6 +488,7 @@ def validate_full_system_authority(
         _validate_parent_time_constraints(events)
         _validate_event_graph_acyclic(events)
         _validate_unique_event_ids(events)
+        _validate_semantic_event_uniqueness(events)
         _validate_temporal_permutation(events, verification)
         _validate_observation_evidence_temporal_binding(events, verification)
         _validate_evidence_verification_temporal_binding(events, verification)
