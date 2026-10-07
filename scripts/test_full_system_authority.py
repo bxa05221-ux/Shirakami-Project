@@ -116,6 +116,15 @@ EVENTS = [
 ]
 
 
+def replace_event(events, event_type, **changes):
+    result = [dict(event) for event in events]
+    for index, event in enumerate(result):
+        if event.get("event_type") == event_type:
+            result[index] = {**event, **changes}
+            return result
+    raise AssertionError(f"event type not found: {event_type}")
+
+
 def call(**overrides):
     data = {
         "events": EVENTS,
@@ -196,7 +205,7 @@ def test_revoked_verifier_cannot_restore_authority():
 
 def test_future_verification_relative_to_decision_blocks():
     bad = [dict(e) for e in EVENTS]
-    bad[1] = {**bad[1], "occurred_at": "2026-10-07T10:06:00+00:00"}
+    bad = replace_event(bad, "verification", occurred_at="2026-10-07T10:06:00+00:00")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
@@ -210,7 +219,7 @@ def test_execution_before_approval_blocks_full_system():
 
 def test_decision_from_wrong_temporal_position_blocks():
     bad = [dict(e) for e in EVENTS]
-    bad[2] = {**bad[2], "occurred_at": "2026-10-07T10:03:00+00:00"}
+    bad = replace_event(bad, "human_decision", occurred_at="2026-10-07T10:03:00+00:00")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
@@ -222,20 +231,20 @@ def test_missing_verification_event_blocks():
 
 def test_approval_event_context_substitution_blocks():
     bad = [dict(e) for e in EVENTS]
-    bad[3] = {**bad[3], "context_version": "C2"}
+    bad = replace_event(bad, "human_approval", context_version="C2")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
 
 def test_execution_event_approval_substitution_blocks():
     bad = [dict(e) for e in EVENTS]
-    bad[4] = {**bad[4], "approval_id": "OTHER"}
+    bad = replace_event(bad, "execution", approval_id="OTHER")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
 def test_execution_event_evidence_substitution_blocks():
     bad = [dict(e) for e in EVENTS]
-    bad[4] = {**bad[4], "evidence_hash": "OTHER"}
+    bad = replace_event(bad, "execution", evidence_hash="OTHER")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
@@ -267,7 +276,7 @@ def test_valid_verification_cannot_be_rebound_to_other_context():
 
 def test_verification_event_cannot_be_rebound_to_other_verification():
     bad = [dict(e) for e in EVENTS]
-    bad[1] = {**bad[1], "verification_id": "V2"}
+    bad = replace_event(bad, "verification", verification_id="V2")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
