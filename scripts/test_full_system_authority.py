@@ -468,3 +468,19 @@ def test_semantic_parent_rebinding_blocks(event_type, parent_event_id):
     bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+@pytest.mark.parametrize(("event_type", "field", "value"), [
+    ("evidence", "target_id", "T2"),
+    ("protocol", "context_version", "C2"),
+    ("protocol", "evidence_hash", "E2"),
+    ("proposal", "protocol_hash", "P2"),
+    ("proposal", "evidence_hash", "E2"),
+    ("human_decision", "proposal_id", "PR2"),
+    ("human_approval", "approval_id", "A2"),
+    ("execution", "context_version", "C2"),
+])
+def test_parent_content_rebinding_blocks(event_type, field, value):
+    bad = replace_event(EVENTS, event_type, **{field: value})
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
