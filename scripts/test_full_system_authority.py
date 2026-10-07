@@ -536,3 +536,52 @@ def test_duplicate_observation_target_is_allowed():
     duplicate["event_id"] = "obs-2"
     duplicate["occurred_at"] = "2026-10-07T10:01:00+00:00"
     call(events=list(EVENTS) + [duplicate])
+
+
+def test_cross_chain_evidence_fork_cannot_enter_verified_chain():
+    bad = list(EVENTS)
+    bad.extend([
+        {"event_id": "obs-2", "event_type": "observation", "target_id": "T2",
+         "occurred_at": "2026-10-07T10:01:00+00:00"},
+        {"event_id": "evidence-2", "event_type": "evidence",
+         "evidence_hash": "E2", "context_version": "C2",
+         "occurred_at": "2026-10-07T10:02:30+00:00",
+         "parent_event_id": "obs-2"},
+    ])
+    bad = replace_event(bad, "protocol", evidence_hash="E2", context_version="C2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_disconnected_protocol_cannot_supply_verified_proposal():
+    bad = list(EVENTS)
+    bad.extend([
+        {"event_id": "protocol-2", "event_type": "protocol",
+         "protocol_hash": "P2", "context_version": "C2",
+         "evidence_hash": "E2", "occurred_at": "2026-10-07T10:03:30+00:00",
+         "parent_event_id": "evidence-2"},
+        {"event_id": "evidence-2", "event_type": "evidence",
+         "evidence_hash": "E2", "context_version": "C2",
+         "occurred_at": "2026-10-07T10:02:30+00:00",
+         "parent_event_id": "obs-2"},
+        {"event_id": "obs-2", "event_type": "observation", "target_id": "T2",
+         "occurred_at": "2026-10-07T10:01:00+00:00"},
+    ])
+    bad = replace_event(bad, "proposal", protocol_hash="P2",
+                        evidence_hash="E2", context_version="C2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_forked_proposal_cannot_be_rebound_to_verified_proposal():
+    bad = list(EVENTS)
+    bad.append({
+        "event_id": "proposal-2", "event_type": "proposal",
+        "proposal_id": "PR2", "protocol_hash": "P1",
+        "context_version": "C1", "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:04:15+00:00",
+        "parent_event_id": "protocol-1",
+    })
+    bad = replace_event(bad, "human_decision", proposal_id="PR2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
