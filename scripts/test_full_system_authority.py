@@ -92,7 +92,7 @@ VERIFICATION = {
 }
 
 EVENTS = [
-    {"event_id": "obs-1", "event_type": "observation",
+    {"event_id": "obs-1", "event_type": "observation", "target_id": "T1",
      "occurred_at": "2026-10-07T10:00:00+00:00"},
     {"event_id": "verification-1", "event_type": "verification",
      "verification_id": "V1",
@@ -267,5 +267,17 @@ def test_valid_verification_cannot_be_rebound_to_other_context():
 def test_verification_event_cannot_be_rebound_to_other_verification():
     bad = [dict(e) for e in EVENTS]
     bad[1] = {**bad[1], "verification_id": "V2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+def test_verification_target_substitution_blocks():
+    bad = {**VERIFICATION, "target_id": "T2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=bad)
+
+
+def test_observation_target_substitution_blocks():
+    bad = [dict(e) for e in EVENTS]
+    bad[0] = {**bad[0], "target_id": "T2"}
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
