@@ -116,7 +116,14 @@ def _validate_event_graph_acyclic(events) -> None:
 
 
 def _validate_parent_time_constraints(events) -> None:
-    by_id = {event.get("event_id"): event for event in events if event.get("event_id")}
+    by_id = {}
+    for event in events:
+        event_id = event.get("event_id")
+        if not event_id:
+            continue
+        if event_id in by_id:
+            raise FullSystemAuthorityError("duplicate event identity is ambiguous")
+        by_id[event_id] = event
     for event in events:
         parent_id = event.get("parent_event_id")
         if not parent_id or parent_id not in by_id:
