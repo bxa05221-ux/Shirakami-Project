@@ -159,11 +159,29 @@ def _validate_semantic_parent_chain(events) -> None:
             raise FullSystemAuthorityError(f"{event_type} parent event type mismatch")
 
 
-def _validate_temporal_permutation(events, verification) -> None:
-    required_types = ("observation", "evidence", "verification", "proposal", "human_decision", "human_approval", "execution")
+def _validate_temporal_permutation(events, verification, decision, approval, execution) -> None:
+    # Authority-bearing artifacts must be selected by identity, not list position.
+    selected_ids = {
+        "verification": verification.get("verification_id"),
+        "human_decision": decision.get("decision_id"),
+        "human_approval": approval.get("approval_id"),
+        "execution": execution.get("approval_id"),
+    }
     positions = []
-    for event_type in required_types:
-        matches = [event for event in events if event.get("event_type") == event_type]
+    for event_type in ("observation", "evidence", "verification", "proposal", "human_decision", "human_approval", "execution"):
+        if event_type in selected_ids:
+            matches = [
+                event for event in events
+                if event.get("event_type") == event_type
+                and event.get({
+                    "verification": "verification_id",
+                    "human_decision": "decision_id",
+                    "human_approval": "approval_id",
+                    "execution": "approval_id",
+                }[event_type]) == selected_ids[event_type]
+            ]
+        else:
+            matches = [event for event in events if event.get("event_type") == event_type]
         if not matches:
             raise FullSystemAuthorityError("temporal permutation artifacts missing")
         positions.append((event_type, matches[0]))
@@ -498,7 +516,7 @@ def validate_full_system_authority(
         _validate_unique_event_ids(events)
         _validate_event_graph_acyclic(events)
         _validate_semantic_event_uniqueness(events)
-        _validate_temporal_permutation(events, verification)
+        _validate_temporal_permutation(events, verification, decision, approval, execution)
         _validate_observation_evidence_temporal_binding(events, verification)
         _validate_evidence_verification_temporal_binding(events, verification)
         _validate_verification_proposal_temporal_binding(events, verification)
