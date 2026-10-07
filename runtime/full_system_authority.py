@@ -432,6 +432,8 @@ def _validate_evidence_provenance(events, verification) -> None:
     ]
     if not evidence_events:
         raise FullSystemAuthorityError("evidence provenance event missing")
+    if len(evidence_events) != 1:
+        raise FullSystemAuthorityError("selected evidence identity is ambiguous")
     if not any(event.get("parent_event_id") in observation_ids for event in evidence_events):
         raise FullSystemAuthorityError("evidence is not derived from verification observation")
 
