@@ -42,7 +42,8 @@ APPROVAL = {
         "approval_id", "context_version", "evidence_hash",
         "protocol_hash", "proposal_id",
     )},
-    "verifier": "v1",\n    "human_approval": True,
+    "verifier": "v1",
+    "human_approval": True,
 }
 
 EXECUTION = {
