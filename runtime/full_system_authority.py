@@ -354,6 +354,8 @@ def _validate_proposal_decision_binding(
     ]
     if not decision_events:
         raise FullSystemAuthorityError("human decision provenance event missing")
+    if len(decision_events) != 1:
+        raise FullSystemAuthorityError("selected human decision identity is ambiguous")
     if decision_events[0].get("proposal_id") != proposal_id:
         raise FullSystemAuthorityError(
             "human decision is not bound to the verified proposal"
