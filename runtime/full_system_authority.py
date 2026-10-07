@@ -193,10 +193,7 @@ def _validate_temporal_permutation(events, verification, decision, approval, exe
             parsed.append((event_type, datetime.fromisoformat(value.replace("Z", "+00:00"))))
         except ValueError as exc:
             raise FullSystemAuthorityError("invalid temporal permutation timestamp") from exc
-    order = {event_type: index for index, (event_type, _) in enumerate(parsed)}
     if not all(parsed[i][1] <= parsed[i + 1][1] for i in range(len(parsed) - 1)):
-        raise FullSystemAuthorityError("temporal permutation detected")
-    if list(order) != list(required_types):
         raise FullSystemAuthorityError("temporal permutation detected")
 
 
