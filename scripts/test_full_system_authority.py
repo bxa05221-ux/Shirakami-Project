@@ -324,3 +324,21 @@ def test_evidence_hash_cannot_be_rebound_to_other_context():
     bad = {**VERIFICATION, "context_version": "C2"}
     with pytest.raises(FullSystemAuthorityError):
         call(verification=bad)
+
+
+def test_protocol_context_substitution_blocks():
+    bad = replace_event(EVENTS, "protocol", context_version="C2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_protocol_evidence_substitution_blocks():
+    bad = replace_event(EVENTS, "protocol", evidence_hash="E2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_protocol_hash_substitution_blocks():
+    bad = {**VERIFICATION, "protocol_hash": "P2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=bad)
