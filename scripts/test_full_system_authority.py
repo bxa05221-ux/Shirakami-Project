@@ -226,3 +226,9 @@ def test_execution_event_approval_substitution_blocks():
     bad[4] = {**bad[4], "approval_id": "OTHER"}
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+def test_execution_event_evidence_substitution_blocks():
+    bad = [dict(e) for e in EVENTS]
+    bad[4] = {**bad[4], "evidence_hash": "OTHER"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
