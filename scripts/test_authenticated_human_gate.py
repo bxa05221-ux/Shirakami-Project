@@ -1,63 +1,19 @@
-"""End-to-end authenticated Human Gate boundary composition."""
-from __future__ import annotations
-from typing import Any, Mapping
+import pytest
+from runtime.human_decision_signature import sign_human_decision
+from runtime.authenticated_human_gate import AuthenticatedHumanGateError, validate_authenticated_human_gate
 
-from runtime.human_gate_authenticity import validate_human_gate_authenticity
-from runtime.human_identity_auth import validate_authenticated_human_decision
-from runtime.human_auth_replay import validate_human_auth_for_decision
-from runtime.human_decision_signature import validate_human_decision_signature
-from runtime.human_key_trust import validate_human_key_trust
-from runtime.human_key_temporal import validate_key_at_decision_time
-from runtime.human_key_rotation_recovery import validate_key_rotation_recovery
-
-class AuthenticatedHumanGateError(ValueError):
-    pass
-
-def validate_authenticated_human_gate(
-    *,
-    identity: Mapping[str, Any],
-    decision: Mapping[str, Any],
-    approval: Mapping[str, Any],
-    signature: str,
-    secret: bytes,
-    persisted: Mapping[str, Any],
-    decision_time: str,
-    trusted_principals: frozenset[str],
-    trusted_keys: frozenset[str],
-    trusted_from: str,
-    trusted_until: str | None = None,
-    revoked_at: str | None = None,
-    current_revoked_authentications: frozenset[str] = frozenset(),
-    seen_authentication_ids: frozenset[str] = frozenset(),
-    current_revoked_keys: frozenset[str] = frozenset(),
-) -> None:
-    try:
-        validate_human_gate_authenticity(decision, approval)
-        validate_authenticated_human_decision(identity, decision)
-        validate_human_auth_for_decision(
-            identity, decision,
-            current_revoked_authentications=current_revoked_authentications,
-            seen_authentication_ids=seen_authentication_ids,
-        )
-        validate_human_decision_signature(decision, signature, secret)
-        validate_human_key_trust(
-            decision,
-            trusted_principals=trusted_principals,
-            trusted_keys=trusted_keys,
-            revoked_keys=current_revoked_keys,
-        )
-        validate_key_at_decision_time(
-            decision,
-            decision_time=decision_time,
-            trusted_from=trusted_from,
-            trusted_until=trusted_until,
-            revoked_at=revoked_at,
-        )
-        validate_key_rotation_recovery(
-            decision, persisted,
-            current_revoked_keys=current_revoked_keys,
-            trusted_keys=trusted_keys,
-        )
-    except Exception as exc:
-        raise AuthenticatedHumanGateError(str(exc)) from exc
-    return
+SECRET=b"test-secret"
+D={"decision_id":"D1","approval_id":"A1","context_version":"C1","evidence_hash":"E1","protocol_hash":"P1","proposal_id":"PR1","principal_id":"H1","authentication_id":"AUTH1","key_id":"K1","decision":"approve","actor_type":"human","human_approval":True,"runtime_authority":False}
+A={**D}
+I={"principal_id":"H1","authentication_id":"AUTH1","actor_type":"human","authenticated":True,"authentication_method":"test"}
+KW={"decision_time":"2026-10-07T10:00:00+00:00","trusted_principals":frozenset({"H1"}),"trusted_keys":frozenset({"K1"}),"trusted_from":"2026-10-01T00:00:00+00:00"}
+def validate(d=D,p=A,i=I,**extra):
+    return validate_authenticated_human_gate(identity=i,decision=d,approval=p,signature=sign_human_decision(d,SECRET),secret=SECRET,persisted=p,**KW,**extra)
+def test_full_chain_passes(): validate()
+def test_revoked_key_blocks():
+    with pytest.raises(AuthenticatedHumanGateError): validate(current_revoked_keys=frozenset({"K1"}))
+def test_runtime_authority_blocks():
+    d={**D,"runtime_authority":True}
+    with pytest.raises(AuthenticatedHumanGateError): validate(d=d,p={**A,"runtime_authority":True})
+def test_persisted_binding_mutation_blocks():
+    with pytest.raises(AuthenticatedHumanGateError): validate(p={**A,"proposal_id":"PR2"})
