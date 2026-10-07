@@ -498,3 +498,18 @@ def test_parent_future_timestamp_blocks(event_type, parent_event_id, occurred_at
     bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id, occurred_at=occurred_at)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+@pytest.mark.parametrize(("event_type", "parent_event_id"), [
+    ("observation", "obs-1"),
+    ("evidence", "evidence-1"),
+    ("protocol", "proposal-1"),
+    ("proposal", "protocol-1"),
+    ("human_decision", "decision-1"),
+    ("human_approval", "approval-1"),
+    ("execution", "exec-1"),
+])
+def test_event_graph_cycle_blocks(event_type, parent_event_id):
+    bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id)
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
