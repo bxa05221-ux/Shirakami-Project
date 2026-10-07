@@ -49,6 +49,37 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_observation_evidence_temporal_binding(events, verification) -> None:
+    evidence_hash = verification.get("evidence_hash")
+    evidence_events = [
+        event for event in events
+        if event.get("event_type") == "evidence"
+        and event.get("evidence_hash") == evidence_hash
+    ]
+    if not evidence_events:
+        raise FullSystemAuthorityError("observation evidence temporal artifacts missing")
+    evidence_event = evidence_events[0]
+    parent_id = evidence_event.get("parent_event_id")
+    observation_events = [
+        event for event in events
+        if event.get("event_type") == "observation"
+        and event.get("event_id") == parent_id
+    ]
+    if not observation_events:
+        raise FullSystemAuthorityError("evidence parent observation missing")
+    from datetime import datetime
+    def parse(event):
+        value = str(event.get("occurred_at", ""))
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise FullSystemAuthorityError("invalid observation evidence timestamp") from exc
+    observation_time = parse(observation_events[0])
+    evidence_time = parse(evidence_event)
+    if observation_time > evidence_time:
+        raise FullSystemAuthorityError("evidence occurs before observation")
+
+
 def _validate_evidence_verification_temporal_binding(events, verification) -> None:
     verification_id = verification.get("verification_id")
     evidence_hash = verification.get("evidence_hash")
@@ -328,6 +359,7 @@ def validate_full_system_authority(
         _validate_protocol_binding(events, verification)
         _validate_proposal_binding(events, verification)
         _validate_proposal_decision_binding(events, verification, decision, approval, execution)
+        _validate_observation_evidence_temporal_binding(events, verification)
         _validate_evidence_verification_temporal_binding(events, verification)
         _validate_verification_proposal_temporal_binding(events, verification)
         _validate_proposal_temporal_binding(events, verification, decision, approval, execution)
