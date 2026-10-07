@@ -110,6 +110,7 @@ def call(**overrides):
         "secret": SECRET,
         "decision_time": "2026-10-07T10:05:00+00:00",
         "trusted_principals": frozenset({"H1"}),
+        "trusted_verifiers": frozenset({"v1"}),
         "trusted_keys": frozenset({"K1"}),
         "trusted_from": "2026-10-01T00:00:00+00:00",
         "current_revoked_verifiers": set(),
