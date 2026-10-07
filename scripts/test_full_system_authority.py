@@ -26,6 +26,7 @@ DECISION = {
 }
 
 IDENTITY = {
+    "key_id": "K1",
     **{k: DECISION[k] for k in (
         "decision_id", "approval_id", "context_version",
         "evidence_hash", "protocol_hash", "proposal_id",
