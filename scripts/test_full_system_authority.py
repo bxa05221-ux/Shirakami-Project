@@ -644,3 +644,33 @@ def test_competing_approval_cannot_authorize_mismatched_execution():
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
+def test_reject_decision_cannot_authorize_execution():
+    bad_decision = dict(DECISION, decision="reject", human_approval=False)
+    bad_identity = dict(IDENTITY)
+    bad = replace_event(list(EVENTS), "human_decision", proposal_id="PR1")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad, decision=bad_decision, identity=bad_identity,
+             signature=sign_human_decision(bad_decision, SECRET))
+
+
+def test_revise_decision_cannot_authorize_execution():
+    bad_decision = dict(DECISION, decision="revise", human_approval=False)
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=bad_decision,
+             signature=sign_human_decision(bad_decision, SECRET))
+
+
+def test_reject_decision_cannot_be_reinterpreted_as_approval():
+    bad_decision = dict(DECISION, decision="reject", human_approval=True)
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=bad_decision,
+             signature=sign_human_decision(bad_decision, SECRET))
+
+
+def test_revise_decision_cannot_be_reinterpreted_as_approval():
+    bad_decision = dict(DECISION, decision="revise", human_approval=True)
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=bad_decision,
+             signature=sign_human_decision(bad_decision, SECRET))
+
+
