@@ -49,6 +49,34 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_verification_proposal_temporal_binding(events, verification) -> None:
+    verification_id = verification.get("verification_id")
+    proposal_id = verification.get("proposal_id")
+    verification_events = [
+        event for event in events
+        if event.get("event_type") == "verification"
+        and event.get("verification_id") == verification_id
+    ]
+    proposal_events = [
+        event for event in events
+        if event.get("event_type") == "proposal"
+        and event.get("proposal_id") == proposal_id
+    ]
+    if not verification_events or not proposal_events:
+        raise FullSystemAuthorityError("verification proposal temporal artifacts missing")
+    from datetime import datetime
+    def parse(event):
+        value = str(event.get("occurred_at", ""))
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise FullSystemAuthorityError("invalid verification proposal timestamp") from exc
+    verification_time = parse(verification_events[0])
+    proposal_time = parse(proposal_events[0])
+    if proposal_time < verification_time:
+        raise FullSystemAuthorityError("proposal predates its verification")
+
+
 def _validate_proposal_temporal_binding(events, verification, decision, approval, execution) -> None:
     proposal_id = verification.get("proposal_id")
     proposal_events = [
@@ -272,6 +300,7 @@ def validate_full_system_authority(
         _validate_protocol_binding(events, verification)
         _validate_proposal_binding(events, verification)
         _validate_proposal_decision_binding(events, verification, decision, approval, execution)
+        _validate_verification_proposal_temporal_binding(events, verification)
         _validate_proposal_temporal_binding(events, verification, decision, approval, execution)
         _validate_verification_semantic_binding(verification, decision, approval, execution)
         validate_full_human_gate(
