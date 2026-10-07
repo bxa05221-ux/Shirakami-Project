@@ -644,6 +644,35 @@ def test_competing_approval_cannot_authorize_mismatched_execution():
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
+def test_unselected_verification_disagreement_is_evidence_not_authority():
+    competing = {
+        "event_id": "verification-2", "event_type": "verification",
+        "verification_id": "V2", "target_id": "T1", "result": "fail",
+        "context_version": "C1", "evidence_hash": "E1",
+        "protocol_hash": "P1", "proposal_id": "PR1",
+        "verifier": "v2", "verifier_instance": "v2-i1",
+        "verification_time": "2026-10-07T10:04:10+00:00",
+        "occurred_at": "2026-10-07T10:04:10+00:00",
+        "parent_event_id": "obs-1",
+    }
+    call(events=list(EVENTS) + [competing])
+
+
+def test_competing_verification_cannot_replace_selected_verification():
+    competing = {
+        "event_id": "verification-2", "event_type": "verification",
+        "verification_id": "V2", "target_id": "T2", "result": "pass",
+        "context_version": "C2", "evidence_hash": "E2",
+        "protocol_hash": "P2", "proposal_id": "PR2",
+        "verifier": "v2", "verifier_instance": "v2-i1",
+        "verification_time": "2026-10-07T10:04:10+00:00",
+        "occurred_at": "2026-10-07T10:04:10+00:00",
+        "parent_event_id": "obs-1",
+    }
+    bad = [competing] + list(EVENTS)
+    call(events=bad)
+
+
 def test_later_reject_is_recorded_without_mutating_existing_approval():
     later_reject = {
         "event_id": "decision-2", "event_type": "human_decision",
