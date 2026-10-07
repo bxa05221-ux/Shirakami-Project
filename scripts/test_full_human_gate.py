@@ -76,6 +76,6 @@ def test_human_gate_cannot_be_created_by_consistent_ai_claims():
 def test_cross_layer_binding_matrix_blocks(artifact,field):
     values={"ui":UI,"identity":I,"decision":D,"approval":A,"persisted":A,"execution":E}
     mutated={**values[artifact],field:"MUTATED"}
-    kwargs={artifact:mutated}
+    kwargs={"u": mutated} if artifact == "ui" else {"i": mutated} if artifact == "identity" else {"d": mutated} if artifact == "decision" else {"p": mutated} if artifact in ("approval", "persisted") else {"e": mutated}
     with pytest.raises(FullHumanGateError):
         gate(**kwargs)
