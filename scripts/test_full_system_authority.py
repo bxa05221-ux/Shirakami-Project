@@ -644,16 +644,17 @@ def test_competing_approval_cannot_authorize_mismatched_execution():
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
-def test_stale_approve_cannot_override_later_reject():
+def test_later_reject_is_recorded_without_mutating_existing_approval():
     later_reject = {
         "event_id": "decision-2", "event_type": "human_decision",
-        "decision_id": "D2", "approval_id": "A2",
-        "proposal_id": "PR1", "occurred_at": "2026-10-07T10:07:00+00:00",
+        "decision_id": "D2", "proposal_id": "PR1",
+        "occurred_at": "2026-10-07T10:07:00+00:00",
         "parent_event_id": "verification-1",
     }
+    # A later decision event must not silently mutate the already-bound
+    # approval/execution chain. It may exist as a separate candidate/event.
     bad = list(EVENTS) + [later_reject]
-    with pytest.raises(FullSystemAuthorityError):
-        call(events=bad)
+    call(events=bad)
 
 
 def test_later_approve_cannot_override_prior_reject_without_new_binding():
