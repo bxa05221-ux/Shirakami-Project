@@ -82,7 +82,6 @@ def _validate_parent_time_constraints(events) -> None:
 def _validate_parent_binding_content(events) -> None:
     by_id = {event.get("event_id"): event for event in events if event.get("event_id")}
     required_bindings = {
-        ("evidence", "observation"): ("target_id",),
         ("protocol", "evidence"): ("context_version", "evidence_hash"),
         ("proposal", "protocol"): ("context_version", "evidence_hash", "protocol_hash"),
         ("human_decision", "verification"): ("context_version", "evidence_hash", "protocol_hash", "proposal_id"),
