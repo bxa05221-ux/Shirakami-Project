@@ -49,6 +49,19 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_decision_approval_uniqueness(events) -> None:
+    seen = {}
+    for event in events:
+        if event.get("event_type") != "human_decision":
+            continue
+        approval_id = event.get("approval_id")
+        if approval_id is None:
+            continue
+        if approval_id in seen:
+            raise FullSystemAuthorityError("approval id claimed by multiple human decisions")
+        seen[approval_id] = event.get("decision_id")
+
+
 def _validate_semantic_event_uniqueness(events) -> None:
     # Only uniquely identified semantic artifacts are subject to duplicate
     # rejection. Multiple observations may legitimately share a target.
@@ -498,6 +511,7 @@ def validate_full_system_authority(
         _validate_unique_event_ids(events)
         _validate_event_graph_acyclic(events)
         _validate_semantic_event_uniqueness(events)
+        _validate_decision_approval_uniqueness(events)
         _validate_temporal_permutation(events, verification)
         _validate_observation_evidence_temporal_binding(events, verification)
         _validate_evidence_verification_temporal_binding(events, verification)
