@@ -352,6 +352,8 @@ def _validate_proposal_decision_binding(
         )
     if not proposal_events:
         raise FullSystemAuthorityError("proposal provenance event missing")
+    if len(proposal_events) != 1:
+        raise FullSystemAuthorityError("selected proposal identity is ambiguous")
 
 
 def _validate_proposal_binding(events, verification) -> None:
@@ -390,6 +392,8 @@ def _validate_protocol_binding(events, verification) -> None:
     ]
     if not protocol_events:
         raise FullSystemAuthorityError("protocol provenance event missing")
+    if len(protocol_events) != 1:
+        raise FullSystemAuthorityError("selected protocol identity is ambiguous")
     if not any(
         event.get("context_version") == context_version
         and event.get("evidence_hash") == evidence_hash
