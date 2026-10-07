@@ -379,22 +379,21 @@ def test_cross_layer_mutation_cannot_be_hidden_by_unchanged_human_gate():
         call(verification=verification, decision=decision, approval=approval, execution=execution)
 
 
-def test_authority_chain_single_field_mutation_matrix():
-    mutations = [
-        ("verification_id", "V-MUT"),
-        ("target_id", "T-MUT"),
-        ("context_version", "C-MUT"),
-        ("evidence_hash", "E-MUT"),
-        ("protocol_hash", "P-MUT"),
-        ("proposal_id", "PR-MUT"),
-        ("verifier", "v-MUT"),
-        ("verifier_instance", "v-i-MUT"),
-    ]
-    for field, value in mutations:
-        verification = dict(VERIFICATION)
-        verification[field] = value
-        with pytest.raises(FullSystemAuthorityError):
-            call(verification=verification)
+@pytest.mark.parametrize(("field", "value"), [
+    ("verification_id", "V-MUT"),
+    ("target_id", "T-MUT"),
+    ("context_version", "C-MUT"),
+    ("evidence_hash", "E-MUT"),
+    ("protocol_hash", "P-MUT"),
+    ("proposal_id", "PR-MUT"),
+    ("verifier", "v-MUT"),
+    ("verifier_instance", "v-i-MUT"),
+])
+def test_authority_chain_single_field_mutation_matrix(field, value):
+    verification = dict(VERIFICATION)
+    verification[field] = value
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=verification)
 
 
 def test_authority_chain_human_binding_single_field_mutation_matrix():
@@ -1008,7 +1007,7 @@ def test_authority_edge_cannot_follow_competing_parent(event_type, parent_event_
         call(events=bad)
 
 @pytest.mark.parametrize(("event_type", "parent_event_id"), [
-    ("evidence", "obs-1"), ("protocol", "proposal-1"), ("proposal", "evidence-1"),
+    ("evidence", "protocol-1"), ("protocol", "proposal-1"), ("proposal", "evidence-1"),
     ("verification", "protocol-1"), ("human_decision", "proposal-1"),
     ("human_approval", "verification-1"), ("execution", "decision-1"),
 ])
