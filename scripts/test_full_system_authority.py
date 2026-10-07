@@ -94,7 +94,7 @@ VERIFICATION = {
 EVENTS = [
     {"event_id": "obs-1", "event_type": "observation", "target_id": "T1",
      "occurred_at": "2026-10-07T10:00:00+00:00"},
-    {"event_id": "evidence-1", "event_type": "evidence", "evidence_hash": "E1", "occurred_at": "2026-10-07T10:02:00+00:00", "parent_event_id": "obs-1"},
+    {"event_id": "evidence-1", "event_type": "evidence", "evidence_hash": "E1", "context_version": "C1", "occurred_at": "2026-10-07T10:02:00+00:00", "parent_event_id": "obs-1"},
     {"event_id": "verification-1", "event_type": "verification",
      "verification_id": "V1",
      "occurred_at": "2026-10-07T10:04:00+00:00",
@@ -312,3 +312,14 @@ def test_evidence_from_other_observation_blocks():
             bad[index] = {**event, "parent_event_id": "obs-2"}
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+def test_evidence_context_substitution_blocks():
+    bad = replace_event(EVENTS, "evidence", context_version="C2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_evidence_hash_cannot_be_rebound_to_other_context():
+    bad = {**VERIFICATION, "context_version": "C2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=bad)
