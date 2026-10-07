@@ -84,8 +84,8 @@ def _validate_parent_binding_content(events) -> None:
     required_bindings = {
         ("protocol", "evidence"): ("context_version", "evidence_hash"),
         ("proposal", "protocol"): ("context_version", "evidence_hash", "protocol_hash"),
-        ("human_decision", "verification"): ("context_version", "evidence_hash", "protocol_hash", "proposal_id"),
-        ("human_approval", "human_decision"): ("context_version", "evidence_hash", "protocol_hash", "proposal_id", "approval_id"),
+        ("human_decision", "verification"): ("context_version", "evidence_hash", "protocol_hash"),
+        ("human_approval", "human_decision"): ("context_version", "evidence_hash", "protocol_hash", "proposal_id"),
         ("execution", "human_approval"): ("context_version", "evidence_hash", "protocol_hash", "proposal_id", "approval_id"),
     }
     for event in events:
