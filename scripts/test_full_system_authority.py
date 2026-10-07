@@ -399,7 +399,7 @@ def test_proposal_after_human_decision_blocks():
 
 
 def test_proposal_before_human_decision_is_required():
-    bad = replace_event(EVENTS, "proposal", occurred_at="2026-10-07T10:04:00+00:00")
+    bad = replace_event(EVENTS, "proposal", occurred_at="2026-10-07T10:05:30+00:00")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
@@ -411,7 +411,7 @@ def test_proposal_predating_verification_blocks():
 
 
 def test_verification_before_proposal_is_required():
-    bad = replace_event(EVENTS, "proposal", occurred_at="2026-10-07T10:04:30+00:00")
+    bad = replace_event(EVENTS, "proposal", occurred_at="2026-10-07T10:03:30+00:00")
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
