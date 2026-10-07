@@ -390,3 +390,15 @@ def test_execution_proposal_binding_mutation_blocks():
     bad = {**EXECUTION, "proposal_id": "PR2"}
     with pytest.raises(FullSystemAuthorityError):
         call(execution=bad)
+
+
+def test_proposal_after_human_decision_blocks():
+    bad = replace_event(EVENTS, "proposal", occurred_at="2026-10-07T10:06:00+00:00")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_proposal_before_human_decision_is_required():
+    bad = replace_event(EVENTS, "proposal", occurred_at="2026-10-07T10:05:30+00:00")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
