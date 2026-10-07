@@ -522,3 +522,11 @@ def test_missing_event_id_blocks():
     bad = replace_event(EVENTS, "evidence", event_id=None)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+def test_semantic_duplicate_evidence_blocks():
+    duplicate = dict(EVENTS[1])
+    duplicate["event_id"] = "evidence-2"
+    bad = list(EVENTS) + [duplicate]
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
