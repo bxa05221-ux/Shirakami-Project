@@ -8,6 +8,32 @@ from runtime.full_human_gate import validate_full_human_gate
 class FullSystemAuthorityError(ValueError):
     pass
 
+
+def _event_time(event: Mapping[str, Any]):
+    from datetime import datetime
+    value = str(event.get("occurred_at", ""))
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise FullSystemAuthorityError(f"invalid system event timestamp: {value}") from exc
+
+
+def _validate_system_temporal_binding(events, verification, decision, approval, execution) -> None:
+    verification_id = verification.get("verification_id")
+    decision_id = decision.get("decision_id")
+    approval_id = approval.get("approval_id")
+    if not verification_id or not decision_id or not approval_id:
+        raise FullSystemAuthorityError("system temporal binding identifiers are required")
+    verification_events = [e for e in events if e.get("event_type") == "verification" and e.get("verification_id") == verification_id]
+    decision_events = [e for e in events if e.get("event_type") == "human_decision" and e.get("decision_id") == decision_id]
+    approval_events = [e for e in events if e.get("event_type") == "human_approval" and e.get("approval_id") == approval_id]
+    execution_events = [e for e in events if e.get("event_type") == "execution" and e.get("approval_id") == approval_id]
+    if not all((verification_events, decision_events, approval_events, execution_events)):
+        raise FullSystemAuthorityError("system temporal artifacts are incomplete")
+    vt, dt, at, xt = map(_event_time, (verification_events[0], decision_events[0], approval_events[0], execution_events[0]))
+    if not (vt <= dt <= at <= xt):
+        raise FullSystemAuthorityError("system temporal order violation")
+
 def validate_full_system_authority(
     *,
     events,
@@ -40,6 +66,7 @@ def validate_full_system_authority(
             persisted, trusted_at=trusted_verifiers, revoked_at=verifier_revoked_at,
             current_revoked_verifiers=verifier_revoked_at,
         )
+        _validate_system_temporal_binding(events, verification, decision, approval, execution)
         validate_full_human_gate(
             ui_event=ui_event, identity=identity, decision=decision,
             approval=approval, execution=execution, signature=signature,
