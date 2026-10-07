@@ -49,6 +49,34 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_evidence_verification_temporal_binding(events, verification) -> None:
+    verification_id = verification.get("verification_id")
+    evidence_hash = verification.get("evidence_hash")
+    verification_events = [
+        event for event in events
+        if event.get("event_type") == "verification"
+        and event.get("verification_id") == verification_id
+    ]
+    evidence_events = [
+        event for event in events
+        if event.get("event_type") == "evidence"
+        and event.get("evidence_hash") == evidence_hash
+    ]
+    if not verification_events or not evidence_events:
+        raise FullSystemAuthorityError("evidence verification temporal artifacts missing")
+    from datetime import datetime
+    def parse(event):
+        value = str(event.get("occurred_at", ""))
+        try:
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise FullSystemAuthorityError("invalid evidence verification timestamp") from exc
+    evidence_time = parse(evidence_events[0])
+    verification_time = parse(verification_events[0])
+    if evidence_time > verification_time:
+        raise FullSystemAuthorityError("evidence occurs after verification")
+
+
 def _validate_verification_proposal_temporal_binding(events, verification) -> None:
     verification_id = verification.get("verification_id")
     proposal_id = verification.get("proposal_id")
@@ -300,6 +328,7 @@ def validate_full_system_authority(
         _validate_protocol_binding(events, verification)
         _validate_proposal_binding(events, verification)
         _validate_proposal_decision_binding(events, verification, decision, approval, execution)
+        _validate_evidence_verification_temporal_binding(events, verification)
         _validate_verification_proposal_temporal_binding(events, verification)
         _validate_proposal_temporal_binding(events, verification, decision, approval, execution)
         _validate_verification_semantic_binding(verification, decision, approval, execution)
