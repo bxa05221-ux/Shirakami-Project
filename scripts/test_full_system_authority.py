@@ -484,3 +484,17 @@ def test_parent_content_rebinding_blocks(event_type, field, value):
     bad = replace_event(EVENTS, event_type, **{field: value})
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+@pytest.mark.parametrize(("event_type", "parent_event_id", "occurred_at"), [
+    ("evidence", "obs-1", "2026-10-07T09:59:00+00:00"),
+    ("protocol", "evidence-1", "2026-10-07T10:01:00+00:00"),
+    ("proposal", "protocol-1", "2026-10-07T10:02:00+00:00"),
+    ("human_decision", "verification-1", "2026-10-07T10:03:00+00:00"),
+    ("human_approval", "decision-1", "2026-10-07T10:04:00+00:00"),
+    ("execution", "approval-1", "2026-10-07T10:04:30+00:00"),
+])
+def test_parent_future_timestamp_blocks(event_type, parent_event_id, occurred_at):
+    bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id, occurred_at=occurred_at)
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
