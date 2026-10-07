@@ -64,3 +64,18 @@ def test_human_gate_cannot_be_created_by_consistent_ai_claims():
             p={**A, "runtime_authority": True},
             u={**UI, "actor_type": "runtime", "runtime_generated": True},
         )
+
+@pytest.mark.parametrize("artifact,field",[
+    ("ui","context_version"),("ui","evidence_hash"),("ui","protocol_hash"),("ui","proposal_id"),
+    ("identity","context_version"),("identity","evidence_hash"),("identity","protocol_hash"),("identity","proposal_id"),
+    ("decision","approval_id"),("decision","context_version"),("decision","evidence_hash"),("decision","protocol_hash"),("decision","proposal_id"),
+    ("approval","approval_id"),("approval","context_version"),("approval","evidence_hash"),("approval","protocol_hash"),("approval","proposal_id"),
+    ("persisted","approval_id"),("persisted","context_version"),("persisted","evidence_hash"),("persisted","protocol_hash"),("persisted","proposal_id"),
+    ("execution","approval_id"),("execution","context_version"),("execution","evidence_hash"),("execution","protocol_hash"),("execution","proposal_id"),
+])
+def test_cross_layer_binding_matrix_blocks(artifact,field):
+    values={"ui":UI,"identity":I,"decision":D,"approval":A,"persisted":A,"execution":E}
+    mutated={**values[artifact],field:"MUTATED"}
+    kwargs={artifact:mutated}
+    with pytest.raises(FullHumanGateError):
+        gate(**kwargs)
