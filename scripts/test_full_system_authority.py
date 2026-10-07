@@ -596,3 +596,49 @@ def test_legitimate_proposal_fork_is_allowed_when_not_selected():
         "parent_event_id": "protocol-1",
     }
     call(events=list(EVENTS) + [fork])
+
+
+def test_unselected_proposal_cannot_inherit_selected_human_approval():
+    fork = {
+        "event_id": "proposal-2", "event_type": "proposal",
+        "proposal_id": "PR2", "protocol_hash": "P1",
+        "context_version": "C1", "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:04:15+00:00",
+        "parent_event_id": "protocol-1",
+    }
+    bad = list(EVENTS) + [fork]
+    bad = replace_event(bad, "execution", proposal_id="PR2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_second_human_decision_cannot_create_second_authority():
+    second = {
+        "event_id": "decision-2", "event_type": "human_decision",
+        "decision_id": "D2", "proposal_id": "PR2",
+        "occurred_at": "2026-10-07T10:05:10+00:00",
+        "parent_event_id": "verification-1",
+    }
+    fork = {
+        "event_id": "proposal-2", "event_type": "proposal",
+        "proposal_id": "PR2", "protocol_hash": "P1",
+        "context_version": "C1", "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:04:15+00:00",
+        "parent_event_id": "protocol-1",
+    }
+    bad = list(EVENTS) + [fork, second]
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_second_approval_cannot_reuse_same_decision_authority():
+    second = {
+        "event_id": "approval-2", "event_type": "human_approval",
+        "approval_id": "A2", "context_version": "C1",
+        "evidence_hash": "E1", "protocol_hash": "P1",
+        "proposal_id": "PR2", "occurred_at": "2026-10-07T10:05:10+00:00",
+        "parent_event_id": "decision-1",
+    }
+    bad = list(EVENTS) + [second]
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
