@@ -28,7 +28,7 @@ def validate_full_system_authority(
     trusted_from: str,
     trusted_until: str | None = None,
     revoked_at: str | None = None,
-    current_revoked_verifiers: set[str] = set(),
+    verifier_revoked_at: frozenset[str] = frozenset(),
     current_revoked_authentications: frozenset[str] = frozenset(),
     seen_authentication_ids: frozenset[str] = frozenset(),
     current_revoked_keys: frozenset[str] = frozenset(),
@@ -37,8 +37,8 @@ def validate_full_system_authority(
     try:
         validate_cross_layer_authority_chain(
             events, approval, execution, verification, verification_digest,
-            persisted, trusted_at=trusted_from, revoked_at=revoked_at,
-            current_revoked_verifiers=current_revoked_verifiers,
+            persisted, trusted_at=trusted_verifiers, revoked_at=verifier_revoked_at,
+            current_revoked_verifiers=verifier_revoked_at,
         )
         validate_full_human_gate(
             ui_event=ui_event, identity=identity, decision=decision,
