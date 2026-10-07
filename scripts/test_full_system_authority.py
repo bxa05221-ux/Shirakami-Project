@@ -366,3 +366,27 @@ def test_proposal_id_cannot_be_rebound():
     bad = {**VERIFICATION, "proposal_id": "PR2"}
     with pytest.raises(FullSystemAuthorityError):
         call(verification=bad)
+
+
+def test_human_decision_cannot_switch_verified_proposal():
+    bad = replace_event(EVENTS, "human_decision", proposal_id="PR2")
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=bad)
+
+
+def test_decision_proposal_binding_mutation_blocks():
+    bad = {**DECISION, "proposal_id": "PR2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(decision=bad)
+
+
+def test_approval_proposal_binding_mutation_blocks():
+    bad = {**APPROVAL, "proposal_id": "PR2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(approval=bad)
+
+
+def test_execution_proposal_binding_mutation_blocks():
+    bad = {**EXECUTION, "proposal_id": "PR2"}
+    with pytest.raises(FullSystemAuthorityError):
+        call(execution=bad)
