@@ -636,6 +636,13 @@ def test_duplicate_selected_proposal_identity_is_rejected():
         call(events=list(EVENTS) + [duplicate])
 
 
+def test_duplicate_decision_identity_is_rejected():
+    duplicate = dict(EVENTS[5])
+    duplicate["event_id"] = "decision-attack"
+    with pytest.raises(FullSystemAuthorityError):
+        call(events=list(EVENTS) + [duplicate])
+
+
 def test_duplicate_selected_decision_identity_is_rejected():
     duplicate = dict(EVENTS[5])
     duplicate["event_id"] = "decision-duplicate"
