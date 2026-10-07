@@ -231,6 +231,102 @@ def test_competing_current_proposal_identity_blocks_authority():
         call(events=[*EVENTS, competing])
 
 
+def test_historical_candidates_can_coexist_with_selected_authority_chain():
+    history = [
+        {
+            "event_id": "obs-history-2",
+            "event_type": "observation",
+            "target_id": "T2",
+            "occurred_at": "2026-10-07T08:00:00+00:00",
+        },
+        {
+            "event_id": "evidence-history-2",
+            "event_type": "evidence",
+            "evidence_hash": "E-history-2",
+            "context_version": "C0",
+            "occurred_at": "2026-10-07T08:01:00+00:00",
+            "parent_event_id": "obs-history-2",
+        },
+        {
+            "event_id": "protocol-history-2",
+            "event_type": "protocol",
+            "protocol_hash": "P-history-2",
+            "context_version": "C0",
+            "evidence_hash": "E-history-2",
+            "occurred_at": "2026-10-07T08:02:00+00:00",
+            "parent_event_id": "evidence-history-2",
+        },
+        {
+            "event_id": "proposal-history-2",
+            "event_type": "proposal",
+            "proposal_id": "PR-history-2",
+            "protocol_hash": "P-history-2",
+            "context_version": "C0",
+            "evidence_hash": "E-history-2",
+            "occurred_at": "2026-10-07T08:03:00+00:00",
+            "parent_event_id": "protocol-history-2",
+        },
+    ]
+    call(events=[*EVENTS, *history])
+
+
+def test_historical_observation_same_target_does_not_create_authority_ambiguity():
+    history = {
+        "event_id": "obs-history-3",
+        "event_type": "observation",
+        "target_id": EVENTS[0]["target_id"],
+        "occurred_at": "2026-10-07T08:00:00+00:00",
+    }
+    call(events=[*EVENTS, history])
+
+
+def test_historical_chain_with_different_semantic_ids_does_not_replace_selected_chain():
+    history = [
+        {
+            "event_id": "obs-history-4",
+            "event_type": "observation",
+            "target_id": "T2",
+            "occurred_at": "2026-10-07T07:00:00+00:00",
+        },
+        {
+            "event_id": "evidence-history-4",
+            "event_type": "evidence",
+            "evidence_hash": "E4",
+            "context_version": "C0",
+            "occurred_at": "2026-10-07T07:01:00+00:00",
+            "parent_event_id": "obs-history-4",
+        },
+        {
+            "event_id": "protocol-history-4",
+            "event_type": "protocol",
+            "protocol_hash": "P4",
+            "context_version": "C0",
+            "evidence_hash": "E4",
+            "occurred_at": "2026-10-07T07:02:00+00:00",
+            "parent_event_id": "evidence-history-4",
+        },
+        {
+            "event_id": "proposal-history-4",
+            "event_type": "proposal",
+            "proposal_id": "PR4",
+            "protocol_hash": "P4",
+            "context_version": "C0",
+            "evidence_hash": "E4",
+            "occurred_at": "2026-10-07T07:03:00+00:00",
+            "parent_event_id": "protocol-history-4",
+        },
+        {
+            "event_id": "verification-history-4",
+            "event_type": "verification",
+            "verification_id": "V4",
+            "target_id": "T2",
+            "occurred_at": "2026-10-07T07:04:00+00:00",
+            "parent_event_id": "obs-history-4",
+        },
+    ]
+    call(events=[*EVENTS, *history])
+
+
 def test_competing_current_verification_identity_blocks_authority():
     competing = dict(VERIFICATION)
     competing["verification_id"] = VERIFICATION["verification_id"]
