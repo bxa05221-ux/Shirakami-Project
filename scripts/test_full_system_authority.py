@@ -622,7 +622,7 @@ def test_unselected_earlier_human_decision_does_not_replace_selected_chain():
     call(events=[earlier] + list(EVENTS))
 
 
-def test_reordered_competing_human_decision_cannot_replace_selected_decision():
+def test_reordered_competing_human_decision_does_not_replace_selected_decision():
     second = {
         "event_id": "decision-2", "event_type": "human_decision",
         "decision_id": "D2", "proposal_id": "PR2",
@@ -636,9 +636,23 @@ def test_reordered_competing_human_decision_cannot_replace_selected_decision():
         "occurred_at": "2026-10-07T10:04:15+00:00",
         "parent_event_id": "protocol-1",
     }
-    bad = [second, fork] + list(EVENTS)
+    call(events=[second, fork] + list(EVENTS))
+
+
+def test_selected_decision_id_cannot_be_rebound_to_competing_proposal():
+    bad_decision = dict(DECISION, proposal_id="PR2")
+    fork = {
+        "event_id": "proposal-2", "event_type": "proposal",
+        "proposal_id": "PR2", "protocol_hash": "P1",
+        "context_version": "C1", "evidence_hash": "E1",
+        "occurred_at": "2026-10-07T10:04:15+00:00",
+        "parent_event_id": "protocol-1",
+    }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=bad)
+        call(events=list(EVENTS) + [fork],
+             decision=bad_decision,
+             signature=sign_human_decision(bad_decision, SECRET))
+
 
 
 def test_competing_approval_cannot_authorize_mismatched_execution():
