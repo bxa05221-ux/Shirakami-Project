@@ -529,3 +529,10 @@ def test_semantic_duplicate_evidence_blocks():
     bad = list(EVENTS) + [duplicate]
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
+
+
+def test_duplicate_observation_target_is_allowed():
+    duplicate = dict(EVENTS[0])
+    duplicate["event_id"] = "obs-2"
+    duplicate["occurred_at"] = "2026-10-07T10:01:00+00:00"
+    call(events=list(EVENTS) + [duplicate])
