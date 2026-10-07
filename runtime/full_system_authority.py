@@ -41,7 +41,7 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
     for field in ("approval_id", "context_version", "evidence_hash", "protocol_hash", "proposal_id"):
         if approval_event.get(field) != approval.get(field):
             raise FullSystemAuthorityError(f"approval event {field} mismatch")
-    for field in ("approval_id", "context_version"):
+    for field in ("approval_id", "context_version", "evidence_hash", "protocol_hash", "proposal_id"):
         if execution_event.get(field) != execution.get(field):
             raise FullSystemAuthorityError(f"execution event {field} mismatch")
     vt, dt, at, xt = map(_event_time, (verification_event, decision_event, approval_event, execution_event))
