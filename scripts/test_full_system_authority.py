@@ -323,6 +323,58 @@ def test_competing_parent_cannot_be_smuggled_through_valid_timestamps():
     with pytest.raises(FullSystemAuthorityError):
         call(events=[*EVENTS, competing])
 
+def test_authority_chain_single_field_mutation_matrix():
+    mutations = [
+        ("verification_id", "V-MUT"),
+        ("target_id", "T-MUT"),
+        ("context_version", "C-MUT"),
+        ("evidence_hash", "E-MUT"),
+        ("protocol_hash", "P-MUT"),
+        ("proposal_id", "PR-MUT"),
+        ("verifier", "v-MUT"),
+        ("verifier_instance", "v-i-MUT"),
+    ]
+    for field, value in mutations:
+        verification = dict(VERIFICATION)
+        verification[field] = value
+        with pytest.raises(FullSystemAuthorityError):
+            call(verification=verification)
+
+
+def test_authority_chain_human_binding_single_field_mutation_matrix():
+    mutations = [
+        ("decision_id", "D-MUT"),
+        ("approval_id", "A-MUT"),
+        ("context_version", "C-MUT"),
+        ("evidence_hash", "E-MUT"),
+        ("protocol_hash", "P-MUT"),
+        ("proposal_id", "PR-MUT"),
+        ("principal_id", "H-MUT"),
+        ("authentication_id", "AUTH-MUT"),
+        ("key_id", "K-MUT"),
+    ]
+    for field, value in mutations:
+        decision = dict(DECISION)
+        decision[field] = value
+        with pytest.raises(FullSystemAuthorityError):
+            call(decision=decision)
+
+
+def test_authority_chain_execution_binding_single_field_mutation_matrix():
+    mutations = [
+        ("approval_id", "A-MUT"),
+        ("context_version", "C-MUT"),
+        ("evidence_hash", "E-MUT"),
+        ("protocol_hash", "P-MUT"),
+        ("proposal_id", "PR-MUT"),
+    ]
+    for field, value in mutations:
+        execution = dict(EXECUTION)
+        execution[field] = value
+        with pytest.raises(FullSystemAuthorityError):
+            call(execution=execution)
+
+
 def test_multiple_composite_attacks_fail_closed_regardless_of_injection_order():
     attacks = [
         {
