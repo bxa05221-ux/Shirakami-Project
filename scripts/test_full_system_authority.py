@@ -113,7 +113,7 @@ def call(**overrides):
         "trusted_verifiers": frozenset({"v1"}),
         "trusted_keys": frozenset({"K1"}),
         "trusted_from": "2026-10-01T00:00:00+00:00",
-        "current_revoked_verifiers": set(),
+        "verifier_revoked_at": frozenset(),
     }
     data.update(overrides)
     return validate_full_system_authority(**data)
@@ -170,4 +170,4 @@ def test_runtime_authority_cannot_cross_complete_chain():
 
 def test_revoked_verifier_cannot_restore_authority():
     with pytest.raises(FullSystemAuthorityError):
-        call(current_revoked_verifiers={"v1"})
+        call(verifier_revoked_at=frozenset({"v1"}))
