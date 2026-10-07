@@ -49,6 +49,40 @@ def _validate_system_temporal_binding(events, verification, decision, approval, 
         raise FullSystemAuthorityError("system temporal order violation")
 
 
+def _validate_proposal_decision_binding(
+    events, verification, decision, approval, execution
+) -> None:
+    proposal_id = verification.get("proposal_id")
+    for artifact_name, artifact in (
+        ("decision", decision),
+        ("approval", approval),
+        ("execution", execution),
+    ):
+        if artifact.get("proposal_id") != proposal_id:
+            raise FullSystemAuthorityError(
+                f"{artifact_name} is bound to a different proposal"
+            )
+    proposal_events = [
+        event for event in events
+        if event.get("event_type") == "proposal"
+        and event.get("proposal_id") == proposal_id
+    ]
+    decision_id = decision.get("decision_id")
+    decision_events = [
+        event for event in events
+        if event.get("event_type") == "human_decision"
+        and event.get("decision_id") == decision_id
+    ]
+    if not decision_events:
+        raise FullSystemAuthorityError("human decision provenance event missing")
+    if decision_events[0].get("proposal_id") != proposal_id:
+        raise FullSystemAuthorityError(
+            "human decision is not bound to the verified proposal"
+        )
+    if not proposal_events:
+        raise FullSystemAuthorityError("proposal provenance event missing")
+
+
 def _validate_proposal_binding(events, verification) -> None:
     proposal_id = verification.get("proposal_id")
     protocol_hash = verification.get("protocol_hash")
@@ -209,6 +243,7 @@ def validate_full_system_authority(
         _validate_evidence_context_binding(events, verification)
         _validate_protocol_binding(events, verification)
         _validate_proposal_binding(events, verification)
+        _validate_proposal_decision_binding(events, verification, decision, approval, execution)
         _validate_verification_semantic_binding(verification, decision, approval, execution)
         validate_full_human_gate(
             ui_event=ui_event, identity=identity, decision=decision,
