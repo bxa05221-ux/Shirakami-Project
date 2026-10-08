@@ -267,3 +267,86 @@ Acceptance criteria:
 - Old AATS is the canonical current ThreadRPG runtime: **not established**.
 
 The historical relationship is therefore strong enough to guide architecture and documentation, while remaining careful about claims of direct implementation ancestry.
+
+
+## 13. Implementation-level mapping from the historical runtime
+
+A second pass over the historical repository shows that the lineage is not only conceptual. Several ThreadRPG-shaped operations were actually exercised in the old Runtime.
+
+At commit `d7c585f8245462198a501bc80723e7af4edae457`, the AATS Wayfinding path is documented and tested as:
+
+```
+AATS → Thread → Renzan → Kasen → Landscape → Small Step
+     → Transition → Evidence → Landscape re-observation
+```
+
+The repository describes:
+
+- `Renzan` as collecting Thread posts as separate observable viewpoints, without interpreting them;
+- `Kasen` as a human-facing re-expression boundary that preserves the viewpoints;
+- Landscape as the state being observed;
+- Evidence as the record of observable transition;
+- re-observation as the loop back into Landscape.
+
+This is a concrete implementation specimen of the earlier ThreadRPG pattern, although it is not evidence that AATS is the canonical or only implementation of ThreadRPG.
+
+### 13.1 Mapping status
+
+| Origin invariant | Historical implementation evidence | Current Shirakami boundary | Status |
+|---|---|---|---|
+| Same Landscape, multiple viewpoints | AATS Thread + Renzan | Landscape / observation boundary | **implemented historically; generalized current boundary** |
+| Viewpoints remain distinguishable | Renzan collects posts without interpretation | Observation / Evidence separation | **implemented** |
+| Human-facing synthesis is separate from observation | Kasen re-expression boundary | Renderer / Projection separation | **implemented as boundary** |
+| Observation does not itself authorize execution | Small Step selection described as external policy boundary | Human Gate / authority chain | **implemented and strengthened** |
+| Observable transition is recorded | AATS → Transition → Evidence | Evidence / AIwitness | **implemented and generalized** |
+| Evidence returns to Landscape | Re-observation cycle + later explicit Evidence → Landscape boundary | Landscape projection | **implemented and verified in later Runtime work** |
+| Context/state survives between observations | Thread / Landscape state in AATS; Matome YAML in ThreadRPG protocol | Semantic Handoff | **conceptually strong; exact schema lineage requires further mapping** |
+| Disagreement / plurality is preserved | Thread posts remain separate viewpoints | Observation plurality / branch preservation | **documented and partially implemented; current canonical schema not yet fixed** |
+| Human remains final authority | ThreadRPG policy + external Small Step boundary | Strategic Human Gate | **implemented and verified** |
+| Model/backend is replaceable | AATS wayfinding notes backend choice remains replaceable | Runtime / Adapter boundary | **implemented and verified** |
+| Re-observation closes the loop | AATS wayfinding cycle | Verification / Landscape loop | **implemented and verified** |
+
+### 13.2 Important correction
+
+The old AATS path is therefore best understood as a **historical implementation specimen** showing how ThreadRPG-derived ideas were exercised in Runtime.
+
+It should not be promoted automatically to:
+
+> "the ThreadRPG Runtime"
+
+because the old ThreadRPG consistency audit explicitly found unresolved questions around Human Gate placement, execution authorization semantics, and the exact relationship between AATS and the proposed ThreadRPG reintegration cycle.
+
+That distinction is important: the implementation evidence strengthens the lineage claim without collapsing historical experiments into today's normative architecture.
+
+## 14. The strongest surviving invariant
+
+Across the documents and implementation experiments, the most persistent invariant is not "thread."
+
+It is:
+
+> **A human Landscape is observed from multiple non-authoritative perspectives; observations remain distinguishable and uncertain; observable transitions are recorded; the resulting state can be observed again; final authority remains human.**
+
+This invariant survives even when:
+
+- Thread becomes a generic Perspective;
+- the renderer changes;
+- the AI model changes;
+- the Runtime changes;
+- the transport becomes HTTP;
+- the observation becomes an API operation;
+- Evidence becomes provider-neutral AIwitness data.
+
+That is the strongest evidence that ThreadRPG was the **discovery mechanism**, while Shirakami Architecture is the **generalized architecture**.
+
+## 15. Mapping completion boundary
+
+This mapping is complete enough to establish the historical-to-current correspondence without requiring a new ThreadRPG Runtime implementation.
+
+Remaining uncertainty is deliberately isolated to three questions:
+
+1. the exact canonical Semantic Handoff schema inherited from Matome YAML;
+2. the minimum normative representation of Perspective / plurality;
+3. whether a dedicated ThreadRPG adapter provides enough practical value to justify implementation.
+
+Those are new design questions, not missing prerequisites for the existing Shirakami core.
+
