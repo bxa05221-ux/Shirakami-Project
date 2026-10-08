@@ -50,3 +50,8 @@ def test_profile_endpoint_returns_404_for_unknown_profile():
     finally:
         server.shutdown()
         server.server_close()
+
+if __name__ == "__main__":
+    test_profile_endpoint_exposes_review_configuration_without_authority()
+    test_profile_endpoint_returns_404_for_unknown_profile()
+    print("Strategic Human Gate HTTP API tests: PASS")
