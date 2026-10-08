@@ -12,7 +12,7 @@ Selection authority: human_gate.
 
 ## Current Position
 
-current_milestone: threadrpg-derived-core-mapping
+current_milestone: threadrpg-derived-core-mapping-complete
 
 ## Milestones
 
@@ -27,7 +27,7 @@ current_milestone: threadrpg-derived-core-mapping
 | aiwitness-decision-map | complete | Decision landscape and branch structure can be preserved for Human Gate |
 | external-developer-handoff | complete | Make the existing system understandable and usable by an independent developer |
 | threadrpg-integration-assessment | complete | Historical ThreadRPG assets and published development record verified; ThreadRPG is treated as an origin/discovery system rather than merely a later application |
-| threadrpg-derived-core-mapping | pending | Map ThreadRPG-origin invariants to current Shirakami boundaries and distinguish implemented, documented-only, and unverified mappings |
+| threadrpg-derived-core-mapping | complete | ThreadRPG-origin invariants mapped to historical implementation specimens and current Shirakami boundaries; remaining uncertainties explicitly isolated |
 
 ## Current Decision Point
 
@@ -70,6 +70,6 @@ The current question is not "how do we put ThreadRPG into the OS?" but:
 
 > Which principles discovered through ThreadRPG became Shirakami Model invariants, and which of those invariants are now implemented and verified by Shirakami OS?
 
-The bounded next milestone is threadrpg-derived-core-mapping.
+The ThreadRPG-derived core mapping is complete at the current evidence boundary. No dedicated ThreadRPG Runtime or adapter is required by this mapping.
 
 JOUMON/v2 and production deployment remain separate branches, not hidden requirements of the current milestone.
