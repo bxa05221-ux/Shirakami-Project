@@ -15,4 +15,4 @@ jobs:
         with:
           python-version: "3.13"
       - name: Run API extension tests
-        run: python scripts/test_human_gate_http_api.py
+        run: python -m scripts.test_human_gate_http_api
