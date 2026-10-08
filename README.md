@@ -229,6 +229,12 @@ Shirakami は現在、プロトタイプから実運用へ向けたシェイク�
 
 ---
 
+## External Developer Handoff
+
+作者の説明なしで、まず手元でAPI境界を確認したい開発者向けに、最短のQuickstartを用意しています。
+
+→ [`docs/EXTERNAL_DEVELOPER_QUICKSTART.md`](docs/EXTERNAL_DEVELOPER_QUICKSTART.md)
+
 ## Start Here
 
 白神を初めて見る場合は、次の順序を推奨します。
