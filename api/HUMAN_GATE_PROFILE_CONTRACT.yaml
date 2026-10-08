@@ -1,0 +1,69 @@
+human_gate_profile:
+  version: "0.1"
+  purpose: >
+    Configure what the Human Gate must inspect before a strategic decision.
+    Configuration expands human review; it never delegates authority to AI.
+
+  profile:
+    id: "strategic"
+    description: >
+      Strategic review profile for situations involving asymmetric positions,
+      assumptions, evidence, alternatives, and strategy selection.
+
+  checks:
+    setting:
+      enabled: true
+      require_human_confirmation: true
+    positioning:
+      enabled: true
+      compare_self_and_counterparty: true
+    asymmetry:
+      enabled: true
+      dimensions:
+        - knowledge
+        - experience
+        - resources
+        - authority
+        - information
+        - time
+    assumptions:
+      enabled: true
+      expose_unverified_assumptions: true
+    evidence:
+      enabled: true
+      separate_fact_from_interpretation: true
+    alternatives:
+      enabled: true
+      preserve_all_branches: true
+    strategy:
+      enabled: true
+      ai_may_generate: true
+      ai_may_select: false
+    reset:
+      enabled: true
+      allow_return_to_setting: true
+
+  authority:
+    ai:
+      may_observe: true
+      may_analyze: true
+      may_generate_options: true
+      may_rank_options: false
+      may_select_strategy: false
+      may_commit_decision: false
+    human_gate:
+      may_confirm_setting: true
+      may_modify_setting: true
+      may_select_strategy: true
+      may_override_ai: true
+
+  invariants:
+    selection_authority: "human_gate"
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+    human_gate_required: true
+    rule: >
+      A Human Gate profile may constrain and expand review requirements, but
+      it must never transfer decision, execution, publication, or merge authority
+      to an AI runtime.
