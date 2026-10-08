@@ -16,6 +16,7 @@ aiwitness:
       - commit
       - verification_uncertainty
       - verification_observed
+      - milestone_map
 
   provenance:
     trace_id: "string"
@@ -28,6 +29,16 @@ aiwitness:
     verification_status: "pending | pass | fail"
     verification_uncertainty: "string | null"
     verification_observed: "mapping"
+
+  milestone_map:
+    rule: >
+      AIwitness may record the observed project position, explicit milestones,
+      decision points, and available branches. It must not rank, recommend,
+      or select a branch.
+    current_milestone_id: "string | null"
+    milestones: "list[mapping]"
+    decision_points: "list[mapping]"
+    selection_authority: "human_gate"
 
   authority:
     execution_authorized: false
