@@ -62,6 +62,18 @@ def validate(data: dict) -> None:
     if forbidden != expected_forbidden:
         raise ValueError("integrity forbidden rules changed")
 
+    milestone_map = root.get("milestone_map")
+    if not isinstance(milestone_map, dict):
+        raise ValueError("missing milestone_map section")
+    if milestone_map.get("selection_authority") != "human_gate":
+        raise ValueError("milestone_map selection authority must be human_gate")
+    if "current_milestone_id" not in milestone_map:
+        raise ValueError("milestone_map current_milestone_id is required")
+    if not isinstance(milestone_map.get("milestones"), str) or not isinstance(milestone_map.get("decision_points"), str):
+        raise ValueError("milestone_map schema declarations are required")
+    if "must not rank, recommend" not in str(milestone_map.get("rule", "")):
+        raise ValueError("milestone_map must prohibit AI ranking or recommendation")
+
     verification = root.get("verification")
     if not isinstance(verification, dict) or verification.get("rule") != "一変更一検証":
         raise ValueError("verification rule must be 一変更一検証")
