@@ -12,7 +12,7 @@ Selection authority: human_gate.
 
 ## Current Position
 
-current_milestone: external-developer-handoff
+current_milestone: threadrpg-integration-assessment
 
 ## Milestones
 
@@ -25,8 +25,8 @@ current_milestone: external-developer-handoff
 | core-conformance | complete | Core authority chain has a reproducible CI conformance gate |
 | api-v1 | complete | Real HTTP API v1.0 boundary implemented and CI-verified |
 | aiwitness-decision-map | complete | Decision landscape and branch structure can be preserved for Human Gate |
-| external-developer-handoff | pending | Make the existing system understandable and usable by an independent developer |
-| joumon-v2 | paused | Multi-runtime collaboration/integration remains a later milestone |
+| external-developer-handoff | complete | Make the existing system understandable and usable by an independent developer |
+| threadrpg-integration-assessment | pending | Determine whether a concrete ThreadRPG implementation/API exists and can be connected to Shirakami |
 
 ## Current Decision Point
 
@@ -60,5 +60,10 @@ Selection authority: human_gate
 
 Shirakami API v1.0 is complete.
 
-The next milestone is external-developer-handoff.
-JOUMON/v2 and production deployment are separate branches, not hidden requirements of the current milestone.
+The external-developer-handoff milestone is complete.
+
+The next milestone is threadrpg-integration-assessment.
+
+ThreadRPG integration is currently an assessment boundary, not an implementation requirement. The concrete ThreadRPG repository/API has not been verified in the connected GitHub sources. No implementation work should be inferred until a concrete integration target is identified.
+
+JOUMON/v2 and production deployment remain separate branches, not hidden requirements of the current milestone.
