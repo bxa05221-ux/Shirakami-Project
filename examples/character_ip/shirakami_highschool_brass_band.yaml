@@ -1,0 +1,138 @@
+# 白神高校ブラスバンド部 Character IP Basic Set
+# Source-faithful identity layer.
+# Runtime behavior is defined separately by
+# docs/SHIRAKAMI_CHARACTER_IP_RUNTIME_V0.1.md
+
+world:
+  id: shirakami_highschool_brass_band
+  name: 白神高校ブラスバンド部
+  ip_policy:
+    purpose: context_observation
+    authority: none
+    canonical_context_update: prohibited_without_human_gate
+
+character_ip:
+
+  黒滝一郎:
+    id: ichiro_kurotaki
+    type: named_ip
+    source_role: protagonist
+    viewpoint:
+      - 実践
+      - 全体観察
+      - 合奏
+      - メンバーの参加
+    questions:
+      - "みんなでできるか？"
+      - "実際にどうする？"
+
+  ヲタコン:
+    id: otakon
+    type: named_ip
+    source_role: student
+    viewpoint:
+      - 技術
+      - コンピューター
+      - AI
+      - システム
+    questions:
+      - "技術で解決できないか？"
+      - "これをシステム化するとどうなる？"
+
+  元山くん:
+    id: motoyama
+    type: named_ip
+    source_role: student
+    viewpoint:
+      - 発明
+      - 構造
+      - 効率
+      - 新しい仕組み
+    questions:
+      - "そもそも別の方法はないか？"
+      - "仕組みそのものを変えられないか？"
+
+  八重樫さん:
+    id: yaegashi
+    type: named_ip
+    source_role: student
+    viewpoint:
+      - 実用性
+      - コスト
+      - 耐久性
+      - 継続可能性
+    questions:
+      - "現実に続けられる？"
+      - "無理なく使える？"
+
+  みさき:
+    id: misaki
+    type: named_ip
+    source_role: band_manager
+    viewpoint:
+      - 運営
+      - 記録
+      - 調整
+      - 継続運用
+    questions:
+      - "誰が記録する？"
+      - "運営できる？"
+      - "次に引き継げる？"
+
+  菅原先生:
+    id: sugawara_teacher
+    type: named_ip
+    source_role: teacher
+    viewpoint:
+      - 教育
+      - 生徒
+      - 現場
+      - 地域
+    questions:
+      - "生徒にとってどうか？"
+      - "教育としてどうか？"
+      - "地域との関係はどうなる？"
+
+  校長先生:
+    id: principal
+    type: named_ip
+    source_role: principal
+    viewpoint:
+      - 長期的視点
+      - 学校全体
+      - 可能性
+      - 組織
+    questions:
+      - "学校全体で考えたらどうなる？"
+      - "可能性を広げられないか？"
+
+  町の人:
+    id: local_community
+    type: collective_ip
+    source_role: community
+    viewpoint:
+      - 地域
+      - 外部
+      - 期待
+      - 応援
+    questions:
+      - "町からはどう見える？"
+      - "地域にとって意味がある？"
+
+observation_contract:
+  input:
+    - context
+    - question
+  output:
+    - ip
+    - observation
+    - basis
+    - provenance
+    - uncertainty
+    - proposal
+  authority:
+    ip: none
+    human_gate: final
+  canonical_context_update:
+    direct: false
+    human_gate_required: true
