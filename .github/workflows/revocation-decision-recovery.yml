@@ -1,0 +1,25 @@
+name: Shirakami Revocation Decision Recovery
+
+on:
+  push:
+    paths:
+      - "runtime/revocation_decision_recovery.py"
+      - "scripts/test_revocation_decision_recovery.py"
+      - "docs/REVOCATION_DECISION_RECOVERY_SPECIFICATION.md"
+      - ".github/workflows/revocation-decision-recovery.yml"
+  pull_request:
+    paths:
+      - "runtime/revocation_decision_recovery.py"
+      - "scripts/test_revocation_decision_recovery.py"
+      - "docs/REVOCATION_DECISION_RECOVERY_SPECIFICATION.md"
+      - ".github/workflows/revocation-decision-recovery.yml"
+
+jobs:
+  revocation-decision-recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m unittest scripts/test_revocation_decision_recovery.py
