@@ -1,0 +1,26 @@
+name: Shirakami Human Key Temporal Boundary
+
+on:
+  push:
+    paths:
+      - "runtime/human_key_temporal.py"
+      - "scripts/test_human_key_temporal.py"
+      - "docs/HUMAN_KEY_TEMPORAL_SPECIFICATION.md"
+      - ".github/workflows/human-key-temporal.yml"
+  pull_request:
+    paths:
+      - "runtime/human_key_temporal.py"
+      - "scripts/test_human_key_temporal.py"
+      - "docs/HUMAN_KEY_TEMPORAL_SPECIFICATION.md"
+      - ".github/workflows/human-key-temporal.yml"
+
+jobs:
+  human-key-temporal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install pytest
+      - run: python -m pytest -q scripts/test_human_key_temporal.py
