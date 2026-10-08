@@ -1,0 +1,133 @@
+version: "0.1"
+name: experience-feedback-loop
+status: experimental
+purpose:
+  - collect outcomes from multiple AI runtimes without treating any runtime as authority
+  - convert successes, failures, corrections, and verification results into reusable evidence
+  - propose protocol improvements from accumulated evidence
+  - preserve human decision authority at every consequential update
+
+principles:
+  runtime_is_replaceable: true
+  evidence_is_not_authority: true
+  outcome_is_not_truth: true
+  human_gate_required_for_protocol_change: true
+  provenance_required: true
+  failure_is_reusable_evidence: true
+
+loop:
+  - landscape
+  - context
+  - protocol
+  - runtime_selection
+  - execution
+  - observation
+  - evidence_capture
+  - verification
+  - human_review
+  - protocol_candidate
+  - human_gate
+  - controlled_update
+  - next_execution
+
+runtime_pool:
+  rule: multiple_runtimes_may_attempt_the_same_task
+  examples:
+    - llm_a
+    - llm_b
+    - llm_c
+    - ecc
+    - codex
+  selection: evidence_based_candidate_selection
+  prohibition: no_runtime_receives_final_authority
+
+observation:
+  capture:
+    - task_context
+    - runtime_identity
+    - runtime_configuration
+    - input_context_hash
+    - execution_trace
+    - produced_artifacts
+    - tests
+    - review_findings
+    - human_corrections
+    - failure_modes
+    - downstream_regressions
+    - final_outcome
+    - timestamps
+
+comparison:
+  rule: compare_evidence_not_models
+  prohibit:
+    - global_model_ranking
+    - authority_by_consensus
+    - treating_frequency_as_truth
+  allowed:
+    - task_specific_comparison
+    - outcome_comparison
+    - failure_pattern_comparison
+    - process_comparison
+
+feedback:
+  source: verified_experience
+  candidate_types:
+    - context_rule
+    - protocol_rule
+    - handoff_rule
+    - verification_rule
+    - runtime_selection_hint
+    - evidence_requirement
+  candidate_status: unverified
+
+human_gate:
+  required_for:
+    - protocol_change
+    - context_policy_change
+    - verification_policy_change
+    - runtime_authority_change
+    - consequential_action
+  bypass: false
+
+aiwitness:
+  role: execution_fact_record
+  authority: none
+  records:
+    - runtime_identity
+    - timestamps
+    - execution_events
+    - artifact_references
+    - verification_events
+    - handoff_provenance
+
+semantic_handoff:
+  preserve:
+    - context
+    - evidence
+    - provenance
+    - uncertainty
+    - verification_status
+
+failure_policy:
+  rule: failure_must_produce_reusable_evidence
+  required_fields:
+    - observed_failure
+    - suspected_boundary
+    - verification_status
+    - human_correction_if_any
+    - recurrence_risk
+  prohibition: do_not_promote_failure_to_protocol_truth_without_review
+
+update_policy:
+  proposal: evidence_may_generate_candidates
+  approval: human_only
+  deployment: controlled
+  rollback: required
+  audit_trail: required
+
+non_goals:
+  - build_a_single_supermodel
+  - automatically_fine_tune_models
+  - select_a_permanent_best_model
+  - delegate_protocol_authority_to_ai
+  - replace_human_judgment
