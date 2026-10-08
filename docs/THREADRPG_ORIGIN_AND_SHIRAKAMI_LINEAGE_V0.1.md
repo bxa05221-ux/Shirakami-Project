@@ -350,3 +350,91 @@ Remaining uncertainty is deliberately isolated to three questions:
 
 Those are new design questions, not missing prerequisites for the existing Shirakami core.
 
+
+
+## 16. Upstream origin: vocabulary alignment and prompt-to-protocol evolution
+
+The ThreadRPG lineage above begins too late if it is read as the absolute origin of Shirakami.
+
+The earlier practical problem was a vocabulary mismatch between the user and the AI:
+
+> The same word or expression could carry different operational meanings for the human and the AI, causing the prompt to deform in interpretation and fail to produce the intended output.
+
+The initial response was therefore not to design an OS, but to reduce semantic friction by aligning vocabulary and attaching compact operational meaning to shared expressions.
+
+A representative example is the use of an expression such as 「今北産業」 as a compact command-like vocabulary item meaning, in context, to summarize the accumulated context in three lines. Internet / 2ch / 5ch vocabulary and other context-dependent expressions were used similarly as practical attempts to make the interaction more immediately intelligible.
+
+This establishes a more primitive lineage:
+
+```
+user ↔ AI vocabulary gap
+        ↓
+vocabulary alignment
+        ↓
+compact shared operational expressions
+        ↓
+prompt refinement
+        ↓
+repeated dialogue and failure correction
+        ↓
+context/state representation
+        ↓
+Matome YAML
+        ↓
+ThreadRPG
+        ↓
+Shirakami Model
+        ↓
+Shirakami Architecture
+        ↓
+Shirakami OS
+```
+
+The important point is that Matome YAML was not initially conceived as a finished protocol specification. It was repeatedly refined through continued dialogue because the prompt itself had to carry increasingly precise meaning, context, state, and operational expectations.
+
+Over repeated use, the prompt ceased to function merely as a natural-language instruction. Parts of it became stable enough to behave as a shared contract for interpretation and execution.
+
+This is the practical transition:
+
+```
+prompt
+  ↓ repeated use / observation / correction
+refined prompt
+  ↓ stable semantics
+protocol-like contract
+  ↓ explicit boundaries
+protocol
+```
+
+Accordingly, the development lineage should distinguish two kinds of origin:
+
+1. **Problem origin:** the vocabulary / semantic gap between human and AI.
+2. **Experimental discovery:** ThreadRPG, where the resulting context-and-observation mechanism was extended to multiple viewpoints and re-observation.
+
+ThreadRPG is therefore the experimental ancestor of the generalized Shirakami Model, but not the absolute beginning of the development process.
+
+## 17. Why this matters
+
+This upstream history explains why Shirakami is better understood as a **semantic alignment and context-continuity architecture** than as an OS that was designed first and later given a safety layer.
+
+The later architecture can be read as a series of generalizations:
+
+- vocabulary alignment → semantic alignment;
+- compact command-like expressions → protocol semantics;
+- prompt refinement → protocol refinement;
+- context carried through dialogue → explicit Context / Landscape state;
+- Matome YAML → structured semantic handoff;
+- multiple viewpoints → observation plurality;
+- repeated re-observation → verification loop;
+- human interpretation / acceptance → Human Gate;
+- model-specific execution → replaceable Runtime / Adapter.
+
+These are lineage mappings, not claims that every later component existed in the earliest artifacts.
+
+## 18. Stronger origin statement
+
+A defensible concise statement of the broader origin is:
+
+> **Shirakami began as an attempt to close the semantic gap between a human user and AI. Repeated dialogue exposed that ordinary prompts could drift in interpretation, so vocabulary, context, state, and operational meaning were progressively externalized and refined. Matome YAML emerged from that process; continued experimentation led to ThreadRPG, where the same mechanism was extended to multiple viewpoints and re-observation. The resulting invariants were then generalized into the Shirakami Model, Shirakami Architecture, and finally Shirakami OS.**
+
+This statement should be treated as a development-history synthesis. Individual stages should continue to be supported by dated artifacts where available.
