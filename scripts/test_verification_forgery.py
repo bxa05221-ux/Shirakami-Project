@@ -12,6 +12,7 @@ VALID = {
     "target_id": "EXEC-1",
     "result": "pass",
     "verifier": "verification-suite-v1",
+    "verifier_instance": "verification-suite-v1-i1",
     "human_approval": False,
     "runtime_authority": False,
 }

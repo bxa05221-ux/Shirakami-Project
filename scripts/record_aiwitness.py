@@ -46,6 +46,33 @@ def build_witness(trace_document: dict) -> dict:
     if not isinstance(gate, dict) or gate.get("required") is not True:
         raise ValueError("human_gate.required must remain true")
 
+    milestone_map = trace_document.get("milestone_map")
+    if milestone_map is not None:
+        if not isinstance(milestone_map, dict):
+            raise ValueError("milestone_map must be a mapping")
+        current = milestone_map.get("current_milestone_id")
+        milestones = milestone_map.get("milestones", [])
+        decision_points = milestone_map.get("decision_points", [])
+        if current is not None and not isinstance(current, str):
+            raise ValueError("milestone_map.current_milestone_id must be a string or null")
+        if not isinstance(milestones, list) or not isinstance(decision_points, list):
+            raise ValueError("milestone_map lists are required")
+        for point in decision_points:
+            if not isinstance(point, dict):
+                raise ValueError("decision_points must contain mappings")
+            if "options" not in point or not isinstance(point["options"], list):
+                raise ValueError("decision point options are required")
+            if point.get("selected_option_id") is not None and point.get("selection_authority") != "human_gate":
+                raise ValueError("branch selection must be attributed to human_gate")
+        milestone_projection = {
+            "current_milestone_id": current,
+            "milestones": milestones,
+            "decision_points": decision_points,
+            "selection_authority": "human_gate",
+        }
+    else:
+        milestone_projection = None
+
     return {
         "aiwitness": {
             "version": "0.1",
@@ -70,6 +97,7 @@ def build_witness(trace_document: dict) -> dict:
                     "tests": list(verification.get("tests", [])),
                 },
             },
+            "milestone_map": milestone_projection,
             "authority": {
                 "execution_authorized": False,
                 "publish_authorized": False,

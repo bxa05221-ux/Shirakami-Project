@@ -10,7 +10,7 @@ class VerificationForgeryError(ValueError):
     """Raised when a verification record is incomplete or tampered with."""
 
 
-BOUND_FIELDS = ("verification_id", "target_id", "result", "verifier")
+BOUND_FIELDS = ("verification_id", "target_id", "result", "verifier", "verifier_instance")
 
 
 def verification_digest(result: Mapping[str, Any]) -> str:

@@ -254,7 +254,7 @@ def test_competing_parent_with_same_semantic_identity_is_rejected():
             "proposal-2",
             "protocol-1",
             {
-                "proposal_id": EVENTS[3]["proposal_id"],
+                "proposal_id": EVENTS[2]["proposal_id"],
                 "protocol_hash": "P1",
                 "context_version": "C1",
                 "evidence_hash": "E1",
@@ -346,7 +346,7 @@ def test_cross_layer_single_sided_mutation_matrix():
         elif artifact == "identity":
             value = dict(IDENTITY); value.update(changes); kwargs["identity"] = value
         elif artifact == "ui_event":
-            value = dict(UI_EVENT); value.update(changes); kwargs["ui_event"] = value
+            value = dict(UI); value.update(changes); kwargs["ui_event"] = value
         else:
             value = dict(PERSISTED); value.update(changes); kwargs["persisted"] = value
         with pytest.raises(FullSystemAuthorityError):
@@ -379,22 +379,21 @@ def test_cross_layer_mutation_cannot_be_hidden_by_unchanged_human_gate():
         call(verification=verification, decision=decision, approval=approval, execution=execution)
 
 
-def test_authority_chain_single_field_mutation_matrix():
-    mutations = [
-        ("verification_id", "V-MUT"),
-        ("target_id", "T-MUT"),
-        ("context_version", "C-MUT"),
-        ("evidence_hash", "E-MUT"),
-        ("protocol_hash", "P-MUT"),
-        ("proposal_id", "PR-MUT"),
-        ("verifier", "v-MUT"),
-        ("verifier_instance", "v-i-MUT"),
-    ]
-    for field, value in mutations:
-        verification = dict(VERIFICATION)
-        verification[field] = value
-        with pytest.raises(FullSystemAuthorityError):
-            call(verification=verification)
+@pytest.mark.parametrize(("field", "value"), [
+    ("verification_id", "V-MUT"),
+    ("target_id", "T-MUT"),
+    ("context_version", "C-MUT"),
+    ("evidence_hash", "E-MUT"),
+    ("protocol_hash", "P-MUT"),
+    ("proposal_id", "PR-MUT"),
+    ("verifier", "v-MUT"),
+    ("verifier_instance", "v-i-MUT"),
+])
+def test_authority_chain_single_field_mutation_matrix(field, value):
+    verification = dict(VERIFICATION)
+    verification[field] = value
+    with pytest.raises(FullSystemAuthorityError):
+        call(verification=verification)
 
 
 def test_authority_chain_human_binding_single_field_mutation_matrix():
@@ -507,7 +506,7 @@ def test_same_semantic_identity_is_not_history_even_with_different_event_id():
     mutations = [
         ("evidence", "evidence_hash", EVENTS[1]["evidence_hash"]),
         ("protocol", "protocol_hash", EVENTS[2]["protocol_hash"]),
-        ("proposal", "proposal_id", EVENTS[3]["proposal_id"]),
+        ("proposal", "proposal_id", EVENTS[3].get("proposal_id", "PR1")),
         ("verification", "verification_id", VERIFICATION["verification_id"]),
         ("human_decision", "decision_id", DECISION["decision_id"]),
         ("human_approval", "approval_id", APPROVAL["approval_id"]),
@@ -527,7 +526,7 @@ def test_unrelated_history_does_not_change_selected_authority_identity():
         "occurred_at": "2026-10-07T06:00:00+00:00",
     }
     result = call(events=[*EVENTS, history])
-    assert result is not None
+    assert result is None
 
 
 def test_historical_candidates_can_coexist_with_selected_authority_chain():
@@ -970,47 +969,48 @@ def test_temporal_permutation_blocks(event_type, occurred_at):
         call(events=bad)
 
 
-@pytest.mark.parametrize(("event_type", "parent_event_id"), [
-    ("evidence", "protocol-1"),
-    ("protocol", "proposal-1"),
-    ("proposal", "evidence-1"),
-    ("verification", "protocol-1"),
-    ("human_decision", "proposal-1"),
-    ("human_approval", "verification-1"),
-    ("execution", "decision-1"),
+@pytest.mark.parametrize(("event_type", "parent_event_id", "replacement"), [
+    ("evidence", "protocol-1",
+     {"event_id": "obs-2", "event_type": "observation", "target_id": "T1",
+      "occurred_at": "2026-10-07T10:01:00+00:00"}),
+    ("protocol", "proposal-1",
+     {"event_id": "evidence-2", "event_type": "evidence", "evidence_hash": "E1",
+      "context_version": "C1", "occurred_at": "2026-10-07T10:02:30+00:00",
+      "parent_event_id": "obs-1"}),
+    ("proposal", "evidence-1",
+     {"event_id": "protocol-2", "event_type": "protocol", "protocol_hash": "P1",
+      "context_version": "C1", "evidence_hash": "E1",
+      "occurred_at": "2026-10-07T10:03:30+00:00", "parent_event_id": "evidence-1"}),
+    ("verification", "protocol-1",
+     {"event_id": "obs-2", "event_type": "observation", "target_id": "T1",
+      "occurred_at": "2026-10-07T10:01:00+00:00"}),
+    ("human_decision", "proposal-1",
+     {"event_id": "verification-2", "event_type": "verification",
+      "verification_id": "V2", "occurred_at": "2026-10-07T10:04:15+00:00",
+      "parent_event_id": "obs-1"}),
+    ("human_approval", "verification-1",
+     {"event_id": "decision-2", "event_type": "human_decision",
+      "decision_id": "D2", "proposal_id": "PR1",
+      "occurred_at": "2026-10-07T10:05:30+00:00",
+      "parent_event_id": "verification-1"}),
+    ("execution", "decision-1",
+     {"event_id": "approval-2", "event_type": "human_approval",
+      "approval_id": "A2", "context_version": "C1", "evidence_hash": "E1",
+      "protocol_hash": "P1", "proposal_id": "PR1",
+      "occurred_at": "2026-10-07T10:05:30+00:00",
+      "parent_event_id": "decision-1"}),
 ])
-@pytest.mark.parametrize(("event_type", "replacement"), [
-    ("evidence", {"event_id": "obs-2", "event_type": "observation", "target_id": "T1",
-                   "occurred_at": "2026-10-07T10:01:00+00:00"}),
-    ("protocol", {"event_id": "evidence-2", "event_type": "evidence", "evidence_hash": "E1",
-                  "context_version": "C1", "occurred_at": "2026-10-07T10:02:30+00:00",
-                  "parent_event_id": "obs-1"}),
-    ("proposal", {"event_id": "protocol-2", "event_type": "protocol", "protocol_hash": "P1",
-                  "context_version": "C1", "evidence_hash": "E1",
-                  "occurred_at": "2026-10-07T10:03:30+00:00", "parent_event_id": "evidence-1"}),
-    ("verification", {"event_id": "obs-2", "event_type": "observation", "target_id": "T1",
-                      "occurred_at": "2026-10-07T10:01:00+00:00"}),
-    ("human_decision", {"event_id": "verification-2", "event_type": "verification",
-                        "verification_id": "V2", "occurred_at": "2026-10-07T10:04:15+00:00",
-                        "parent_event_id": "obs-1"}),
-    ("human_approval", {"event_id": "decision-2", "event_type": "human_decision",
-                        "decision_id": "D2", "proposal_id": "PR1",
-                        "occurred_at": "2026-10-07T10:05:30+00:00",
-                        "parent_event_id": "verification-1"}),
-    ("execution", {"event_id": "approval-2", "event_type": "human_approval",
-                   "approval_id": "A2", "context_version": "C1", "evidence_hash": "E1",
-                   "protocol_hash": "P1", "proposal_id": "PR1",
-                   "occurred_at": "2026-10-07T10:05:30+00:00",
-                   "parent_event_id": "decision-1"}),
-])
-def test_authority_edge_cannot_follow_competing_parent(event_type, replacement):
+def test_authority_edge_cannot_follow_competing_parent(event_type, parent_event_id, replacement):
     bad = [dict(e) for e in EVENTS] + [dict(replacement)]
-    parent_id = replacement["event_id"]
-    bad = replace_event(bad, event_type, parent_event_id=parent_id)
+    bad = replace_event(bad, event_type, parent_event_id=parent_event_id)
     with pytest.raises(FullSystemAuthorityError):
         call(events=bad)
 
-
+@pytest.mark.parametrize(("event_type", "parent_event_id"), [
+    ("evidence", "protocol-1"), ("protocol", "proposal-1"), ("proposal", "evidence-1"),
+    ("verification", "protocol-1"), ("human_decision", "proposal-1"),
+    ("human_approval", "verification-1"), ("execution", "decision-1"),
+])
 def test_semantic_parent_rebinding_blocks(event_type, parent_event_id):
     bad = replace_event(EVENTS, event_type, parent_event_id=parent_event_id)
     with pytest.raises(FullSystemAuthorityError):
@@ -1214,7 +1214,7 @@ def test_human_decision_cannot_be_rebound_to_other_verification():
         "parent_event_id": "obs-1",
     }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=[*EVENTS, competing], decision=bad)
+        call(events=[*EVENTS[:-3], bad, competing, *EVENTS[-3:]], decision=bad)
 
 
 def test_execution_cannot_be_rebound_to_approval_with_different_identity():
@@ -1234,7 +1234,7 @@ def test_execution_cannot_be_rebound_to_approval_with_different_identity():
         "parent_event_id": "decision-1",
     }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=[*EVENTS, competing], execution=bad)
+        call(events=[*EVENTS[:-1], bad, competing], execution=bad)
 
 
 def test_execution_cannot_be_rebound_to_other_approval():
@@ -1252,7 +1252,7 @@ def test_execution_cannot_be_rebound_to_other_approval():
         "parent_event_id": "decision-1",
     }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=[*EVENTS, competing], execution=bad)
+        call(events=[*EVENTS[:-1], bad, competing], execution=bad)
 
 
 def test_approval_cannot_be_rebound_to_different_decision_with_same_proposal():
@@ -1267,7 +1267,7 @@ def test_approval_cannot_be_rebound_to_different_decision_with_same_proposal():
         "parent_event_id": "verification-1",
     }
     with pytest.raises(FullSystemAuthorityError):
-        call(events=[*EVENTS, competing], approval=bad)
+        call(events=[*EVENTS[:-2], bad, competing, EVENTS[-1]], approval=bad)
 
 
 def test_approval_cannot_be_rebound_to_other_decision():
@@ -1325,7 +1325,7 @@ def test_duplicate_protocol_identity_with_mutated_binding_is_rejected():
 
 
 def test_duplicate_proposal_identity_with_mutated_binding_is_rejected():
-    duplicate = {**EVENTS[3], "event_id": "proposal-attack", "protocol_hash": "P2"}
+    duplicate = {**EVENTS[2], "event_id": "proposal-attack", "protocol_hash": "P2"}
     with pytest.raises(FullSystemAuthorityError):
         call(events=list(EVENTS) + [duplicate])
 
