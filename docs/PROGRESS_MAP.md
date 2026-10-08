@@ -12,7 +12,7 @@ Selection authority: human_gate.
 
 ## Current Position
 
-current_milestone: threadrpg-integration-assessment
+current_milestone: threadrpg-derived-core-mapping
 
 ## Milestones
 
@@ -26,27 +26,28 @@ current_milestone: threadrpg-integration-assessment
 | api-v1 | complete | Real HTTP API v1.0 boundary implemented and CI-verified |
 | aiwitness-decision-map | complete | Decision landscape and branch structure can be preserved for Human Gate |
 | external-developer-handoff | complete | Make the existing system understandable and usable by an independent developer |
-| threadrpg-integration-assessment | pending | Determine whether a concrete ThreadRPG implementation/API exists and can be connected to Shirakami |
+| threadrpg-integration-assessment | complete | Historical ThreadRPG assets and published development record verified; ThreadRPG is treated as an origin/discovery system rather than merely a later application |
+| threadrpg-derived-core-mapping | pending | Map ThreadRPG-origin invariants to current Shirakami boundaries and distinguish implemented, documented-only, and unverified mappings |
 
 ## Current Decision Point
 
-### DP-01: What happens after API v1.0?
+### DP-02: How should ThreadRPG relate to current Shirakami architecture?
 
 Options:
 
-1. handoff
-   - Prepare the minimum external-developer onboarding surface.
-   - Goal: another developer can inspect, run, and understand the existing boundary without the author explaining the architecture live.
+1. port ThreadRPG as an application
+   - Treat ThreadRPG primarily as a product/runtime integration target.
+   - Not selected as the default interpretation.
 
-2. productization
-   - Build production deployment concerns such as authentication, TLS, rate limiting, operations, and hosting.
-   - These are intentionally outside API v1.0.
+2. derive core invariants
+   - Trace which principles were discovered through ThreadRPG and later generalized into Shirakami Model / Architecture.
+   - This is the current assessment direction.
 
-3. joumon-v2
-   - Resume JOUMON as a multi-runtime collaboration/integration layer.
-   - This is intentionally later than the external handoff boundary.
+3. reopen completed architecture boundaries
+   - Rebuild existing Runtime/API/Human Gate work around ThreadRPG-specific semantics.
+   - Explicitly out of scope unless the invariant mapping demonstrates a concrete necessity.
 
-Selected option: none
+Selected option: 2
 Selection authority: human_gate
 
 ## Completion Rules
@@ -55,6 +56,7 @@ Selection authority: human_gate
 - New work must either satisfy the current pending milestone or be explicitly declared a new research topic.
 - A percentage must never replace the milestone map.
 - The map records alternatives; it does not choose among them.
+- Historical lineage must not be used to smuggle application-specific semantics into the Runtime kernel.
 
 ## Current Boundary
 
@@ -62,8 +64,12 @@ Shirakami API v1.0 is complete.
 
 The external-developer-handoff milestone is complete.
 
-The next milestone is threadrpg-integration-assessment.
+The ThreadRPG integration assessment is complete at the historical/documentary level.
 
-ThreadRPG integration is currently an assessment boundary, not an implementation requirement. The concrete ThreadRPG repository/API has not been verified in the connected GitHub sources. No implementation work should be inferred until a concrete integration target is identified.
+The current question is not "how do we put ThreadRPG into the OS?" but:
+
+> Which principles discovered through ThreadRPG became Shirakami Model invariants, and which of those invariants are now implemented and verified by Shirakami OS?
+
+The bounded next milestone is threadrpg-derived-core-mapping.
 
 JOUMON/v2 and production deployment remain separate branches, not hidden requirements of the current milestone.
