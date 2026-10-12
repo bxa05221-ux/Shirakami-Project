@@ -141,3 +141,8 @@ A fresh branch from current `main` was created to test the dependency-complete F
 ### Decision boundary
 
 Do not merge #85 automatically. Review whether this extra composition boundary is warranted given the existing completed core-conformance milestone. If accepted, integrate the narrow chain first; only then assess whether one aggregate conformance runner is needed. Do not pull in API v1 or the remaining #70/#71 threat-model suite merely to increase the file or test count.
+
+
+### Normative-spec check
+
+A targeted review of `shirakami-specification/specifications/R0100-shirakami-evolution-loop.md` confirms the governing principles: evidence is traceable/immutable, protocol adoption requires Human Review, AI cannot acquire final authority, and verification is distinct from authorization. However, R0100 does **not** mandate this exact 18-module Full-System Authority Chain implementation or its event schema. Therefore PR #85 is a proposed strengthening/composition layer—not a missing prerequisite that may be silently added to the already-completed core-conformance milestone. Its value and scope require human review.
