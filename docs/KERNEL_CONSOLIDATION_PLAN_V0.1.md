@@ -91,3 +91,36 @@ The consolidation candidate is ready for review only when:
 7. The PR description lists what was deliberately excluded and why.
 
 Passing these criteria means “ready for human review,” not “automatically merged” and not a claim that every possible security property has been proven.
+
+
+## First-pass file audit (2026-10-12)
+
+### Confirmed current-main differences
+
+- `main` contains `runtime/human_gate_http_api.py` and `runtime/human_gate_profile.py`, which expose configurable Human Gate review profiles. They are explicitly documented as configuration/review endpoints, not decision endpoints.
+- `main` does not contain the candidate branch's `runtime/http_api.py`, `runtime/full_system_authority.py`, `scripts/run_core_conformance.py`, `scripts/test_full_system_authority.py`, `docs/API_V1.md`, or `docs/CORE_CONFORMANCE.md`. These are genuine candidate additions, not simple duplicate files. Their dependencies and authority semantics still require review before porting.
+- The candidate's `runtime/http_api.py` imports `runtime.api.ShirakamiAPI`; therefore, porting the transport alone would be incomplete. The full dependency closure must be classified before implementation is copied.
+- PR #73 changes 21 files and includes `docs/PROGRESS_MAP.md`. Its copy sets `current_milestone: joumon-v2`, while the current `main` map sets `current_milestone: threadrpg-derived-core-mapping-complete`. The PR copy is stale/conflicting for the current project baseline and must not replace the `main` map.
+- The existing Human Gate profile API and the candidate API v1 are not automatically duplicates: the former documents profile/configuration access, while the latter is a provider-neutral Semantic Handoff API. Review their contracts and authorization boundaries rather than merging them by filename or naming.
+
+### Current workflow evidence inspected
+
+- PR #71 head `bc4a602790c0f5eae540845fcd17fe4b7fe8a71a`: Full-System Authority Chain workflow failed at test collection due to a parametrization mismatch; most focused workflows shown for that SHA succeeded.
+- PR #72 head `f136c5fafe08ba7f4eb2df3f67f4cb126fad80b7`: Full-System Authority Chain workflow failed; the prior job log reported 8 failures, 146 passes, and 1 error. This fix branch is not the final #73 head.
+- PR #73 head `859842dbf46a176ad5945425a8002e4d5f1fa74c`: all six reported PR workflows succeeded, including Full-System Authority Chain and Core Conformance.
+- None of these results is a run on the new consolidation branch based on current `main`. The correct conclusion is: #73 is the strongest verified candidate so far, but its changes have not been verified against the current baseline.
+
+### First-pass disposition
+
+| Change group | Disposition | Reason |
+|---|---|---|
+| Full-system authority runtime + its focused test | Carry forward as a candidate | Missing on `main`; required for the #71/#73 authority-chain claim, but test semantics must be audited. |
+| Core Conformance runner, contract, and workflow | Carry forward as a candidate | Missing on `main`; offers an aggregate gate. Confirm its test list and workflow scope before adoption. |
+| API v1 transport, API implementation/contracts, examples and tests | Carry forward as a candidate group, not as isolated files | Missing on `main`; transport imports a separate API implementation. Preserve the existing Human Gate profile API. |
+| PR #73 copy of `docs/PROGRESS_MAP.md` | Exclude | Conflicts with the current main milestone. Keep one canonical map. |
+| PR #70/#71 individual workflows and threat-model specs | Do not mass-delete or mass-port | Many focus on distinct failure classes. Audit whether each is a distinct guarantee and whether the aggregate gate invokes it. |
+| PR #72 as an independent integration unit | Exclude as a standalone unit | One-file corrective branch with a failed workflow; relevant test corrections are already represented in the #73 candidate head and must be verified there. |
+
+### Next technical step
+
+Create a fresh integration candidate from the current `main` SHA, then reapply the smallest dependency-complete set for (1) full-system authority validation and (2) Core Conformance. Include API v1 only after the API dependency group and authority contract are reviewed together. Run the exact focused tests and aggregate gate on that candidate. Do not merge PR #70–#73 while this candidate is being prepared.
