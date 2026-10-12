@@ -124,3 +124,20 @@ Passing these criteria means “ready for human review,” not “automatically 
 ### Next technical step
 
 Create a fresh integration candidate from the current `main` SHA, then reapply the smallest dependency-complete set for (1) full-system authority validation and (2) Core Conformance. Include API v1 only after the API dependency group and authority contract are reviewed together. Run the exact focused tests and aggregate gate on that candidate. Do not merge PR #70–#73 while this candidate is being prepared.
+
+
+## Follow-up implementation candidate (2026-10-12)
+
+A fresh branch from current `main` was created to test the dependency-complete Full-System Authority Chain without importing the whole #71/#73 branches:
+
+- Candidate PR: #85, `integration/full-system-authority-minimal-v0.1` → `main`.
+- Candidate head at initial verification: `93a0067eeef4a039dbfd18df8ad2d316bb2a2819`.
+- Scope: 18 runtime modules forming the import dependency closure, one focused test file, the chain specification, and one focused workflow (21 files total).
+- Explicit exclusions: API v1 files, aggregate Core Conformance runner, unrelated threat-model layers, and the conflicting copy of `docs/PROGRESS_MAP.md`.
+- Focused workflow result on that candidate SHA: **168 passed**; workflow conclusion **success**.
+- Other repository workflows triggered on the same push were not treated as proof of this chain's correctness. At the time of this note, Codex Handoff Consumer Verification was still in progress.
+- This is evidence that the isolated chain and its focused tests execute on current `main`; it is not evidence that the entire kernel has been re-certified, nor that the chain provides production-grade cryptographic or real-world identity assurance.
+
+### Decision boundary
+
+Do not merge #85 automatically. Review whether this extra composition boundary is warranted given the existing completed core-conformance milestone. If accepted, integrate the narrow chain first; only then assess whether one aggregate conformance runner is needed. Do not pull in API v1 or the remaining #70/#71 threat-model suite merely to increase the file or test count.
