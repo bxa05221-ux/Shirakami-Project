@@ -1,0 +1,25 @@
+name: Shirakami Verifier Provenance
+
+on:
+  push:
+    paths:
+      - "runtime/verifier_provenance.py"
+      - "scripts/test_verifier_provenance.py"
+      - "docs/VERIFIER_PROVENANCE_SPECIFICATION.md"
+      - ".github/workflows/verifier-provenance.yml"
+  pull_request:
+    paths:
+      - "runtime/verifier_provenance.py"
+      - "scripts/test_verifier_provenance.py"
+      - "docs/VERIFIER_PROVENANCE_SPECIFICATION.md"
+      - ".github/workflows/verifier-provenance.yml"
+
+jobs:
+  verifier-provenance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m unittest scripts/test_verifier_provenance.py

@@ -1,0 +1,25 @@
+name: Shirakami Verification Integrity
+
+on:
+  push:
+    paths:
+      - "runtime/verification_integrity.py"
+      - "scripts/test_verification_integrity.py"
+      - "docs/VERIFICATION_INTEGRITY_SPECIFICATION.md"
+      - ".github/workflows/verification-integrity.yml"
+  pull_request:
+    paths:
+      - "runtime/verification_integrity.py"
+      - "scripts/test_verification_integrity.py"
+      - "docs/VERIFICATION_INTEGRITY_SPECIFICATION.md"
+      - ".github/workflows/verification-integrity.yml"
+
+jobs:
+  verification-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m unittest scripts/test_verification_integrity.py
