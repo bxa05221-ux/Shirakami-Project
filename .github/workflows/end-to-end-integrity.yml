@@ -1,0 +1,39 @@
+name: Shirakami End-to-End Integrity
+
+on:
+  push:
+    paths:
+      - "runtime/temporal_integrity.py"
+      - "runtime/decision_binding.py"
+      - "runtime/recovery_integrity.py"
+      - "runtime/end_to_end_integrity.py"
+      - "scripts/test_temporal_integrity.py"
+      - "scripts/test_decision_binding.py"
+      - "scripts/test_recovery_integrity.py"
+      - "scripts/test_end_to_end_integrity.py"
+      - "docs/END_TO_END_TEMPORAL_RECOVERY_SPECIFICATION.md"
+      - ".github/workflows/end-to-end-integrity.yml"
+  pull_request:
+    paths:
+      - "runtime/temporal_integrity.py"
+      - "runtime/decision_binding.py"
+      - "runtime/recovery_integrity.py"
+      - "runtime/end_to_end_integrity.py"
+      - "scripts/test_temporal_integrity.py"
+      - "scripts/test_decision_binding.py"
+      - "scripts/test_recovery_integrity.py"
+      - "scripts/test_end_to_end_integrity.py"
+      - "docs/END_TO_END_TEMPORAL_RECOVERY_SPECIFICATION.md"
+      - ".github/workflows/end-to-end-integrity.yml"
+
+jobs:
+  end-to-end-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install pytest
+      - run: |
+          python -m pytest -q             scripts/test_temporal_integrity.py             scripts/test_decision_binding.py             scripts/test_recovery_integrity.py             scripts/test_end_to_end_integrity.py
