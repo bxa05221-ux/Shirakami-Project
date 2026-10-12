@@ -1,0 +1,25 @@
+name: Persistence Recovery Integrity
+
+on:
+  push:
+    paths:
+      - "runtime/recovery_integrity.py"
+      - "scripts/test_recovery_integrity.py"
+      - "docs/PERSISTENCE_RECOVERY_SPECIFICATION.md"
+      - ".github/workflows/persistence-recovery.yml"
+  pull_request:
+    paths:
+      - "runtime/recovery_integrity.py"
+      - "scripts/test_recovery_integrity.py"
+      - "docs/PERSISTENCE_RECOVERY_SPECIFICATION.md"
+      - ".github/workflows/persistence-recovery.yml"
+
+jobs:
+  recovery-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m unittest scripts/test_recovery_integrity.py
