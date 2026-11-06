@@ -2,6 +2,8 @@
 
 ## AIを人間の意思のもとで扱うための Language Protocol OS
 
+[Official Website](https://shirakami-project.astutelinen1.chatgpt.site/)
+
 Shirakami Project は、AIそのものを賢くするのではなく、**人間がAIを自分の意思で使える環境をつくる**ための研究・設計・実装プロジェクトです。
 
 白神モデルは、LLMそのものを置き換えるものではありません。
