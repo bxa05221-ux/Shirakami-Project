@@ -1,0 +1,27 @@
+matome:
+  title: "Completion Integrity Example"
+  codename: "Evidence-backed completion state"
+  status: "verification_required"
+
+requirements:
+  - requirement_id: "R-001"
+    status: "verified"
+    evidence_ids:
+      - "EVIDENCE-EXAMPLE-001"
+    verification_source: "ci:test"
+  - requirement_id: "R-002"
+    status: "unverified"
+    evidence_ids: []
+
+human_gate:
+  required: true
+
+authority:
+  execution_authorized: false
+  publish_authorized: false
+  merge_authorized: false
+
+note: >
+  This document intentionally contains no completion percentage.
+  A missing verification result remains unverified rather than being
+  converted into an AI-estimated progress number.
