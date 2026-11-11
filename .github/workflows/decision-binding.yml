@@ -1,0 +1,26 @@
+name: Shirakami Decision Binding
+
+on:
+  push:
+    paths:
+      - "runtime/decision_binding.py"
+      - "scripts/test_decision_binding.py"
+      - "docs/DECISION_BINDING_ATTACK_SPECIFICATION.md"
+      - ".github/workflows/decision-binding.yml"
+  pull_request:
+    paths:
+      - "runtime/decision_binding.py"
+      - "scripts/test_decision_binding.py"
+      - "docs/DECISION_BINDING_ATTACK_SPECIFICATION.md"
+      - ".github/workflows/decision-binding.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip pytest
+      - run: pytest -q scripts/test_decision_binding.py
