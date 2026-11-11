@@ -1,0 +1,25 @@
+name: Shirakami Trust Root Governance
+
+on:
+  push:
+    paths:
+      - "runtime/trust_root_governance.py"
+      - "scripts/test_trust_root_governance.py"
+      - "docs/TRUST_ROOT_GOVERNANCE_SPECIFICATION.md"
+      - ".github/workflows/trust-root-governance.yml"
+  pull_request:
+    paths:
+      - "runtime/trust_root_governance.py"
+      - "scripts/test_trust_root_governance.py"
+      - "docs/TRUST_ROOT_GOVERNANCE_SPECIFICATION.md"
+      - ".github/workflows/trust-root-governance.yml"
+
+jobs:
+  trust-root-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m unittest scripts/test_trust_root_governance.py
