@@ -74,3 +74,5 @@ jobs:
         run: pytest -q scripts/test_validate_aiwitness_boundary.py
       - name: Verify Semantic Integrity boundary
         run: pytest -q scripts/test_semantic_integrity.py
+      - name: Verify bidirectional Project-to-Project Handoff round trip
+        run: pytest -q scripts/test_bidirectional_handoff_roundtrip.py
