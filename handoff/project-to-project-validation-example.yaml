@@ -1,0 +1,45 @@
+project_handoff_validation:
+  version: "0.1"
+  id: "P2P-HO-20260927-001"
+  status: "verification_required"
+
+  source:
+    project: "Shirakami Project"
+    handoff_id: "SH-HO-20260925-001"
+    actor: "chatgpt"
+
+  receiver:
+    project: "Receiver Project Fixture"
+    reconstruction_mode: "semantic_handoff"
+
+  required_context:
+    - "objective"
+    - "protocol"
+    - "evidence"
+    - "repository"
+    - "change"
+    - "constraints"
+    - "unresolved_questions"
+    - "human_gate"
+
+  provenance:
+    source_handoff: "handoff/SH-HO-20260925-001.yaml"
+    evidence_ids:
+      - "AGENT-COORDINATION-001"
+
+  authority:
+    execution_authorized: false
+    publish_authorized: false
+    merge_authorized: false
+
+  human_gate:
+    required: true
+    decision: "pending"
+
+  unresolved_questions:
+    preserved: true
+    count: 3
+
+  result:
+    reconstructed: false
+    verification: "pending"
