@@ -1,0 +1,36 @@
+name: JOUMON Live Fugu Observation
+
+on:
+  workflow_dispatch:
+    inputs:
+      statement:
+        description: "Observation statement"
+        required: true
+        type: string
+      model:
+        description: "Fugu model id"
+        required: false
+        default: "fugu"
+        type: string
+
+jobs:
+  live-fugu:
+    runs-on: ubuntu-latest
+    environment: joumon-live
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip openai pyyaml pytest
+      - name: Run deterministic boundary tests
+        working-directory: examples/joumon-minimal
+        run: python -m pytest -q
+      - name: Run one opt-in live Fugu observation
+        env:
+          SAKANA_API_KEY: ${{ secrets.SAKANA_API_KEY }}
+          JOUMON_STATEMENT: ${{ inputs.statement }}
+          FUGU_MODEL: ${{ inputs.model }}
+        run: python examples/joumon-minimal/joumon_live_fugu_entrypoint.py
