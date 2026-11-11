@@ -1,0 +1,26 @@
+name: Shirakami Human Key Rotation Recovery
+
+on:
+  push:
+    paths:
+      - "runtime/human_key_rotation_recovery.py"
+      - "scripts/test_human_key_rotation_recovery.py"
+      - "docs/HUMAN_KEY_ROTATION_RECOVERY_SPECIFICATION.md"
+      - ".github/workflows/human-key-rotation-recovery.yml"
+  pull_request:
+    paths:
+      - "runtime/human_key_rotation_recovery.py"
+      - "scripts/test_human_key_rotation_recovery.py"
+      - "docs/HUMAN_KEY_ROTATION_RECOVERY_SPECIFICATION.md"
+      - ".github/workflows/human-key-rotation-recovery.yml"
+
+jobs:
+  human-key-rotation-recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install pytest
+      - run: python -m pytest -q scripts/test_human_key_rotation_recovery.py

@@ -1,0 +1,25 @@
+name: Shirakami Verifier Authenticity
+
+on:
+  push:
+    paths:
+      - "runtime/verifier_authenticity.py"
+      - "scripts/test_verifier_authenticity.py"
+      - "docs/VERIFIER_AUTHENTICITY_SPECIFICATION.md"
+      - ".github/workflows/verifier-authenticity.yml"
+  pull_request:
+    paths:
+      - "runtime/verifier_authenticity.py"
+      - "scripts/test_verifier_authenticity.py"
+      - "docs/VERIFIER_AUTHENTICITY_SPECIFICATION.md"
+      - ".github/workflows/verifier-authenticity.yml"
+
+jobs:
+  verifier-authenticity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m unittest scripts/test_verifier_authenticity.py
