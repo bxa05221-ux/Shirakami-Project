@@ -1,0 +1,47 @@
+version: "0.1"
+name: experience-record
+status: experimental
+required:
+  task:
+    id: string
+    description: string
+  context:
+    reference: string
+    hash: string
+  runtime:
+    id: string
+    version: string
+    configuration: object
+  execution:
+    trace: string
+    started_at: timestamp
+    ended_at: timestamp
+  outcome:
+    status: enum[success,partial,failure,aborted]
+    artifacts: array
+  verification:
+    status: enum[verified,partially_verified,unverified,failed]
+    evidence: array
+  provenance:
+    source: string
+    handoff_chain: array
+  uncertainty:
+    items: array
+optional:
+  human_correction:
+    description: string
+    evidence: array
+  downstream_effects:
+    regressions: array
+    followup_issues: array
+  protocol_candidate:
+    kind: string
+    proposal: string
+    status: enum[unverified,reviewed,accepted,rejected]
+
+rules:
+  - every_record_requires_provenance
+  - outcome_does_not_equal_truth
+  - protocol_candidate_requires_human_gate
+  - runtime_identity_must_be_recorded
+  - verification_status_must_be_explicit
