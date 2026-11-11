@@ -74,3 +74,5 @@ jobs:
         run: pytest -q scripts/test_validate_aiwitness_boundary.py
       - name: Verify Semantic Integrity boundary
         run: pytest -q scripts/test_semantic_integrity.py
+      - name: Verify Context Transition history boundary
+        run: pytest -q scripts/test_context_transition.py
