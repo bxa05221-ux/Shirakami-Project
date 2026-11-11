@@ -1,0 +1,27 @@
+name: Shirakami Trust Root Boundary
+
+on:
+  push:
+    paths:
+      - "runtime/trust_root.py"
+      - "runtime/verifier_authenticity.py"
+      - "scripts/test_trust_root.py"
+      - "docs/TRUST_ROOT_BOUNDARY_SPECIFICATION.md"
+      - ".github/workflows/trust-root.yml"
+  pull_request:
+    paths:
+      - "runtime/trust_root.py"
+      - "runtime/verifier_authenticity.py"
+      - "scripts/test_trust_root.py"
+      - "docs/TRUST_ROOT_BOUNDARY_SPECIFICATION.md"
+      - ".github/workflows/trust-root.yml"
+
+jobs:
+  trust-root:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m unittest scripts/test_trust_root.py
