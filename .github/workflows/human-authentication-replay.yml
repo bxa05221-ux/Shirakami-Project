@@ -1,0 +1,26 @@
+name: Shirakami Human Authentication Replay Boundary
+
+on:
+  push:
+    paths:
+      - "runtime/human_auth_replay.py"
+      - "scripts/test_human_auth_replay.py"
+      - "docs/HUMAN_AUTHENTICATION_REPLAY_SPECIFICATION.md"
+      - ".github/workflows/human-authentication-replay.yml"
+  pull_request:
+    paths:
+      - "runtime/human_auth_replay.py"
+      - "scripts/test_human_auth_replay.py"
+      - "docs/HUMAN_AUTHENTICATION_REPLAY_SPECIFICATION.md"
+      - ".github/workflows/human-authentication-replay.yml"
+
+jobs:
+  human-authentication-replay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install pytest
+      - run: python -m pytest -q scripts/test_human_auth_replay.py
