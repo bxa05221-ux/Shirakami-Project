@@ -1,0 +1,43 @@
+schema: "shirakami.bidirectional_handoff.v1"
+status: "validation_fixture"
+
+source_project:
+  id: "project-a"
+  handoff_id: "handoff-a-to-b-001"
+  context:
+    objective: "Validate bidirectional semantic handoff"
+    unresolved:
+      - "Whether returned Matome preserves provenance"
+  evidence:
+    - evidence_id: "EV-A-001"
+      observation: "Source project emitted a Matome YAML"
+      provenance: "project-a"
+  human_gate:
+    required: true
+    authority_transferred: false
+
+receiver_project:
+  id: "project-b"
+  received_from: "project-a"
+  reconstructed_context: true
+  generated_response:
+    matome:
+      title: "Project B response"
+      status: "candidate"
+      unresolved:
+        - "Whether source interpretation is complete"
+    provenance:
+      source_handoff_id: "handoff-a-to-b-001"
+      preserved: true
+
+return_handoff:
+  enabled: true
+  direction: "project-b-to-project-a"
+  authority_transfer: false
+  human_gate_required: true
+  validation_targets:
+    - "context_preserved"
+    - "evidence_provenance_preserved"
+    - "unresolved_items_preserved"
+    - "human_gate_preserved"
+    - "no_decision_authority_transfer"
