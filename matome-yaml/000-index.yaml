@@ -49,3 +49,8 @@ library:
 boundary:
   authority: "meaning"
   note: "的目YAMLは意味の引継ぎ単位であり、実装そのものの正本ではない"
+  publication: "public-contract-and-examples"
+  protected_design_history: true
+  protected_operational_knowledge: true
+  protected_sensitive_data: true
+  policy: "../governance/MATOME_PUBLICATION_BOUNDARY_v0.1.md"
